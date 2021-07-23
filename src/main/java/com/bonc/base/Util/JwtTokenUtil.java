@@ -89,12 +89,21 @@ public class JwtTokenUtil {
 		Claims claims = null;
 		try {
 			claims = parseJWT(jwtStr);
-			System.out.println(1111);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
 		return true;
+	}
+	public static Claims getClaims(String jwtStr) {
+		Claims claims = null;
+		try {
+			claims = parseJWT(jwtStr);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		return claims;
 	}
 
 	public static SecretKey generalKey() {
