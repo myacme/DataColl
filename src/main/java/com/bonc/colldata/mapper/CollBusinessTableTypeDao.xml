@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollBusinessTableTypeDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollBusinessTableType">
+        <!--@Table coll_business_table_type-->
+        <result property="businessTypeTableCode" column="business_type_table_code" jdbcType="VARCHAR"/>
+        <result property="businessTypeCode" column="business_type_code" jdbcType="VARCHAR"/>
+        <result property="businessTypeTableName" column="business_type_table_name" jdbcType="VARCHAR"/>
+        <result property="businessTypeTableNameCode" column="business_type_table_name_code" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getTableList" resultMap="BaseResultMap">
+        SELECT * from  coll_business_table_type WHERE state = '1' and business_type_table_code  in
+            ( SELECT table_business_code from coll_table_data WHERE version =#{version} GROUP BY table_business_code)
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          business_type_table_code, business_type_code, business_type_table_name,business_type_table_name_code, remarks
+        from main.coll_business_table_type
+        where business_type_table_code = #{id}
+          and state = '1'
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          business_type_table_code, business_type_code, business_type_table_name, remarks
+        from main.coll_business_table_type
+        <where>
+             state = '1'
+            <if test="businessTypeTableCode != null and businessTypeTableCode != ''">
+                and business_type_table_code = #{businessTypeTableCode}
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                and business_type_code = #{businessTypeCode}
+            </if>
+            <if test="businessTypeTableName != null and businessTypeTableName != ''">
+                and business_type_table_name = #{businessTypeTableName}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks = #{remarks}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          business_type_table_code, business_type_code, business_type_table_name,business_type_table_name_code, remarks
+        from main.coll_business_table_type
+        <where>
+            state = '1'
+            <if test="typeCode != null and typeCode != ''">
+                and business_type_code = #{typeCode}
+            </if>
+            <if test="name != null and name != ''">
+                and business_type_table_name like '%'||#{name}||'%'
+            </if>
+            <if test="code != null and code != ''">
+                and business_type_table_name_code like '%'||#{code}||'%'
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into main.coll_business_table_type(business_type_table_code, business_type_code, business_type_table_name,business_type_table_name_code, remarks)
+        values (#{businessTypeTableCode}, #{businessTypeCode}, #{businessTypeTableName},#{businessTypeTableNameCode}, #{remarks})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_business_table_type
+        <set>
+            <if test="businessTypeTableCode != null and businessTypeTableCode != ''">
+                business_type_table_code = #{businessTypeTableCode},
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                business_type_code = #{businessTypeCode},
+            </if>
+            <if test="businessTypeTableName != null and businessTypeTableName != ''">
+                business_type_table_name = #{businessTypeTableName},
+            </if>
+            <if test="businessTypeTableNameCode != null and businessTypeTableNameCode != ''">
+                business_type_table_name_code = #{businessTypeTableNameCode},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+        </set>
+        where business_type_table_code = #{businessTypeTableCode}
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        update main.coll_business_table_type set state = '0' where business_type_table_code = #{id}
+    </update>
+<!--    <delete id="deleteById">-->
+<!--        delete from main.coll_business_table_type where business_type_table_code = #{id}-->
+<!--    </delete>-->
+
+</mapper>

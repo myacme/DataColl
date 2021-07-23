@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bonc.colldata.mapper.UserManagerDao">
+	<resultMap id="baseMap" type="com.bonc.colldata.entity.UserManager">
+		<id property="userId" column="user_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="deptId" column="dept_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="userName" column="username" javaType="String" jdbcType="VARCHAR"/>
+		<result property="nickName" column="nick_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="gender" column="gender" javaType="String" jdbcType="VARCHAR"/>
+		<result property="phone" column="phone" javaType="String" jdbcType="VARCHAR"/>
+		<result property="email" column="email" javaType="String" jdbcType="VARCHAR"/>
+		<result property="passwordCode" column="password_code" javaType="String" jdbcType="VARCHAR"/>
+		<result property="password" column="password" javaType="String" jdbcType="VARCHAR"/>
+		<result property="isAdmin" column="is_admin" javaType="String" jdbcType="VARCHAR"/>
+		<result property="enabled" column="enabled" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" javaType="String" jdbcType="VARCHAR"/>
+		<result property="isSelf" column="is_self" javaType="String" jdbcType="VARCHAR"/>
+		<result property="dataType" column="data_type" javaType="String" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="checkList" parameterType="String" resultMap="baseMap">
+		SELECT
+		user_id,
+		dept_id,
+		username,
+		nick_name ,
+		gender,
+		phone ,
+		email ,
+		password_code,
+		password,
+		is_admin ,
+		enabled,
+		create_time,
+		is_self,
+		data_type
+		FROM SYS_USER
+		WHERE 1=1
+		<if test="userName!=null and userName!=''">
+			and username like '%'||#{userName}||'%'
+		</if>
+		<if test="name!=null and name!=''">
+			and nick_name like '%'||#{name}||'%'
+		</if>
+		<if test="phone!=null and phone!=''">
+			and phone like '%'||#{phone}||'%'
+		</if>
+		<if test="state !=null and state!=''">
+			and enabled=#{state}
+		</if>
+	</select>
+	<select id="checkUserById" resultMap="baseMap" parameterType="String">
+	     SELECT
+	   user_id,
+	   dept_id,
+	   username,
+	   nick_name ,
+	   gender,
+	   phone ,
+	   email ,
+	   password_code,
+	   password,
+	   is_admin ,
+	   enabled,
+	   create_time,
+	   is_self,
+	   data_type
+	   FROM SYS_USER
+	   WHERE user_id=#{userId}
+   </select>
+	<select id="checkUserByName" resultMap="baseMap" parameterType="String">
+	     SELECT
+	   user_id,
+	   dept_id,
+	   username,
+	   nick_name ,
+	   gender,
+	   phone ,
+	   email ,
+	   password_code,
+	   password,
+	   is_admin ,
+	   enabled,
+	   create_time,
+	   is_self,
+	   data_type
+	   FROM SYS_USER
+	   WHERE username=#{userName}
+   </select>
+	<update id="updateUser" parameterType="com.bonc.colldata.entity.UserManager">
+		update sys_user
+		<set>
+			<if test="deptId!=null and deptId!=''">dept_id=#{deptId},</if>
+			<if test="userName!=null and userName!=''">username=#{userName},</if>
+			<if test="nickName!=null and nickName!=''">nick_name=#{nickName},</if>
+			<if test="gender!=null and gender!=''">gender=#{gender},</if>
+			<if test="phone!=null and phone!=''">phone=#{phone},</if>
+			<if test="email!=null and email!=''">email=#{email},</if>
+			<if test="passwordCode!=null and passwordCode!=''">password_code=#{passwordCode},</if>
+			<if test="password!=null and password!=''">password=#{password},</if>
+			<if test="isAdmin!=null and isAdmin!=''">is_admin=#{isAdmin},</if>
+			<if test="enabled!=null and enabled!=''">enabled=#{enabled},</if>
+			<if test="isSelf!=null and isSelf!=''">is_self=#{isSelf},</if>
+			<if test="dataType!=null and dataType!=''">data_type=#{dataType}</if>
+		</set>
+		where user_id=#{userId}
+	</update>
+
+	<update id="checkState" parameterType="java.util.Map">
+		update sys_user
+		set enabled=#{state}
+		where
+		<foreach collection="list" separator="or" item="i">
+			user_id=#{i}
+		</foreach>
+	</update>
+	<update id="updatePassword" parameterType="String">
+		update sys_user
+		set
+		password=#{passwordEncode},
+		password_code=#{newPassword}
+		where user_id=#{userId}
+	</update>
+
+	<insert id="addUserManager" parameterType="com.bonc.colldata.entity.UserManager">
+		 INSERT INTO SYS_USER(
+		  user_id,
+	   dept_id,
+	   username,
+	   nick_name ,
+	   gender,
+	   phone ,
+	   email ,
+	   password_code,
+	   password,
+	   is_admin ,
+	   enabled,
+	   create_time,
+	   is_self,
+	   data_type
+		 ) VALUES(
+		 #{userId},
+		 #{deptId},
+		 #{userName},
+		 #{nickName},
+		 #{gender},
+		 #{phone},
+		 #{email},
+		 #{passwordCode},
+		 #{password},
+		 #{isAdmin},
+		 #{enabled},
+		 #{createTime},
+		  #{isSelf},
+		 #{dataType}
+		 )
+
+	</insert>
+
+</mapper>

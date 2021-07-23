@@ -1,0 +1,66 @@
+
+
+spring:
+  datasource:
+    druid:
+      db-type: com.alibaba.druid.pool.DruidDataSource
+      driverClassName: org.sqlite.JDBC
+      url: jdbc:sqlite://192.168.1.55/sqlite/collDB.db
+      username:
+      password:
+
+      initial-size: 1
+
+      min-idle: 1
+
+      max-active: 1
+
+      max-wait: 5000
+
+      time-between-eviction-runs-millis: 60000
+
+      min-evictable-idle-time-millis: 300000
+
+      max-evictable-idle-time-millis: 900000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+      validation-query: select 1
+
+      webStatFilter:
+          enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+      filter:
+        stat:
+          enabled: true
+
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+  servlet:
+    multipart:
+
+      max-file-size: 10MB
+
+      max-request-size: 50MB
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: none
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
+mybatis:
+  mapper-locations: classpath:com/bonc/colldata/mapper/**/*.xml
+  configuration:
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+server:
+  port: 8080
+

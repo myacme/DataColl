@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollReceiveTaskDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollReceiveTask">
+        <!--@Table coll_receive_task-->
+        <result property="sendTaskCode" column="send_task_code" jdbcType="VARCHAR"/>
+        <result property="sendTaskName" column="send_task_name" jdbcType="VARCHAR"/>
+        <result property="sendTaskVersion" column="send_task_version" jdbcType="VARCHAR"/>
+        <result property="sendTaskCollType" column="send_task_coll_type" jdbcType="VARCHAR"/>
+        <result property="sendTaskDataAgo" column="send_task_data_ago" jdbcType="VARCHAR"/>
+        <result property="sendTaskCollDepartment" column="send_task_coll_department" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryVersionOfnew" resultType="java.util.Map">
+        SELECT distinct(send_task_version) FROM "coll_receive_task"
+        where state = '1' and is_reprot = '0'
+    </select>
+    <select id="queryVersionOfHistory" resultType="java.util.Map">
+        SELECT distinct(send_task_version) FROM "coll_receive_task"
+        where state = '1' and is_reprot = '1'
+    </select>
+
+    <update id="report" >
+        update coll_receive_task set is_report = '1'
+        where send_task_version = #{version}
+    </update>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
+        from main.coll_receive_task
+        where send_task_code = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
+        from main.coll_receive_task
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
+        from main.coll_receive_task
+        <where>
+            <if test="sendTaskCode != null and sendTaskCode != ''">
+                and send_task_code = #{sendTaskCode}
+            </if>
+            <if test="sendTaskName != null and sendTaskName != ''">
+                and send_task_name = #{sendTaskName}
+            </if>
+            <if test="sendTaskVersion != null and sendTaskVersion != ''">
+                and send_task_version = #{sendTaskVersion}
+            </if>
+            <if test="sendTaskCollType != null and sendTaskCollType != ''">
+                and send_task_coll_type = #{sendTaskCollType}
+            </if>
+            <if test="sendTaskDataAgo != null and sendTaskDataAgo != ''">
+                and send_task_data_ago = #{sendTaskDataAgo}
+            </if>
+            <if test="sendTaskCollDepartment != null and sendTaskCollDepartment != ''">
+                and send_task_coll_department = #{sendTaskCollDepartment}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insert" parameterType="com.bonc.colldata.entity.CollReceiveTask">
+          insert into coll_receive_task
+
+          values
+          (
+          #{sendTaskCode},
+          #{sendTaskName},
+          #{sendTaskVersion},
+          #{sendTaskCollType},
+          #{sendTaskDataAgo},
+          #{sendTaskCollDepartment},
+          #{sendIfTemp},
+          #{createTime},
+          #{state},
+          '0'
+
+          )
+     </insert>
+    <insert id="addReceiveTaskTable" parameterType="com.bonc.colldata.entity.CollReceiveTask">
+        insert into coll_receive_task_table
+        values
+        <foreach collection="list" separator="," item="item" index="index">
+            (
+            #{sendTaskCode},
+            #{item.sendTaskTableCode},
+            #{createTime},
+            #{state}
+            )
+        </foreach>
+    </insert>
+
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_receive_task
+        <set>
+            <if test="sendTaskName != null and sendTaskName != ''">
+                send_task_name = #{sendTaskName},
+            </if>
+            <if test="sendTaskVersion != null and sendTaskVersion != ''">
+                send_task_version = #{sendTaskVersion},
+            </if>
+            <if test="sendTaskCollType != null and sendTaskCollType != ''">
+                send_task_coll_type = #{sendTaskCollType},
+            </if>
+            <if test="sendTaskDataAgo != null and sendTaskDataAgo != ''">
+                send_task_data_ago = #{sendTaskDataAgo},
+            </if>
+            <if test="sendTaskCollDepartment != null and sendTaskCollDepartment != ''">
+                send_task_coll_department = #{sendTaskCollDepartment},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where send_task_code = #{sendTaskCode}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from main.coll_receive_task where send_task_code = #{id}
+    </delete>
+
+</mapper>

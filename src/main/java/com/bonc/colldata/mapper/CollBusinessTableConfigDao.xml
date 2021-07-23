@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollBusinessTableConfigDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollBusinessTableConfig">
+        <!--@Table coll_business_table_config-->
+        <result property="tableConfigCode" column="table_config_code" jdbcType="VARCHAR"/>
+        <result property="tableConfigTableCode" column="table_config_table_code" jdbcType="VARCHAR"/>
+        <result property="tableConfigName" column="table_config_name" jdbcType="VARCHAR"/>
+        <result property="tableConfigType" column="table_config_type" jdbcType="VARCHAR"/>
+        <result property="tableConfigSize" column="table_config_size" jdbcType="VARCHAR"/>
+        <result property="tableConfigPrecision" column="table_config_precision" jdbcType="VARCHAR"/>
+        <result property="tableConfigCalibration" column="table_config_calibration" jdbcType="VARCHAR"/>
+        <result property="tableConfigIfnull" column="table_config_ifnull" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="tableConfigNameCode" column="table_config_name_code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getConfigList" resultMap="BaseResultMap">
+        SELECT
+            table_config_code,
+            table_config_name
+        FROM
+            coll_business_table_config
+        WHERE
+            table_config_table_code = #{tableCode}
+          and state = '1'
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code
+        from main.coll_business_table_config
+        where  table_config_code = #{id}
+          and state = '1'
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code
+        from main.coll_business_table_config
+        where table_config_table_code = #{id} and state = '1'
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code
+        from main.coll_business_table_config
+        <where>
+            <if test="tableConfigCode != null and tableConfigCode != ''">
+                and table_config_code = #{tableConfigCode}
+            </if>
+            <if test="tableConfigTableCode != null and tableConfigTableCode != ''">
+                and table_config_table_code = #{tableConfigTableCode}
+            </if>
+            <if test="tableConfigName != null and tableConfigName != ''">
+                and table_config_name = #{tableConfigName}
+            </if>
+            <if test="tableConfigType != null and tableConfigType != ''">
+                and table_config_type = #{tableConfigType}
+            </if>
+            <if test="tableConfigSize != null and tableConfigSize != ''">
+                and table_config_size = #{tableConfigSize}
+            </if>
+            <if test="tableConfigPrecision != null and tableConfigPrecision != ''">
+                and table_config_precision = #{tableConfigPrecision}
+            </if>
+            <if test="tableConfigCalibration != null and tableConfigCalibration != ''">
+                and table_config_calibration = #{tableConfigCalibration}
+            </if>
+            <if test="tableConfigIfnull != null and tableConfigIfnull != ''">
+                and table_config_ifnull = #{tableConfigIfnull}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks = #{remarks}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" >
+        insert into main.coll_business_table_config(table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code)
+        values (#{tableConfigCode}, #{tableConfigTableCode}, #{tableConfigName}, #{tableConfigType}, #{tableConfigSize}, #{tableConfigPrecision}, #{tableConfigCalibration}, #{tableConfigIfnull}, #{remarks},#{tableConfigNameCode})
+    </insert>
+    <!--新增所有列-->
+    <insert id="insertList" >
+        <if test="list != null">
+            insert into main.coll_business_table_config(table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code)
+            values
+               <foreach collection="list" index="index" item="item" separator=",">
+                   (#{item.tableConfigCode}, #{item.tableConfigTableCode}, #{item.tableConfigName}, #{item.tableConfigType}, #{item.tableConfigSize}, #{item.tableConfigPrecision}, #{item.tableConfigCalibration}, #{item.tableConfigIfnull}, #{item.remarks},#{item.tableConfigNameCode})
+               </foreach>
+        </if>
+       </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_business_table_config
+        <set>
+            <if test="tableConfigCode != null and tableConfigCode != ''">
+                table_config_code = #{tableConfigCode},
+            </if>
+            <if test="tableConfigTableCode != null and tableConfigTableCode != ''">
+                table_config_table_code = #{tableConfigTableCode},
+            </if>
+            <if test="tableConfigName != null and tableConfigName != ''">
+                table_config_name = #{tableConfigName},
+            </if>
+            <if test="tableConfigType != null and tableConfigType != ''">
+                table_config_type = #{tableConfigType},
+            </if>
+            <if test="tableConfigSize != null and tableConfigSize != ''">
+                table_config_size = #{tableConfigSize},
+            </if>
+            <if test="tableConfigPrecision != null and tableConfigPrecision != ''">
+                table_config_precision = #{tableConfigPrecision},
+            </if>
+            <if test="tableConfigCalibration != null and tableConfigCalibration != ''">
+                table_config_calibration = #{tableConfigCalibration},
+            </if>
+            <if test="tableConfigIfnull != null and tableConfigIfnull != ''">
+                table_config_ifnull = #{tableConfigIfnull},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+            <if test="tableConfigNameCode != null and tableConfigNameCode != ''">
+                table_config_name_code = #{tableConfigNameCode},
+            </if>
+        </set>
+        where table_config_code = #{tableConfigCode}
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        update main.coll_business_table_config set state = '0' where table_config_code in
+        <if test="dis != null">
+            <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+                #{item.id}
+            </foreach>
+        </if>
+    </update>
+<!--    <delete id="deleteById">-->
+<!--        delete from main.coll_business_table_config where table_config_code in-->
+<!--        <if test="dis != null">-->
+<!--            <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">-->
+<!--                #{item.id}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--    </delete>-->
+
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollSendTaskDao">
+
+	<resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollReceiveTask">
+		<!--@Table coll_receive_task-->
+		<result property="sendTaskCode" column="send_task_code" jdbcType="VARCHAR"/>
+		<result property="sendTaskName" column="send_task_name" jdbcType="VARCHAR"/>
+		<result property="sendTaskVersion" column="send_task_version" jdbcType="VARCHAR"/>
+		<result property="sendTaskCollType" column="send_task_coll_type" jdbcType="VARCHAR"/>
+		<result property="sendTaskDataAgo" column="send_task_data_ago" jdbcType="VARCHAR"/>
+		<result property="sendTaskCollDepartment" column="send_task_coll_department" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+		<result property="state" column="state" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!--查询指定行数据-->
+	<select id="getSendTaskList" resultMap="BaseResultMap">
+        select
+          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
+        from coll_send_task
+        where state='1'
+	    order by create_time  desc
+    </select>
+	<insert id="addSendTask" parameterType="com.bonc.colldata.entity.CollReceiveTask">
+          insert into coll_send_task
+          values
+          (
+          #{sendTaskCode},
+          #{sendTaskName},
+          #{sendTaskVersion},
+          #{sendTaskCollType},
+          #{sendTaskDataAgo},
+          #{sendTaskCollDepartment},
+          #{sendIfTemp},
+          #{createTime},
+          #{state}
+
+          )
+     </insert>
+	<insert id="addSendTaskTable" parameterType="com.bonc.colldata.entity.CollReceiveTask">
+		insert into coll_send_task_table
+		values
+		<foreach collection="list" separator="," item="item" index="index">
+			(
+			#{sendTaskCode},
+			#{item.sendTaskTableCode},
+			#{createTime},
+			#{state}
+			)
+		</foreach>
+	</insert>
+
+	<select id="getCollType" resultType="java.util.Map">
+        SELECT CODE_NAME,CODE_VALUE FROM COLL_DATA_DICT_VALUE WHERE CODE_TYPE='CJLX' AND STATE='1'
+    </select>
+	<select id="getBeforeVersion" resultType="java.util.Map" parameterType="String">
+		SELECT DISTINCT a.version code_value,a.version code_name from coll_table_data a left join
+		coll_business_table_type b
+		on b.business_type_table_code=a.table_business_code
+		where 1=1
+		<if test="departmentCode!=null and departmentCode!=''">
+			AND b.department_code=#{departmentCode}
+		</if>
+
+	</select>
+	<resultMap id="baseTaskTable" type="com.bonc.colldata.entity.CollReceiveTaskTable">
+		<id column="send_task_code" property="sendTaskCode" javaType="String" />
+		<result column="send_task_table_code" property="sendTaskTableCode" javaType="String" />
+		<result column="send_task_table_name" property="sendTaskTableName" javaType="String" />
+	</resultMap>
+
+	<select id="getTaskTables"  resultMap="baseTaskTable" parameterType="String">
+		select a.send_task_code,a.send_task_table_code,b.business_type_table_name send_task_table_name from
+		coll_send_task_table a left join coll_business_table_type b on a.send_task_table_code=b.business_type_table_code where
+		 a.state='1' and a.send_task_code=#{sendTaskCode}
+	</select>
+	<select id="getSendTaskById" resultMap="BaseResultMap" parameterType="String">
+		select
+          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
+        from coll_send_task
+        where state='1' and send_task_code=#{sendTaskCode}
+	</select>
+	<resultMap id="baeTableField" type="com.bonc.colldata.entity.CollBusinessTableConfig">
+		<id column="table_config_code" property="tableConfigCode"/>
+		<result column="table_config_name" property="tableConfigName"/>
+	</resultMap>
+	<select id="getTableFieldConfig" parameterType="String" resultMap="baeTableField">
+		select
+		table_config_code,
+		table_config_name
+		from
+		coll_business_table_config
+		where table_config_table_code=#{tableCode}
+	</select>
+</mapper>

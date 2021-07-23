@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bonc.colldata.mapper.UserRoleDao">
+	<resultMap id="baseMap" type="com.bonc.colldata.entity.UserRole">
+		<id property="roleId" column="role_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="description" column="description" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" javaType="String" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time" javaType="String" jdbcType="VARCHAR"/>
+		<result property="state" column="state" javaType="String" jdbcType="VARCHAR"/>
+	</resultMap>
+<select id="getRoleList" parameterType="String" resultMap="baseMap">
+	select
+	role_id,
+	name,
+	description,
+	create_time,
+	update_time,
+	state
+  from
+   sys_role
+   where 1=1
+   <if test="roleId!=null and roleId!=''">
+	   AND role_id like '%'||#{roleId}||'%'
+   </if>
+	<if test="roleName!=null and roleName!=''">
+		AND name like '%'||#{roleName}||'%'
+	</if>
+	<if test="state!=null and state!=''">
+		AND state =#{roleId}
+	</if>
+</select>
+
+	<insert id="addRole" parameterType="com.bonc.colldata.entity.UserRole">
+		insert into sys_role(role_id,name,description,create_time,update_time,state) values(
+		#{roleId},
+		#{name},
+		#{description},
+		#{createTime},
+		#{updateTime},
+		#{state}
+		)
+	</insert>
+	<update id="updateState" parameterType="java.util.Map">
+		update sys_role set state=#{state} where
+		<foreach collection="list" separator="or" item="i" >
+			role_id=#{i}
+		</foreach>
+	</update>
+</mapper>

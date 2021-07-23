@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollDataDictValueDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollDataDictValue">
+        <!--@Table coll_data_dict_value-->
+        <result property="codeId" column="code_id" jdbcType="VARCHAR"/>
+        <result property="codeType" column="code_type" jdbcType="VARCHAR"/>
+        <result property="codeName" column="code_name" jdbcType="VARCHAR"/>
+        <result property="codeValue" column="code_value" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          code_id, code_type, code_name, code_value, state
+        from main.coll_data_dict_value
+        where code_id = #{codeId} and is_valid = '1'
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          code_id, code_type, code_name, code_value, state
+        from main.coll_data_dict_value
+        where code_type = #{id} and is_valid = '1'
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          code_id, code_type, code_name, code_value, state
+        from main.coll_data_dict_value
+        <where>
+            <if test="codeId != null and codeId != ''">
+                and code_id = #{codeId}
+            </if>
+            <if test="codeType != null and codeType != ''">
+                and code_type = #{codeType}
+            </if>
+            <if test="codeName != null and codeName != ''">
+                and code_name = #{codeName}
+            </if>
+            <if test="codeValue != null and codeValue != ''">
+                and code_value = #{codeValue}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" >
+        insert into main.coll_data_dict_value(code_id,code_type, code_name, code_value, state)
+        values (#{codeId},#{codeType}, #{codeName}, #{codeValue}, #{state})
+    </insert>
+    <!--批量新增-->
+    <insert id="insertList" >
+        <if test="list != null">
+            insert into main.coll_data_dict_value(code_id,code_type, code_name, code_value, state)
+            values
+            <foreach collection="list" index="index" item="item" separator=",">
+                (#{item.codeId},#{item.codeType}, #{item.codeName}, #{item.codeValue}, #{item.state})
+            </foreach>
+        </if>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_data_dict_value
+        <set>
+            <if test="codeType != null and codeType != ''">
+                code_type = #{codeType},
+            </if>
+            <if test="codeName != null and codeName != ''">
+                code_name = #{codeName},
+            </if>
+            <if test="codeValue != null and codeValue != ''">
+                code_value = #{codeValue},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where code_id = #{codeId}
+    </update>
+
+    <!--通过主键修改数据-->
+    <update id="updateState">
+        update main.coll_data_dict_value
+        <set>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </set>
+        where code_id in
+        <if test="list != null">
+            <foreach collection="list" index="index" item="item" open="(" close=")"
+                     separator=",">
+                #{item.id}
+            </foreach>
+        </if>
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        update main.coll_data_dict_value
+        set is_valid = '0'
+        where code_id in
+        <if test="list != null">
+            <foreach collection="list" index="index" item="item" open="(" close=")"
+                     separator=",">
+                #{item.id}
+            </foreach>
+        </if>
+    </update>
+<!--    <delete id="deleteById" >-->
+<!--        delete from main.coll_data_dict_value where code_id in-->
+<!--        <if test="list != null">-->
+<!--            <foreach collection="list" index="index" item="item" open="(" close=")"-->
+<!--                     separator=",">-->
+<!--                #{item.id}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--    </delete>-->
+
+</mapper>

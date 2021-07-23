@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollTableDataDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollTableData">
+        <!--@Table coll_table_data-->
+        <result property="dataCode" column="data_code" jdbcType="VARCHAR"/>
+        <result property="businessTypeCode" column="business_type_code" jdbcType="VARCHAR"/>
+        <result property="tableBusinessCode" column="table_business_code" jdbcType="VARCHAR"/>
+        <result property="tableConfigCode" column="table_config_code" jdbcType="VARCHAR"/>
+        <result property="departmentCode" column="department_code" jdbcType="VARCHAR"/>
+        <result property="dataValue" column="data_value" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="version" column="version" jdbcType="VARCHAR"/>
+        <result property="tableConfigName" column="table_config_name" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="thisUpdate" column="this_update" jdbcType="VARCHAR"/>
+        <result property="thisUpdate" column="lower_update" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
+        from main.coll_table_data
+        where  data_code = #{id}
+            and state = '1'
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+            a.data_code, a.business_type_code, a.table_business_code, a.table_config_code, a.department_code, a.data_value, a.create_time, a.version,this_update,lower_update,
+            b.table_config_name
+        from main.coll_table_data a LEFT JOIN main.coll_business_table_config b on a.table_config_code = b.table_config_code
+        where a.table_business_code = #{tableCode}
+            and a.version = #{version}
+            and state = '1'
+
+    </select>
+
+    <select id="getDataList" resultType="java.util.Map">
+        select data_code,business_type_code,version,department_code, max(${update}) '${update}'
+        <if test="list != null">
+            ,
+        </if>
+        <foreach collection="list" index="index" item="item" separator=",">
+            max(case table_config_code when #{item.tableConfigCode} then data_value end ) '${item.tableConfigCode}'
+        </foreach>
+        from coll_table_data
+        <where>
+            <if test="dataCode != null and dataCode != ''">
+                and data_code = #{dataCode}
+            </if>
+            <if test="tableCode != null and tableCode!=''">
+                and table_business_code = #{tableCode}
+            </if>
+            <if test="version != null and version!=''">
+                and version = #{version}
+            </if>
+            and state = '1'
+        </where>
+        GROUP BY data_code,business_type_code,version,department_code
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
+        from main.coll_table_data
+        <where>
+            <if test="version != null and version != ''">
+                and version = #{version}
+            </if>
+            and state = '1'
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into main.coll_table_data(data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
+        values (#{dataCode}, #{businessTypeCode}, #{tableBusinessCode}, #{tableConfigCode}, #{departmentCode}, #{dataValue}, #{createTime}, #{version},#{thisUpdate})
+    </insert>
+
+    <!--批量新增所有列-->
+    <insert id="insertList" >
+        <if test="list != null">
+            insert into main.coll_table_data(data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
+            values
+            <foreach collection="list" index="index" item="item" separator=",">
+                (#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
+            </foreach>
+        </if>
+    </insert>
+
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_table_data
+        <set>
+            this_update = '1',
+            <if test="dataCode != null and dataCode != ''">
+                data_code = #{dataCode},
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                business_type_code = #{businessTypeCode},
+            </if>
+            <if test="tableBusinessCode != null and tableBusinessCode != ''">
+                table_business_code = #{tableBusinessCode},
+            </if>
+            <if test="tableConfigCode != null and tableConfigCode != ''">
+                table_config_code = #{tableConfigCode},
+            </if>
+            <if test="departmentCode != null and departmentCode != ''">
+                department_code = #{departmentCode},
+            </if>
+            <if test="dataValue != null and dataValue != ''">
+                data_value = #{dataValue},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="version != null and version != ''">
+                version = #{version},
+            </if>
+        </set>
+        where data_code = #{dataCode}
+    </update>
+    <!--批量修改数据-->
+    <update id="updateList">
+        <if test="list != null">
+            <foreach collection="list" index="index" item="item" separator=",">
+                update main.coll_table_data
+                <set>
+                    this_update = '1',
+                    <if test="item.dataCode != null and item.dataCode != ''">
+                        data_code = #{item.dataCode},
+                    </if>
+                    <if test="item.businessTypeCode != null and item.businessTypeCode != ''">
+                        business_type_code = #{item.businessTypeCode},
+                    </if>
+                    <if test="item.tableBusinessCode != null and item.tableBusinessCode != ''">
+                        table_business_code = #{item.tableBusinessCode},
+                    </if>
+                    <if test="item.tableConfigCode != null and item.tableConfigCode != ''">
+                        table_config_code = #{item.tableConfigCode},
+                    </if>
+                    <if test="item.departmentCode != null and item.departmentCode != ''">
+                        department_code = #{item.departmentCode},
+                    </if>
+                    <if test="item.dataValue != null and item.dataValue != ''">
+                        data_value = #{item.dataValue},
+                    </if>
+                    <if test="item.createTime != null and item.createTime != ''">
+                        create_time = #{item.createTime},
+                    </if>
+                    <if test="item.version != null and item.version != ''">
+                        version = #{item.version},
+                    </if>
+                </set>
+                where data_code = #{item.dataCode}
+            </foreach>
+        </if>
+
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        update main.coll_table_data set state = '0' where data_code = #{id}
+    </update>
+<!--    <delete id="deleteById">-->
+<!--        delete from main.coll_table_data where data_code = #{id}-->
+<!--    </delete>-->
+
+    <!--通过主键删除-->
+    <update id="delete">
+        update main.coll_table_data set state = '0'
+        <where>
+            <if test="dataCode != null and dataCode != ''">
+                and data_code = #{dataCode}
+            </if>
+            <if test="tableCode != null and tableCode!=''">
+                and table_business_code = #{tableCode}
+            </if>
+            <if test="version != null and version!=''">
+                and version = #{version}
+            </if>
+        </where>
+    </update>
+<!--    <delete id="delete">-->
+<!--        delete from main.coll_table_data-->
+<!--        <where>-->
+<!--            <if test="dataCode != null and dataCode != ''">-->
+<!--                and data_code = #{dataCode}-->
+<!--            </if>-->
+<!--            <if test="tableCode != null and tableCode!=''">-->
+<!--                and table_business_code = #{tableCode}-->
+<!--            </if>-->
+<!--            <if test="version != null and version!=''">-->
+<!--                and version = #{version}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </delete>-->
+
+</mapper>

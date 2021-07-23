@@ -1,0 +1,56 @@
+package com.bonc.colldata.mapper;
+
+import com.bonc.colldata.entity.CollBusinessType;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+/**
+ * (CollBusinessType)表数据库访问层
+ *
+ * @author ljx
+ * @since 2021-07-13 16:29:17
+ */
+@Mapper
+public interface CollBusinessTypeDao {
+
+	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	CollBusinessType queryById(String id);
+
+	/**
+	 * 查询指定行数据
+	 *
+	 * @return 对象列表
+	 */
+	List<CollBusinessType> queryAll();
+
+
+	/**
+	 * 新增数据
+	 *
+	 * @param collBusinessType 实例对象
+	 * @return 影响行数
+	 */
+	int insert(CollBusinessType collBusinessType);
+
+	/**
+	 * 修改数据
+	 *
+	 * @param collBusinessType 实例对象
+	 * @return 影响行数
+	 */
+	int update(CollBusinessType collBusinessType);
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 影响行数
+	 */
+	int deleteById(String id);
+}
