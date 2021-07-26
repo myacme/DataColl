@@ -40,6 +40,14 @@ public interface CollReceiveTaskDao {
 	int report(@Param("version") String version);
 
 	/**
+	 * 根据版本号查询
+	 *
+	 * @param version
+	 * @return int
+	 */
+	CollReceiveTask getByVersion(@Param("version") String version);
+
+	/**
 	 * 通过ID查询单条数据
 	 *
 	 * @param id 主键

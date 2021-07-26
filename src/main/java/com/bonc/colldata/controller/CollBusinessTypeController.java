@@ -40,7 +40,6 @@ public class CollBusinessTypeController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("查询业务类型")
-
 	@RequestMapping(method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "业务类型id", required = true),
@@ -56,7 +55,6 @@ public class CollBusinessTypeController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("业务类型列表")
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Object query() {
 		List<CollBusinessType> list = collBusinessTypeService.queryAll();
@@ -70,7 +68,6 @@ public class CollBusinessTypeController {
 	 * @return 状态码
 	 */
 	@ApiOperation("增加业务类型")
-
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollBusinessType collBusinessType) {
 		collBusinessType.setBusinessCode(CommonUtil.getUUID32());
@@ -85,7 +82,6 @@ public class CollBusinessTypeController {
 	 * @return 状态码
 	 */
 	@ApiOperation("修改业务类型")
-
 	@RequestMapping(method = RequestMethod.PUT)
 	public Object update(@RequestBody CollBusinessType collBusinessType) {
 		int update = collBusinessTypeService.update(collBusinessType);

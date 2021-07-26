@@ -74,8 +74,8 @@ public interface CollBusinessTableConfigDao {
 	/**
 	 * 通过主键删除数据
 	 *
-	 * @param ids 主键
+	 * @param list 主键
 	 * @return 影响行数
 	 */
-	int deleteById(@Param("list") List<Map<String, Object>> ids);
+	int deleteById(@Param("list") List<Map<String, Object>> list);
 }

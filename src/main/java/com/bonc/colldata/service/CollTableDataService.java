@@ -46,6 +46,16 @@ public interface CollTableDataService {
 	 */
 	void downloadDataZip(HttpServletResponse response, String version, String isTemplet);
 
+
+	/**
+	 * 通过版本导出所有的表数据（纵表）
+	 *
+	 * @param response
+	 * @param version
+	 * @return
+	 */
+	void rportDataZip(HttpServletResponse response, String version);
+
 	/**
 	 * 查询上报版本号
 	 *
@@ -76,10 +86,11 @@ public interface CollTableDataService {
 	 *
 	 * @param tableCode 表清单id
 	 * @param version   版本
+	 * @param deptCode  分页
 	 * @param pageable  分页
 	 * @return 对象列表
 	 */
-	HashMap<String, Object> queryAllByLimit(String tableCode, String version, Pageable pageable);
+	HashMap<String, Object> queryAllByLimit(String tableCode, String version, String deptCode, Pageable pageable);
 
 	/**
 	 * 查询多条数据不分页
@@ -144,10 +155,8 @@ public interface CollTableDataService {
 	/**
 	 * 通过ID删除
 	 *
-	 * @param tableCode 表主键
-	 * @param dataCode  行数据主键
-	 * @param version   版本
+	 * @param list 表主键
 	 * @return 实例对象
 	 */
-	int delete(String tableCode, String dataCode, String version);
+	int delete(List<Map<String, Object>> list);
 }

@@ -29,10 +29,10 @@ public class CommonUtil {
 	}
 
 	/**
-	 * 生产版本编号
+	 *
 	 * @return
 	 */
-	public static String getNowDate() {
+	public static String getNowTime() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		// 日期时间转字符串
 		LocalDateTime now = LocalDateTime.now();

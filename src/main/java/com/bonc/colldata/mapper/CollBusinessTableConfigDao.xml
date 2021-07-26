@@ -138,7 +138,7 @@
     <!--通过主键删除-->
     <update id="deleteById">
         update main.coll_business_table_config set state = '0' where table_config_code in
-        <if test="dis != null">
+        <if test="list != null">
             <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
                 #{item.id}
             </foreach>

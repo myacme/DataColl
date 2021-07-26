@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +64,6 @@ public class CollBusinessTableController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("表清单列表")
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "typeCode", value = "业务类型id", required = true),
@@ -84,12 +82,11 @@ public class CollBusinessTableController {
 	 * @return 状态码
 	 */
 	@ApiOperation("增加表清单")
-
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollBusinessTableType collBusinessTableType) {
 		collBusinessTableType.setBusinessTypeTableCode(CommonUtil.getUUID32());
 		int result = collBusinessTableTypeService.insert(collBusinessTableType);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result>0?collBusinessTableType:null);
 	}
 
 	/**
@@ -99,7 +96,6 @@ public class CollBusinessTableController {
 	 * @return 状态码
 	 */
 	@ApiOperation("修改表清单")
-
 	@RequestMapping(method = RequestMethod.PUT)
 	public Object update(@RequestBody CollBusinessTableType collBusinessTableType) {
 		int result = collBusinessTableTypeService.update(collBusinessTableType);
@@ -113,7 +109,6 @@ public class CollBusinessTableController {
 	 * @return 状态码
 	 */
 	@ApiOperation("删除表清单")
-
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "表清单id", required = true),
@@ -149,7 +144,6 @@ public class CollBusinessTableController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("查询表清单配置项")
-
 	@RequestMapping(value = "/config", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "表清单配置项id", required = true),
@@ -166,7 +160,6 @@ public class CollBusinessTableController {
 	 * @return 列表
 	 */
 	@ApiOperation("增加表清单配置项")
-
 	@RequestMapping(value = "/config", method = RequestMethod.POST)
 	public Object createTableData(@RequestBody CollBusinessTableConfig collBusinessTableConfig) {
 		collBusinessTableConfig.setTableConfigCode(CommonUtil.getUUID32());
@@ -181,7 +174,6 @@ public class CollBusinessTableController {
 	 * @return 列表
 	 */
 	@ApiOperation("修改表清单配置项")
-
 	@RequestMapping(value = "/config", method = RequestMethod.PUT)
 	public Object updataTableData(@RequestBody CollBusinessTableConfig collBusinessTableConfig) {
 		int result = collBusinessTableConfigService.update(collBusinessTableConfig);
@@ -195,7 +187,6 @@ public class CollBusinessTableController {
 	 * @return 列表
 	 */
 	@ApiOperation("删除表清单配置项")
-
 	@RequestMapping(value = "/data", method = RequestMethod.DELETE)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "ids", value = "表清单配置项id列表", required = true),
@@ -210,7 +201,6 @@ public class CollBusinessTableController {
 	 *
 	 */
 	@ApiOperation("模板下载")
-
 	@RequestMapping(value = "templateDownload", method = RequestMethod.GET)
 	public void templateDownload(HttpServletResponse response) {
 		collBusinessTableConfigService.templateDownload(response);

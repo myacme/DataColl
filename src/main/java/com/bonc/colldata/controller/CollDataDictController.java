@@ -46,7 +46,6 @@ public class CollDataDictController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("查询字典")
-
 	@RequestMapping(method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
@@ -64,7 +63,6 @@ public class CollDataDictController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("字典列表")
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "name", value = "字典名称，搜索参数"),
@@ -82,7 +80,6 @@ public class CollDataDictController {
 	 * @return 状态码
 	 */
 	@ApiOperation("增加字典")
-
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollDataDictType collDataDictType) {
 		collDataDictType.setDictCode(CommonUtil.getUUID32());
@@ -98,7 +95,6 @@ public class CollDataDictController {
 	 * @return 状态码
 	 */
 	@ApiOperation("修改字典")
-
 	@RequestMapping(method = RequestMethod.PUT)
 	public Object update(@RequestBody CollDataDictType collDataDictType) {
 		int result = collDataDictTypeService.update(collDataDictType);
@@ -112,7 +108,6 @@ public class CollDataDictController {
 	 * @return 状态码
 	 */
 	@ApiOperation("删除字典")
-
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
@@ -131,7 +126,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("字典配置项列表")
-
 	@RequestMapping(value = "/data/list", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
@@ -148,7 +142,6 @@ public class CollDataDictController {
 	 * @return 单条数据
 	 */
 	@ApiOperation("查询字典配置项")
-
 	@RequestMapping(value = "/data", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典配置项id", required = true),
@@ -165,7 +158,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("增加字典配置项")
-
 	@RequestMapping(value = "/data", method = RequestMethod.POST)
 	public Object createDictData(@RequestBody CollDataDictValue collDataDictValue) {
 		collDataDictValue.setCodeId(CommonUtil.getUUID32());
@@ -181,7 +173,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("修改字典配置项")
-
 	@RequestMapping(value = "/data", method = RequestMethod.PUT)
 	public Object updataDictData(@RequestBody CollDataDictValue collDataDictValue) {
 		int result = collDataDictValueService.update(collDataDictValue);
@@ -195,7 +186,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("删除字典配置项")
-
 	@RequestMapping(value = "/data", method = RequestMethod.DELETE)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "ids", value = "字典配置项id列表", required = true),
@@ -212,7 +202,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("启用字典配置项")
-
 	@RequestMapping(value = "/data/use", method = RequestMethod.POST)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "ids", value = "字典配置项id列表", required = true),
@@ -229,7 +218,6 @@ public class CollDataDictController {
 	 * @return 列表
 	 */
 	@ApiOperation("禁用字典配置项")
-
 	@RequestMapping(value = "/data/disuse", method = RequestMethod.POST)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "ids", value = "字典配置项id列表", required = true),
@@ -244,7 +232,6 @@ public class CollDataDictController {
 	 *
 	 */
 	@ApiOperation("模板下载")
-
 	@RequestMapping(value = "templateDownload", method = RequestMethod.GET)
 	public void templateDownload(HttpServletResponse response) {
 		collDataDictValueService.templateDownload(response);
@@ -259,7 +246,7 @@ public class CollDataDictController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
 	})
-	public Object batchImport(@RequestBody MultipartFile file, @RequestParam String id) {
+	public Object batchImport(@RequestBody MultipartFile file,@RequestParam String id) {
 		int result = collDataDictValueService.batchImport(file, id);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
 	}

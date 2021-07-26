@@ -47,7 +47,8 @@ public interface CollTableDataDao {
 	                                      @Param("tableCode") String tableCode,
 	                                      @Param("version") String version,
 	                                      @Param("dataCode") String dataCode,
-	                                      @Param("update") String update);
+	                                      @Param("update") String update,
+	                                      @Param("array") String[] array);
 
 
 	/**
@@ -57,6 +58,22 @@ public interface CollTableDataDao {
 	 * @return 对象列表
 	 */
 	List<CollTableData> queryAll(@Param("version") String verssion);
+
+	/**
+	 * 通过版本所有的数据
+	 *
+	 * @param rportVersion
+	 * @param historyVersion
+	 * @return 对象列表String rportVersion, String historyVersion
+	 */
+	List<CollTableData> queryAllOfTowVersion(@Param("rportVersion") String rportVersion,@Param("historyVersion") String historyVersion);
+	/**
+	 * 通过版本所有的数据
+	 *
+	 * @param verssion 实例对象
+	 * @return 对象列表
+	 */
+	List<Map<String,Object>> queryMap(@Param("version") String verssion);
 
 	/**
 	 * 新增数据
@@ -101,10 +118,8 @@ public interface CollTableDataDao {
 	/**
 	 * 通过ID删除
 	 *
-	 * @param tableCode 表主键
-	 * @param dataCode  行数据主键
-	 * @param version   版本
+	 * @param list 表主键
 	 * @return
 	 */
-	int delete(@Param("tableCode") String tableCode, @Param("dataCode") String dataCode, @Param("version") String version);
+	int delete(@Param("list") List<Map<String, Object>> list);
 }

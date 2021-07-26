@@ -12,9 +12,20 @@
         <result property="state" column="state" jdbcType="VARCHAR"/>
     </resultMap>
 
+<!--    <select id="getTableList" resultMap="BaseResultMap">-->
+<!--        SELECT * from  coll_business_table_type WHERE state = '1' and business_type_table_code  in-->
+<!--            ( SELECT table_business_code from coll_table_data WHERE version =#{version} GROUP BY table_business_code)-->
+<!--    </select>-->
     <select id="getTableList" resultMap="BaseResultMap">
-        SELECT * from  coll_business_table_type WHERE state = '1' and business_type_table_code  in
-            ( SELECT table_business_code from coll_table_data WHERE version =#{version} GROUP BY table_business_code)
+        SELECT
+            *
+        FROM
+            coll_business_table_type
+        WHERE
+            state = '1'
+          AND business_type_table_code IN (
+            SELECT send_task_table_code FROM coll_receive_task_table WHERE send_task_code IN (
+                SELECT send_task_code FROM coll_receive_task WHERE send_task_version = #{version} ) )
     </select>
 
     <!--查询单个-->

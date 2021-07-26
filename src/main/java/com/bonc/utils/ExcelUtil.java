@@ -79,31 +79,23 @@ public class ExcelUtil {
 		dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
 		dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
 		dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
-		dataStyle.setShrinkToFit(true);  //自动伸缩
+//		dataStyle.setShrinkToFit(true);  //自动伸缩
 		dataStyle.setDataFormat(dataFormat.getFormat("@"));
 		/*创建行Rows及单元格Cells*/
 		//第一行为标题
 		Row headRow = sheet.createRow(0);
-		//第二行为字段编码
-		Row codeRow = sheet.createRow(1);
-		codeRow.setZeroHeight(true);
 		if (data != null) {
-			for (int i = 2; i <= data.size() + 1; i++) {
+			for (int i = 1; i <= data.size(); i++) {
 				Row dataRow = sheet.createRow(i);
 				for (int i1 = 0; i1 < nameList.size(); i1++) {
 					sheet.setDefaultColumnStyle(i1, sheetStyle);
 					if (isFrist) {
 						Cell cell = headRow.createCell(i1);
-						cell.setCellValue(nameList.get(i1).getTableConfigName());
-						headStyle.setShrinkToFit(true);  //自动伸缩
+						cell.setCellValue(nameList.get(i1).getTableConfigName() + "(" + nameList.get(i1).getTableConfigCode() + ")");
 						cell.setCellStyle(headStyle);
-						Cell cell1 = codeRow.createCell(i1);
-						cell1.setCellValue(nameList.get(i1).getTableConfigCode());
-						headStyle.setShrinkToFit(false);
-						cell1.setCellStyle(headStyle);
 					}
 					Cell cell = dataRow.createCell(i1);
-					cell.setCellValue(data.get(i - 2).get(nameList.get(i1).getTableConfigCode()).toString());
+					cell.setCellValue(data.get(i - 1).get(nameList.get(i1).getTableConfigCode()).toString());
 					cell.setCellStyle(dataStyle);
 				}
 				isFrist = false;
@@ -112,32 +104,10 @@ public class ExcelUtil {
 			for (int i1 = 0; i1 < nameList.size(); i1++) {
 				sheet.setDefaultColumnStyle(i1, sheetStyle);
 				Cell cell = headRow.createCell(i1);
-				cell.setCellValue(nameList.get(i1).getTableConfigName());
-				headStyle.setShrinkToFit(true);
+				cell.setCellValue(nameList.get(i1).getTableConfigName() + "(" + nameList.get(i1).getTableConfigCode() + ")");
 				cell.setCellStyle(headStyle);
-				Cell cell1 = codeRow.createCell(i1);
-				cell1.setCellValue(nameList.get(i1).getTableConfigCode());
-				headStyle.setShrinkToFit(false);
-				cell1.setCellStyle(headStyle);
 			}
 		}
-//		//修改标题行格式
-//		for (int i = 0; i < headRow.getLastCellNum(); i++) {
-//			Cell cell = headRow.getCell(i);
-//			cell.setCellStyle(headStyle);
-//		}
-//		//修改数据单元格格式
-//		int count = headRow.getLastCellNum();
-//		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-//			Row row = sheet.getRow(i);
-//			for (int j = 1; j < count; j++) {
-//				Cell cell = row.getCell(j);
-//				if (cell == null) {
-//					cell = row.createCell(j);
-//				}
-//				cell.setCellStyle(dataStyle);
-//			}
-//		}
 		/*设置列自动对齐*/
 		for (int i = 0; i < headRow.getLastCellNum(); i++) {
 			sheet.autoSizeColumn(i);
@@ -184,7 +154,7 @@ public class ExcelUtil {
 		headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
 		headStyle.setBorderTop(BorderStyle.THICK);
 		headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		headStyle.setAlignment(HorizontalAlignment.CENTER);    //设置水平对齐方式
+		headStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
 		headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
 //		headStyle.setShrinkToFit(true);  //自动伸缩
 		headStyle.setFont(headFont);  //设置字体
@@ -201,32 +171,23 @@ public class ExcelUtil {
 		dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
 		dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
 		dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
-//		dataStyle.setShrinkToFit(true);  //自动伸缩
 		dataStyle.setDataFormat(dataFormat.getFormat("@"));
 		/*创建行Rows及单元格Cells*/
 		//第一行为标题
 		Row headRow = sheet.createRow(0);
-		//第二行为字段编码
-		Row codeRow = sheet.createRow(1);
-		codeRow.setZeroHeight(true);
 		if (data != null) {
-			for (int i = 2; i <= data.size() + 1; i++) {
+			for (int i = 1; i <= data.size(); i++) {
 				Row dataRow = sheet.createRow(i);
 				int i1 = 0;
 				for (String key : nameMap.keySet()) {
 					sheet.setDefaultColumnStyle(i1, sheetStyle);
 					if (isFrist) {
 						Cell cell = headRow.createCell(i1);
-						cell.setCellValue(key);
-						headStyle.setShrinkToFit(true);  //自动伸缩
+						cell.setCellValue(key + "(" + nameMap.get(key) + ")");
 						cell.setCellStyle(headStyle);
-						Cell cell1 = codeRow.createCell(i1);
-						cell1.setCellValue(nameMap.get(key));
-						headStyle.setShrinkToFit(false);
-						cell1.setCellStyle(headStyle);
 					}
 					Cell cell = dataRow.createCell(i1);
-					cell.setCellValue(data.get(i - 2).get(key).toString());
+					cell.setCellValue(data.get(i - 1).get(key).toString());
 					cell.setCellStyle(dataStyle);
 					i1++;
 				}
@@ -237,13 +198,86 @@ public class ExcelUtil {
 			for (String key : nameMap.keySet()) {
 				sheet.setDefaultColumnStyle(i1, sheetStyle);
 				Cell cell = headRow.createCell(i1);
-				cell.setCellValue(key);
-				headStyle.setShrinkToFit(true);
+				cell.setCellValue(key + "(" + nameMap.get(key) + ")");
 				cell.setCellStyle(headStyle);
-				Cell cell1 = codeRow.createCell(i1);
-				cell1.setCellValue(nameMap.get(key));
-				headStyle.setShrinkToFit(false);
-				cell1.setCellStyle(headStyle);
+				i1++;
+			}
+		}
+		/*设置列自动对齐*/
+		for (int i = 0; i < headRow.getLastCellNum(); i++) {
+			sheet.autoSizeColumn(i);
+		}
+		return wb;
+	}
+
+	/**
+	 * 通用生成excle
+	 *
+	 * @param data 需要处理的数据，其中Map可以是不同格式的Map
+	 */
+	public static Workbook generateXSLX(List<Map<String, Object>> data) {
+		Workbook wb = new XSSFWorkbook();
+		boolean isFrist = true;
+
+		/*创建表单*/
+		Sheet sheet = wb.createSheet("导出数据");
+		//设置字体
+		Font headFont = wb.createFont();
+		headFont.setFontHeightInPoints((short) 14);
+		headFont.setFontName("Courier New");
+		headFont.setItalic(false);
+		headFont.setStrikeout(false);
+		//设置单元格为文本
+		CellStyle sheetStyle = wb.createCellStyle();
+		XSSFDataFormat dataFormat = (XSSFDataFormat) wb.createDataFormat();
+		sheetStyle.setDataFormat(dataFormat.getFormat("@"));
+		//设置头部单元格样式
+		CellStyle headStyle = wb.createCellStyle();
+		headStyle.setBorderBottom(BorderStyle.THICK);  //设置单元格线条
+		//设置填充方案
+		headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		//设置自定义填充颜色
+		headStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+		headStyle.setBorderLeft(BorderStyle.THICK);
+		headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setBorderRight(BorderStyle.THICK);
+		headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setBorderTop(BorderStyle.THICK);
+		headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
+		headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+//		headStyle.setShrinkToFit(true);  //自动伸缩
+		headStyle.setFont(headFont);  //设置字体
+		headStyle.setDataFormat(dataFormat.getFormat("@"));
+		/*设置数据单元格格式*/
+		CellStyle dataStyle = wb.createCellStyle();
+		dataStyle.setBorderBottom(BorderStyle.THIN);  //设置单元格线条
+		dataStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());   //设置单元格颜色
+		dataStyle.setBorderLeft(BorderStyle.THIN);
+		dataStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setBorderRight(BorderStyle.THIN);
+		dataStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setBorderTop(BorderStyle.THIN);
+		dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
+		dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+		dataStyle.setDataFormat(dataFormat.getFormat("@"));
+		/*创建行Rows及单元格Cells*/
+		//第一行为标题
+		Row headRow = sheet.createRow(0);
+		for (int i = 1; i <= data.size(); i++) {
+			Row dataRow = sheet.createRow(i);
+			int i1 = 0;
+			for (String key : data.get(i - 1).keySet()) {
+				sheet.setDefaultColumnStyle(i1, sheetStyle);
+				if (isFrist) {
+					Cell cell = headRow.createCell(i1);
+					cell.setCellValue(key);
+					cell.setCellStyle(headStyle);
+				}
+				Cell cell = dataRow.createCell(i1);
+				cell.setCellValue(data.get(i - 1).get(key).toString());
+				cell.setCellStyle(dataStyle);
 				i1++;
 			}
 		}
@@ -261,7 +295,7 @@ public class ExcelUtil {
 	 */
 	public static Workbook createXSLXTemplate(List<Map<String, Object>> list) {
 		Workbook wb = new XSSFWorkbook();
-		int index=0;
+		int index = 0;
 		for (Map<String, Object> map : list) {
 			String name = map.get("name").toString();
 			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
@@ -269,7 +303,7 @@ public class ExcelUtil {
 			boolean isFrist = true;
 			/*创建表单*/
 			Sheet sheet = wb.createSheet();
-			wb.setSheetName(index,name);
+			wb.setSheetName(index, name);
 			index++;
 			//设置字体
 			Font headFont = wb.createFont();
@@ -317,7 +351,7 @@ public class ExcelUtil {
 			//第一行为标题
 			Row headRow = sheet.createRow(0);
 			if (data != null) {
-				for (int i = 1; i <= data.size() ; i++) {
+				for (int i = 1; i <= data.size(); i++) {
 					Row dataRow = sheet.createRow(i);
 					int i1 = 0;
 					for (String key : nameMap.keySet()) {
@@ -352,9 +386,7 @@ public class ExcelUtil {
 			for (int i = 0; i < headRow.getLastCellNum(); i++) {
 				sheet.autoSizeColumn(i);
 			}
-
 		}
-
 		return wb;
 	}
 
@@ -382,30 +414,45 @@ public class ExcelUtil {
 	}
 
 
-	public List<Map<String, String>> parseExcel(XSSFWorkbook workbook) {
-		XSSFSheet xssfSheet = workbook.getSheetAt(0);
+	public static List<Map<String, String>> parseExcel(File excle) {
 		List<Map<String, String>> list = new ArrayList<>();
-		XSSFRow titleRow = xssfSheet.getRow(0);
-		//循环取每行的数据
-		for (int rowIndex = 2; rowIndex < xssfSheet.getPhysicalNumberOfRows(); rowIndex++) {
-			XSSFRow xssfRow = xssfSheet.getRow(rowIndex);
-			if (xssfRow == null) {
-				continue;
+		try {
+			//.是特殊字符，需要转义！！！！！
+			String[] split = excle.getName().split("\\.");
+			XSSFWorkbook wb;
+			InputStream inputStream = new FileInputStream(excle);
+			//根据文件后缀（xls/xlsx）进行判断
+			if ("xlsx".equals(split[1])) {
+				wb = new XSSFWorkbook(inputStream);
+			} else {
+				System.out.println("文件类型错误!");
+				return null;
 			}
-			Map<String, String> map = new LinkedHashMap<>();
-			//循环取每个单元格(cell)的数据
-			for (int cellIndex = 0; cellIndex < xssfRow.getPhysicalNumberOfCells(); cellIndex++) {
-				XSSFCell titleCell = titleRow.getCell(cellIndex);
-				XSSFCell xssfCell = xssfRow.getCell(cellIndex);
-				map.put(titleCell.getStringCellValue(), getValue(xssfCell));
+			XSSFSheet xssfSheet = wb.getSheetAt(0);
+			XSSFRow titleRow = xssfSheet.getRow(0);
+			//循环取每行的数据
+			for (int rowIndex = 1; rowIndex < xssfSheet.getPhysicalNumberOfRows(); rowIndex++) {
+				XSSFRow xssfRow = xssfSheet.getRow(rowIndex);
+				if (xssfRow == null) {
+					continue;
+				}
+				Map<String, String> map = new LinkedHashMap<>();
+				//循环取每个单元格(cell)的数据
+				for (int cellIndex = 0; cellIndex < xssfRow.getPhysicalNumberOfCells(); cellIndex++) {
+					XSSFCell titleCell = titleRow.getCell(cellIndex);
+					XSSFCell xssfCell = xssfRow.getCell(cellIndex);
+					map.put(titleCell.getStringCellValue(), getValue(xssfCell));
+				}
+				list.add(map);
 			}
-			list.add(map);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return list;
 	}
 
 
-	private String getValue(XSSFCell cell) {
+	private static String getValue(XSSFCell cell) {
 		if (cell == null) {
 			return null;
 		}
@@ -429,7 +476,6 @@ public class ExcelUtil {
 	public static List<List<CollTableData>> readExcle(File excle) {
 		List<List<CollTableData>> tableDate = new ArrayList<>();
 		try {
-			System.out.println(excle.exists() + "--" + excle.isDirectory());
 			//.是特殊字符，需要转义！！！！！
 			String[] split = excle.getName().split("\\.");
 			Workbook wb;
@@ -448,14 +494,14 @@ public class ExcelUtil {
 				Sheet sheet = wb.getSheetAt(sIndex);
 				String tableName = null;
 				try {
-					tableName = sheet.getSheetName().substring(sheet.getSheetName().indexOf("("), sheet.getSheetName().indexOf(")"));
+					tableName = getName(sheet.getSheetName());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				//获取字段名
-				Row title = sheet.getRow(1);
-				//跳过上面2行提示数据
-				for (int rIndex = sheet.getFirstRowNum() + 2; rIndex <= sheet.getLastRowNum(); rIndex++) {
+				Row title = sheet.getRow(0);
+				//跳过上面1行提示数据
+				for (int rIndex = sheet.getFirstRowNum() + 1; rIndex <= sheet.getLastRowNum(); rIndex++) {
 					Row row = sheet.getRow(rIndex);
 					StringBuilder cellString = new StringBuilder();
 					if (row != null) {
@@ -477,12 +523,12 @@ public class ExcelUtil {
 									//格式化数字类型数据
 									if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 										double cellValue = cell.getNumericCellValue();
-										bean.setTableConfigCode(titleCell.getStringCellValue());
+										bean.setTableConfigCode(getName(titleCell.getStringCellValue()));
 										bean.setDataValue(String.valueOf(cellValue));
 										bean.setTableBusinessCode(tableName);
 										continue;
 									}
-									bean.setTableConfigCode(titleCell.getStringCellValue());
+									bean.setTableConfigCode(getName(titleCell.getStringCellValue()));
 									bean.setDataValue(cell.getStringCellValue());
 									bean.setTableBusinessCode(tableName);
 								}
@@ -525,7 +571,7 @@ public class ExcelUtil {
 			//获取所有的Sheet
 			for (int sIndex = 0; sIndex < wb.getNumberOfSheets(); sIndex++) {
 				Sheet sheet = wb.getSheetAt(sIndex);
-				  String  tableName= sheet.getSheetName();	//获取字段名
+				String tableName = sheet.getSheetName();    //获取字段名
 				Row title = sheet.getRow(0);
 				//跳过上面2行提示数据
 				for (int rIndex = sheet.getFirstRowNum() + 1; rIndex <= sheet.getLastRowNum(); rIndex++) {
@@ -545,15 +591,17 @@ public class ExcelUtil {
 							for (int cIndex = row.getFirstCellNum(); cIndex < row.getLastCellNum(); cIndex++) {
 								Cell titleCell = title.getCell(cIndex);
 								Cell cell = row.getCell(cIndex);
-								String key=getName(titleCell.getStringCellValue());
+								String key = getName(titleCell.getStringCellValue());
 								if (titleCell != null && cell != null) {
 									//格式化数字类型数据
 									if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 										double cellValue = cell.getNumericCellValue();
 										map.put(key, String.valueOf(cellValue));
+										map.put(getName(titleCell.getStringCellValue()), String.valueOf(cellValue));
 										continue;
 									}
 									map.put(key, cell.getStringCellValue());
+									map.put(getName(titleCell.getStringCellValue()), cell.getStringCellValue());
 								}
 							}
 							dataList.add(map);
@@ -567,6 +615,7 @@ public class ExcelUtil {
 		}
 		return dataList;
 	}
+
 	public static List<Map<String, String>> readExcleCommon(File excle) {
 		List<Map<String, String>> dataList = new ArrayList<>();
 		try {
@@ -585,15 +634,15 @@ public class ExcelUtil {
 			}
 			//获取所有的Sheet
 			for (int sIndex = 0; sIndex < wb.getNumberOfSheets(); sIndex++) {
-				Map<String,String> map=new HashMap<>();
+				Map<String, String> map = new HashMap<>();
 				Sheet sheet = wb.getSheetAt(sIndex);
 				//获取表明
-				String  tableName= sheet.getSheetName();
-                if(!"coll_personnel_maintain".toLowerCase().equals(tableName.toLowerCase())){
-                   //如果为人人员基础信息表，那么则将表导入派发任务
-	                map.put("sendTaskTableCode",tableName);
-	                dataList.add(map);
-                }
+				String tableName = sheet.getSheetName();
+				if (!"coll_personnel_maintain".toLowerCase().equals(tableName.toLowerCase())) {
+					//如果为人人员基础信息表，那么则将表导入派发任务
+					map.put("sendTaskTableCode", tableName);
+					dataList.add(map);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -601,13 +650,13 @@ public class ExcelUtil {
 		}
 		return dataList;
 	}
-	public static String getName(String str){
-		String result=null;
+
+	public static String getName(String str) {
+		String result = null;
 		Matcher mat = Pattern.compile("(?<=\\()(\\S+)(?=\\))").matcher(str);
-		while (mat.find()){
-			result=mat.group();
+		while (mat.find()) {
+			result = mat.group();
 		}
 		return result;
 	}
-
 }

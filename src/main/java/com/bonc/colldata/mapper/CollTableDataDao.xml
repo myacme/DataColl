@@ -15,7 +15,7 @@
         <result property="tableConfigName" column="table_config_name" jdbcType="VARCHAR"/>
         <result property="state" column="state" jdbcType="VARCHAR"/>
         <result property="thisUpdate" column="this_update" jdbcType="VARCHAR"/>
-        <result property="thisUpdate" column="lower_update" jdbcType="VARCHAR"/>
+        <result property="lowerUpdate" column="lower_update" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
@@ -40,12 +40,9 @@
     </select>
 
     <select id="getDataList" resultType="java.util.Map">
-        select data_code,business_type_code,version,department_code, max(${update}) '${update}'
-        <if test="list != null">
-            ,
-        </if>
-        <foreach collection="list" index="index" item="item" separator=",">
-            max(case table_config_code when #{item.tableConfigCode} then data_value end ) '${item.tableConfigCode}'
+        select data_code,business_type_code,table_business_code,version,department_code, max(${update}) '${update}'
+        <foreach collection="list" index="index" item="item">
+            ,max(case table_config_code when #{item.tableConfigCode} then data_value end ) '${item.tableConfigCode}'
         </foreach>
         from coll_table_data
         <where>
@@ -58,13 +55,61 @@
             <if test="version != null and version!=''">
                 and version = #{version}
             </if>
+            <if test="array != null">
+                and department_code in
+                <foreach collection="array" index="index" item="item" open="(" close=")"
+                         separator=",">
+                    #{item}
+                </foreach>
+            </if>
             and state = '1'
         </where>
-        GROUP BY data_code,business_type_code,version,department_code
+        GROUP BY data_code,business_type_code,table_business_code,version,department_code
     </select>
 
-    <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
+        select
+          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
+        from main.coll_table_data
+        <where>
+            <if test="version != null and version != ''">
+                and version = #{version}
+            </if>
+            and state = '1'
+        </where>
+    </select>
+
+    <select id="queryAllOfTowVersion" resultMap="BaseResultMap">
+        select
+          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version
+        from main.coll_table_data
+        where
+            table_business_code in(
+                SELECT
+                    business_type_table_code
+                FROM
+                    coll_business_table_type
+                WHERE
+                    state = '1'
+                    AND business_type_table_code IN (
+                        SELECT send_task_table_code FROM coll_receive_task_table WHERE send_task_code IN (
+                            SELECT send_task_code FROM coll_receive_task WHERE send_task_version = #{rportVersion} ) )
+                intersect
+                SELECT
+                    business_type_table_code
+                FROM
+                    coll_business_table_type
+                WHERE
+                    state = '1'
+                    AND business_type_table_code IN (
+                        SELECT send_task_table_code FROM coll_receive_task_table WHERE send_task_code IN (
+                            SELECT send_task_code FROM coll_receive_task WHERE send_task_version = #{historyVersion} ) )
+            )
+            and version = #{historyVersion}
+            and state = '1'
+    </select>
+
+    <select id="queryMap" resultType="map">
         select
           data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
         from main.coll_table_data
@@ -98,70 +143,29 @@
     <update id="update">
         update main.coll_table_data
         <set>
-            this_update = '1',
-            <if test="dataCode != null and dataCode != ''">
-                data_code = #{dataCode},
-            </if>
-            <if test="businessTypeCode != null and businessTypeCode != ''">
-                business_type_code = #{businessTypeCode},
-            </if>
-            <if test="tableBusinessCode != null and tableBusinessCode != ''">
-                table_business_code = #{tableBusinessCode},
-            </if>
-            <if test="tableConfigCode != null and tableConfigCode != ''">
-                table_config_code = #{tableConfigCode},
-            </if>
-            <if test="departmentCode != null and departmentCode != ''">
-                department_code = #{departmentCode},
-            </if>
             <if test="dataValue != null and dataValue != ''">
+                this_update = '1',
                 data_value = #{dataValue},
-            </if>
-            <if test="createTime != null and createTime != ''">
-                create_time = #{createTime},
-            </if>
-            <if test="version != null and version != ''">
-                version = #{version},
             </if>
         </set>
         where data_code = #{dataCode}
+        and  table_config_code = #{tableConfigCode}
     </update>
     <!--批量修改数据-->
-    <update id="updateList">
+    <update id="updateList" parameterType="list">
         <if test="list != null">
-            <foreach collection="list" index="index" item="item" separator=",">
+            <foreach collection="list" index="index" item="item" separator=";">
                 update main.coll_table_data
                 <set>
-                    this_update = '1',
-                    <if test="item.dataCode != null and item.dataCode != ''">
-                        data_code = #{item.dataCode},
-                    </if>
-                    <if test="item.businessTypeCode != null and item.businessTypeCode != ''">
-                        business_type_code = #{item.businessTypeCode},
-                    </if>
-                    <if test="item.tableBusinessCode != null and item.tableBusinessCode != ''">
-                        table_business_code = #{item.tableBusinessCode},
-                    </if>
-                    <if test="item.tableConfigCode != null and item.tableConfigCode != ''">
-                        table_config_code = #{item.tableConfigCode},
-                    </if>
-                    <if test="item.departmentCode != null and item.departmentCode != ''">
-                        department_code = #{item.departmentCode},
-                    </if>
-                    <if test="item.dataValue != null and item.dataValue != ''">
-                        data_value = #{item.dataValue},
-                    </if>
-                    <if test="item.createTime != null and item.createTime != ''">
-                        create_time = #{item.createTime},
-                    </if>
-                    <if test="item.version != null and item.version != ''">
-                        version = #{item.version},
+                    <if test="item.dataValue != null">
+                        this_update = '1',
+                        data_value = #{item.dataValue,jdbcType=VARCHAR},
                     </if>
                 </set>
                 where data_code = #{item.dataCode}
+                    and  table_config_code = #{item.tableConfigCode}
             </foreach>
         </if>
-
     </update>
 
     <!--通过主键删除-->
@@ -175,17 +179,13 @@
     <!--通过主键删除-->
     <update id="delete">
         update main.coll_table_data set state = '0'
-        <where>
-            <if test="dataCode != null and dataCode != ''">
-                and data_code = #{dataCode}
-            </if>
-            <if test="tableCode != null and tableCode!=''">
-                and table_business_code = #{tableCode}
-            </if>
-            <if test="version != null and version!=''">
-                and version = #{version}
-            </if>
-        </where>
+        where data_code in
+        <if test="list != null">
+            <foreach collection="list" index="index" item="item" open="(" close=")"
+                     separator=",">
+                #{item.id}
+            </foreach>
+        </if>
     </update>
 <!--    <delete id="delete">-->
 <!--        delete from main.coll_table_data-->

@@ -33,7 +33,6 @@ public class CollDealHistoryDataController {
 	private CollTableDataService collTableDataService;
 
 	@ApiOperation("导出数据")
-
 	@RequestMapping(value = "export", method = RequestMethod.GET)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "version", value = "版本", required = true),
@@ -45,7 +44,6 @@ public class CollDealHistoryDataController {
 
 
 	@ApiOperation("查询历史版本列表")
-
 	@RequestMapping(value = "version", method = RequestMethod.GET)
 	@ResponseBody
 	public Object queryVersion() {
@@ -54,7 +52,6 @@ public class CollDealHistoryDataController {
 	}
 
 	@ApiOperation("复制数据")
-
 	@RequestMapping(value = "copy", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({
