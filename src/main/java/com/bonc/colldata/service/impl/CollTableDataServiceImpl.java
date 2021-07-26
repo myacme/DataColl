@@ -9,10 +9,7 @@ import com.bonc.colldata.mapper.CollTableDataDao;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
-import com.bonc.utils.CommonUtil;
-import com.bonc.utils.ExcelUtil;
-import com.bonc.utils.FileUtil;
-import com.bonc.utils.ZipUtil;
+import com.bonc.utils.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -58,6 +55,8 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 
 	@Override
 	public int inputZip(MultipartFile file, String version, String rportType) {
+		//获取当前登录用户
+		UserManager user = SessionUtiil.getUserInfo();
 		int result = 0;
 		List<CollTableData> tableDataList = new ArrayList<>();
 		File[] files = ZipUtil.unzip(FileUtil.toFile(file), "123");
@@ -91,8 +90,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 								String id = CommonUtil.getUUID32();
 								list.forEach(bean -> {
 									bean.setDataCode(id);
-									bean.setBusinessTypeCode("");
-									bean.setDepartmentCode("");
+									bean.setDepartmentCode(user.getDeptId());
 									bean.setVersion(version);
 									bean.setThisUpdate("0");
 									bean.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
