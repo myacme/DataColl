@@ -57,14 +57,14 @@ public class CollSendTaskCoontroller {
 		String version=TimeUtil.getVersion();
 		return  new RestRecord(200,"版本号",version);
 	}
-    @RequestMapping(value = "/scan",method = RequestMethod.GET)
-    @ApiOperation("pdf预览")
-    @ApiImplicitParams({
-		    @ApiImplicitParam(name = "isOnline",value = "true为预览，false为下载",required = true),
-		    @ApiImplicitParam(name = "sendTaskCode",value = "下发任务编号",required = true),
-    })
-	public void scanPdf(HttpServletResponse response, boolean isOnLine, String sendTaskCode) throws IOException{
-	    collSendTaskService.scanPdf(response,isOnLine,sendTaskCode);
+	@RequestMapping(value = "/scan",method = RequestMethod.GET)
+	@ApiOperation("pdf预览")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "isOnline",value = "true为预览，false为下载",required = true),
+			@ApiImplicitParam(name = "sendTaskCode",value = "下发任务编号",required = true),
+	})
+	public void scanPdf( HttpServletResponse response, boolean isOnLine, String sendTaskCode) throws IOException{
+		collSendTaskService.scanPdf(response,isOnLine,sendTaskCode);
 	}
 	@RequestMapping(value = "/collType",method = RequestMethod.GET)
 	@ApiOperation("查询采集类型")
@@ -81,18 +81,25 @@ public class CollSendTaskCoontroller {
 	}
 	@RequestMapping(value = "/getExcelTemplate",method = RequestMethod.GET)
 	@ApiOperation("生成excl")
-	public  void getExcelTemplate(HttpServletResponse response, String sendTaskCode){
+	public  void getExcelTemplate(HttpServletResponse response,String sendTaskCode){
 
-		 collSendTaskService.getExcelTemplate(response,sendTaskCode,false);
+		collSendTaskService.getExcelTemplate(response,sendTaskCode,false,"send");
 	}
 	@RequestMapping(value = "/getTaskZip",method = RequestMethod.GET)
 	@ApiOperation("生成压缩包")
-	public void getSendTaskZip(HttpServletResponse response, String sendTaskCode){
-		collSendTaskService.getExcelTemplate(response,sendTaskCode,true);
+	public void getSendTaskZip(HttpServletResponse response,String sendTaskCode){
+		collSendTaskService.getExcelTemplate(response,sendTaskCode,true,"send");
 	}
 	@RequestMapping(value = "/getExport",method = RequestMethod.GET)
 	@ApiOperation("导出")
-	public void exportZip(HttpServletResponse response, @RequestParam List<String> sendTaskCode){
+	public void exportZip(HttpServletResponse response,@RequestParam List<String> sendTaskCode){
 		collSendTaskService.getZipMore(response,sendTaskCode);
+	}
+
+	@RequestMapping(value = "/downloadZip",method = RequestMethod.GET)
+	@ApiOperation("下载zip")
+	public Object downloadZip(String ids){
+		collSendTaskService.downloadZip(ids);
+		return new RestRecord(200,"成功","");
 	}
 }

@@ -48,7 +48,7 @@ public class SwaggerConfig {
     public Docket createRestApi() {
         List<Parameter> parameters = new ArrayList<>();
         parameters.add(new ParameterBuilder()
-                .name("token")
+                .name("authorization")
                 .description("认证token")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")

@@ -91,14 +91,19 @@
      </insert>
 	<!--查询列表-->
 	<select id="getPersonnelByList" resultType="com.bonc.colldata.entity.CollPersonnelMaintain" parameterType="java.util.Map">
-        SELECT *  FROM coll_personnel_maintain WHERE STATE='1'
-        <if test="name!=null and name !=''">
-	        AND name like '%'||#{name}||'%'
-        </if>
-		<if test="dept_id!=null and dept_id!=''">
-			AND dept_id=#{dept_id}
+		SELECT *  FROM coll_personnel_maintain WHERE STATE='1'
+		<if test="list!=null">
+			<foreach collection="list" index="index" item="item">
+				<if test="item.type==1">
+					AND ${item.code} like '%'||#{item.value}||'%'
+				</if>
+				<if test="item.type!=1">
+					AND ${item.code} =#{item.value}
+				</if>
+			</foreach>
 		</if>
-    </select>
+
+	</select>
 	<!--查询人员数据详情 byid-->
 	<select id="checkById" parameterType="String" resultType="com.bonc.colldata.entity.CollPersonnelMaintain">
           SELECT *  FROM coll_personnel_maintain WHERE STATE='1' and id=#{id}
@@ -138,8 +143,13 @@
 		</set>
 		where id=#{id}
 	</update>
-	<update id="deletePersonnelById" parameterType="String">
-		update coll_personnel_maintain set state='0' where id=#{id}
+	<update id="deletePersonnelById" parameterType="java.util.Map">
+		update coll_personnel_maintain set state='0' where
+		id IN
+		<foreach collection="list" open="(" close=")" item="i" separator="," index="index">
+			#{i}
+		</foreach>
+
 	</update>
 
 	<select id="getTableDesc" resultType="java.util.Map">

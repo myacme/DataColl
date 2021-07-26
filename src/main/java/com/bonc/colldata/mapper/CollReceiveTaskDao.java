@@ -53,7 +53,7 @@ public interface CollReceiveTaskDao {
 	 * @param id 主键
 	 * @return 实例对象
 	 */
-	CollReceiveTask queryById(String id);
+	CollReceiveTask queryById(@Param("id") String id);
 
 	/**
 	 * 查询指定行数据

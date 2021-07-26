@@ -2,10 +2,12 @@ package com.bonc.colldata.service.baseData;
 
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.QueryParam;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ import java.util.Map;
 @Service
 public class CollPersonnelServiceImpl implements CollPersonnelService {
 	@Resource
-    private CollPersonnelMapper collPersonnelMapper;
+	private CollPersonnelMapper collPersonnelMapper;
 
 	@Override
 	public List<CollBasicPersonnelConfig> getTableHead() {
@@ -36,7 +38,9 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public List<CollPersonnelMaintain> getPersonnelByList(Map<String, Object> map) {
+	public List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("list",list);
 		return collPersonnelMapper.getPersonnelByList(map);
 	}
 
@@ -46,8 +50,10 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public int deletePersonnelById(String id) {
-		return collPersonnelMapper.deletePersonnelById(id);
+	public int deletePersonnelById(List<String> id) {
+		Map<String,Object> map=new HashMap<>();
+		map.put("list",id);
+		return collPersonnelMapper.deletePersonnelById(map);
 	}
 
 	@Override

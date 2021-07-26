@@ -3,6 +3,7 @@ package com.bonc.colldata.controller;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollReceiveTask;
 import com.bonc.colldata.service.CollReceiveTaskService;
+import com.bonc.colldata.service.impl.CollSendTaskServiceImpl;
 import com.bonc.utils.CommonUtil;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.time.Instant;
 import java.util.Map;
 
@@ -39,7 +41,8 @@ public class CollReceiveTaskController {
 	 */
 	@Resource
 	private CollReceiveTaskService collReceiveTaskService;
-
+	@Resource
+	private CollSendTaskServiceImpl collSendTaskService;
 	/**
 	 * 接收任务，解压压缩包
 	 *
@@ -77,6 +80,11 @@ public class CollReceiveTaskController {
 	@RequestMapping(value = "/viewNotification", method = RequestMethod.GET)
 	public ResponseEntity<Object> queryOne(@RequestParam String id) {
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	@ApiOperation("下载模板")
+	@RequestMapping(value = "/getTemplate", method = RequestMethod.GET)
+	public void getTemplate(HttpServletResponse response, String sendTaskCode) {
+		collSendTaskService.getExcelTemplate(response,sendTaskCode,false,"receive");
 	}
 
 

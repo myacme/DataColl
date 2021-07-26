@@ -20,7 +20,13 @@ public interface CollSendTaskDao {
 	 * todo:获取下发任务列表
 	 * @return
 	 */
-	List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum);
+	List<CollReceiveTask> getSendTaskList(int pageSize,int pageNum);
+
+	/***
+	 * todo:获取下发任务列表
+	 * @return
+	 */
+	CollReceiveTask getSendTask(@Param("id") String id);
 
 	/***
 	 * todo:数据插入下发任务表
@@ -35,6 +41,13 @@ public interface CollSendTaskDao {
 	 * @return
 	 */
 	int addSendTaskTable(CollReceiveTask collReceiveTask);
+
+	/***
+	 * todo:查询下发任务关联表
+	 * @param id
+	 * @return
+	 */
+	List<Map<String,Object>> getSendTaskTable(@Param("id") String id);
 
 	/***
 	 * todo:下发采集类型

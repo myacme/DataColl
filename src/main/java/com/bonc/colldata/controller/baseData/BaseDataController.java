@@ -1,9 +1,7 @@
 package com.bonc.colldata.controller.baseData;
 
 import com.bonc.base.RestRecord;
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollDepartment;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.*;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
@@ -14,10 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -66,11 +61,11 @@ public class BaseDataController {
 		map.put("instiutions_phone", instiutions_phone);
 		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
 		List<String> idList = collDepartmentService.getAllNode(list);
-        PageHelper.startPage(pageNum,pageSize);
-        idList.add(pCode);
-        map.put("list",idList);
+		PageHelper.startPage(pageNum,pageSize);
+		idList.add(pCode);
+		map.put("list",idList);
 		List<CollDepartment> result = collDepartmentService.checkCollDepartmentList(map);
-	    PageInfo pageInfo=new PageInfo(result);
+		PageInfo pageInfo=new PageInfo(result);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
 
@@ -148,19 +143,28 @@ public class BaseDataController {
 
 	@ApiOperation("删除人员数据详情")
 	@RequestMapping(value = "/personnel/delete", method = RequestMethod.GET)
-	public Object deletePersonnel(String id) {
+	public Object deletePersonnel(@RequestParam(value = "id") List<String> id) {
+		for(String s:id){
+			System.out.println(s);
+		}
 		//获取数据id
 		collPersonnelService.deletePersonnelById(id);
 		return new RestRecord(200, "查询成功", id);
 	}
 
 	@ApiOperation("人员数据列表")
-	@RequestMapping(value = "/personnel/list", method = RequestMethod.GET)
-	public Object listPersonnel(int pageSize,int pageNum) {
-		PageHelper.startPage(pageNum,pageSize);
+	@RequestMapping(value = "/personnel/list", method = RequestMethod.POST)
+
+	public Object listPersonnel(@RequestBody QueryList queryList) {
+		for(QueryParam queryParam:queryList.getList()){
+			System.out.println(queryParam.getCode());
+		}
+
+		PageHelper.startPage(queryList.getPageNum(),queryList.getPageSize());
 		//获取数据id
-		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByList(null);
+		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByList(queryList.getList());
 		PageInfo pageInfo=new PageInfo(list);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
 }
+

@@ -63,7 +63,7 @@ public interface CollPersonnelMapper {
 	 * @param id
 	 * @return
 	 */
-	int deletePersonnelById(@Param("id") String id);
+	int deletePersonnelById(Map<String,Object> map);
 
 	/***
 	 * todo:获取表字段描述

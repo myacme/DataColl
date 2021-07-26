@@ -2,6 +2,7 @@ package com.bonc.colldata.service.baseData;
 
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.QueryParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -26,13 +27,13 @@ public interface CollPersonnelService {
 	CollPersonnelMaintain checkById(@Param("id") String id);
 
 
-	List<CollPersonnelMaintain> getPersonnelByList(Map<String, Object> map);
+	List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list);
 
 
 	int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain);
 
 
-	int deletePersonnelById(@Param("id") String id);
+	int deletePersonnelById(List<String> id);
 
 	List<Map<String,Object>> getTableDesc();
 }

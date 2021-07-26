@@ -3,6 +3,7 @@ package com.bonc.colldata.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.CollSendTaskDao;
+import com.bonc.colldata.service.CollReceiveTaskService;
 import com.bonc.colldata.service.CollSendTaskService;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
@@ -36,6 +37,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	private CollTableDataService collTableDataService;
 	@Resource
 	private CollPersonnelService collPersonnelService;
+	@Resource
+	private CollReceiveTaskService collReceiveTaskService;
 
 	@Override
 	public List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum) {
@@ -127,9 +130,15 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * @param sendTaskCode
 	 * @param ifZip
 	 */
-	public void getExcelTemplate(HttpServletResponse response, String sendTaskCode, boolean ifZip) {
+	public void getExcelTemplate(HttpServletResponse response, String sendTaskCode, boolean ifZip, String type) {
 		//根据派发任务编号 获取派发任务详情
-		CollReceiveTask collReceiveTask = this.getSendTaskById(sendTaskCode);
+		CollReceiveTask collReceiveTask = null;
+		if ("send".toLowerCase().equals(type.toLowerCase())) {
+			collReceiveTask = this.getSendTaskById(sendTaskCode);
+		} else if ("receive".toLowerCase().equals(type.toLowerCase())) {
+			collReceiveTask = collReceiveTaskService.queryById(sendTaskCode);
+		}
+
 		//业务数据类型  001是业务数据 002 时候业务+基础
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
@@ -144,12 +153,12 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		List<Map<String, Object>> list = new ArrayList<>();
 		list = this.getTaskTemplate(listTable);
-		if("cjlx002".equals(taskCollType)){
+		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplate(list);
 		//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
-		String fileName=deptId+"_"+taskName+"_"+taskCollType+"_"+vsersion;
+		String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		if (!ifZip) {
 			try (OutputStream outputStream = response.getOutputStream();) {
 				response.setContentType("application/octet-stream;charset=UTF-8");
@@ -200,7 +209,14 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		//获取表字段字段信息
 		List<Map<String, Object>> listDesc = collPersonnelService.getTableDesc();
 		//获取数据
-		List<CollPersonnelMaintain> listData = collPersonnelService.getPersonnelByList(param);
+		List<QueryParam> listp = new ArrayList<>();
+		QueryParam queryParam = new QueryParam();
+		queryParam.setCode("dept_id");
+		queryParam.setType(1);
+		queryParam.setValue(deptId);
+		listp.add(queryParam);
+		List<CollPersonnelMaintain> listData = collPersonnelService.getPersonnelByList(listp);
+
 		for (Map<String, Object> m : listDesc) {
 
 			if (String.valueOf(m.get("name")).toLowerCase().equals("id")) {
@@ -216,8 +232,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 					if (collBasicPersonnelConfig.getPersonnelConfigValue().toLowerCase().equals(key.toLowerCase())) {
 						value = collBasicPersonnelConfig.getPersonnelConfigName() + "(" + key + ")";
 						break;
-					}else{
-						value= key+ "(" + key + ")";
+					} else {
+						value = key + "(" + key + ")";
 					}
 				}
 				nameMap.put(key, value);
@@ -251,7 +267,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			Map<String, Object> p = new HashMap<>();
 			p.put("nameMap", map);
 			p.put("data", null);
-			p.put("name", tableCode );
+			p.put("name", tableCode);
 			list.add(p);
 		}
 		return list;
@@ -280,7 +296,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 			List<Map<String, Object>> list = new ArrayList<>();
 			list = this.getTaskTemplate(listTable);
-			if("cjlx002".equals(taskCollType)){
+			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 			}
 
@@ -304,13 +320,29 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 				}
 			}
 			String fileName = taskName;
-			String path=ZipUtil.zipTodir(fileList, fileName, "123");
+			String path = ZipUtil.zipTodir(fileList, fileName, "123");
 			File f = new File(path);
 			filed.add(f);
 			fileList.forEach(file1 -> file1.delete());
 		}
 		ZipUtil.zipDownload(response, filed, "数据.zip", "12345");
-		filed.forEach(f->f.delete());
+		filed.forEach(f -> f.delete());
 	}
 
+
+	/**
+	 * 导出zip
+	 *
+	 * @param ids
+	 */
+	public void downloadZip(String ids) {
+		String[] idArr = ids.split(",");
+		for (String id : idArr) {
+			CollReceiveTask task = collSendTaskDao.getSendTask(id);
+			List<Map<String, Object>> tables = collSendTaskDao.getSendTaskTable(id);
+			tables.forEach(table -> {
+				collTableDataService.reportDataExcle(table.get("").toString(), task.getSendTaskVersion(), "0");
+			});
+		}
+	}
 }
