@@ -59,7 +59,7 @@ public class CollDealHistoryDataController {
 			@ApiImplicitParam(name = "historyVersion", value = "历史版本", required = true),
 	})
 	public Object copyDataToNewVersion(String rportVerion, String historyVersion) {
-		collTableDataService.copyDataToNewVersion(rportVerion,historyVersion);
-		return new RestRecord(200, "成功", null);
+		int result = collTableDataService.copyDataToNewVersion(rportVerion, historyVersion);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 }

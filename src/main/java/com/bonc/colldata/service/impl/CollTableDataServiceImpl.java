@@ -375,6 +375,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 				collTableData.setVersion(rportVersion);
 				collTableData.setCreateTime(CommonUtil.getNowTime());
 				collTableData.setDataCode(id);
+				collTableData.setThisUpdate("0");
 				newDataList.add(collTableData);
 			});
 		});
