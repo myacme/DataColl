@@ -3,6 +3,7 @@ package com.bonc.colldata.service;
 import com.bonc.colldata.entity.CollBusinessTableType;
 import com.bonc.colldata.entity.CollTableData;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -18,6 +19,14 @@ import java.util.Map;
  */
 public interface CollTableDataService {
 
+	/**
+	 * 导入zip
+	 * @param file
+	 * @param version
+	 * @param rportType
+	 * @return
+	 */
+	int inputZip(MultipartFile file, String version, String rportType);
 	/**
 	 * 通过版本查询所有的表
 	 *

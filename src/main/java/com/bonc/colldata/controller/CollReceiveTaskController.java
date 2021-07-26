@@ -3,14 +3,13 @@ package com.bonc.colldata.controller;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollReceiveTask;
 import com.bonc.colldata.service.CollReceiveTaskService;
-import com.bonc.utils.*;
+import com.bonc.utils.CommonUtil;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,7 +47,6 @@ public class CollReceiveTaskController {
 	 * @return ResponseEntity
 	 */
 	@ApiOperation("接收任务")
-
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@Validated @RequestParam MultipartFile multipartFile) {
 		//插入数据
@@ -63,7 +61,6 @@ public class CollReceiveTaskController {
 	 * @return ResponseEntity
 	 */
 	@ApiOperation("收到任务列表")
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Object query(Pageable pageable) {
 		PageInfo<Map<String, Object>> pageInfo = collReceiveTaskService.queryAllByLimit(pageable);
@@ -77,7 +74,6 @@ public class CollReceiveTaskController {
 	 * @return ResponseEntity
 	 */
 	@ApiOperation("查看通知")
-
 	@RequestMapping(value = "/viewNotification", method = RequestMethod.GET)
 	public ResponseEntity<Object> queryOne(@RequestParam String id) {
 		return new ResponseEntity<>(HttpStatus.OK);

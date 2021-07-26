@@ -34,7 +34,7 @@ public class ExcelUtil {
 		/*创建表单*/
 		Sheet sheet;
 		if (tableType != null) {
-			sheet = wb.createSheet(tableType.getBusinessTypeTableName() + "(" + tableType.getBusinessTypeTableCode() + ")");
+			sheet = wb.createSheet(tableType.getBusinessTypeTableCode());
 		} else {
 			sheet = wb.createSheet("导出数据");
 		}
@@ -183,11 +183,16 @@ public class ExcelUtil {
 					sheet.setDefaultColumnStyle(i1, sheetStyle);
 					if (isFrist) {
 						Cell cell = headRow.createCell(i1);
-						cell.setCellValue(key + "(" + nameMap.get(key) + ")");
+						cell.setCellValue(nameMap.get(key) + "(" + key + ")");
 						cell.setCellStyle(headStyle);
 					}
 					Cell cell = dataRow.createCell(i1);
-					cell.setCellValue(data.get(i - 1).get(key).toString());
+					Object o = data.get(i - 1).get(key);
+					if (o != null) {
+						cell.setCellValue(data.get(i - 1).get(key).toString());
+					} else {
+						cell.setCellValue("");
+					}
 					cell.setCellStyle(dataStyle);
 					i1++;
 				}
@@ -276,7 +281,12 @@ public class ExcelUtil {
 					cell.setCellStyle(headStyle);
 				}
 				Cell cell = dataRow.createCell(i1);
-				cell.setCellValue(data.get(i - 1).get(key).toString());
+				Object o = data.get(i - 1).get(key);
+				if (o != null) {
+					cell.setCellValue(data.get(i - 1).get(key).toString());
+				} else {
+					cell.setCellValue("");
+				}
 				cell.setCellStyle(dataStyle);
 				i1++;
 			}
@@ -495,6 +505,9 @@ public class ExcelUtil {
 				String tableName = null;
 				try {
 					tableName = getName(sheet.getSheetName());
+					if ("导出数据".equals(tableName)) {
+						tableName = null;
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -573,7 +586,7 @@ public class ExcelUtil {
 				Sheet sheet = wb.getSheetAt(sIndex);
 				String tableName = sheet.getSheetName();    //获取字段名
 				Row title = sheet.getRow(0);
-				//跳过上面2行提示数据
+				//跳过上面1行提示数据
 				for (int rIndex = sheet.getFirstRowNum() + 1; rIndex <= sheet.getLastRowNum(); rIndex++) {
 					Row row = sheet.getRow(rIndex);
 					StringBuilder cellString = new StringBuilder();
@@ -659,4 +672,38 @@ public class ExcelUtil {
 		}
 		return result;
 	}
+
+	/**
+	 * 处理数据纵表
+	 *
+	 * @param excle
+	 * @return
+	 */
+	public static String getSheetName(File excle) {
+		String tableName = null;
+		try {
+			//.是特殊字符，需要转义！！！！！
+			String[] split = excle.getName().split("\\.");
+			Workbook wb;
+			InputStream inputStream = new FileInputStream(excle);
+			//根据文件后缀（xls/xlsx）进行判断
+			if ("xls".equals(split[1])) {
+				wb = new HSSFWorkbook(inputStream);
+			} else if ("xlsx".equals(split[1])) {
+				wb = new XSSFWorkbook(inputStream);
+			} else {
+				System.out.println("文件类型错误!");
+				return null;
+			}
+			//获取所有的Sheet
+			for (int sIndex = 0; sIndex < wb.getNumberOfSheets(); sIndex++) {
+				Sheet sheet = wb.getSheetAt(sIndex);
+					tableName = sheet.getSheetName();
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return tableName;
+	}
+
 }

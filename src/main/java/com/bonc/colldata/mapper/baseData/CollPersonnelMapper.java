@@ -31,6 +31,13 @@ public interface CollPersonnelMapper {
 	int addPersonnelData(CollPersonnelMaintain collPersonnelMaintain);
 
 	/***
+	 * todo:批量新增人员数据
+	 * @param collPersonnelMaintain
+	 * @return
+	 */
+	int insertPersonnelData(@Param("list") List<CollPersonnelMaintain> collPersonnelMaintain);
+
+	/***
 	 * todo:查看某个人员详情
 	 * @param id
 	 * @return
@@ -42,7 +49,7 @@ public interface CollPersonnelMapper {
 	 * @param map
 	 * @return
 	 */
-	List<CollPersonnelMaintain> getPersonnelByList(Map<String, Object> map);
+	List<CollPersonnelMaintain> getPersonnelByList(Map<String,Object> map);
 
 	/***
 	 * todo:修改人员信息

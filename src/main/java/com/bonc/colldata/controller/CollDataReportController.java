@@ -1,15 +1,11 @@
 package com.bonc.colldata.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollBusinessTableType;
 import com.bonc.colldata.entity.CollTableData;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.utils.CommonUtil;
-import com.bonc.utils.ExcelUtil;
-import com.bonc.utils.FileUtil;
-import com.bonc.utils.ZipUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -21,13 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * (CollTableData)表控制层
@@ -54,47 +48,7 @@ public class CollDataReportController {
 			@ApiImplicitParam(name = "rportType", value = "数据类型（本级数据：0，下级数据：1）", required = true),
 	})
 	public Object inputZip(@RequestBody MultipartFile file, @RequestParam String version, @RequestParam String rportType) {
-		int result = 0;
-		List<CollTableData> tableDataList = new ArrayList<>();
-		File[] files = ZipUtil.unzip(FileUtil.toFile(file), "123");
-		if (files != null && files.length != 0) {
-			for (File excle : files) {
-				if ("1".equals(rportType)) {
-					List<Map<String, String>> maps = ExcelUtil.parseExcel(excle);
-					JSONArray jsonArray = new JSONArray();
-					jsonArray.addAll(maps);
-					Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
-					collect.forEach((k, list) -> {
-						String id = CommonUtil.getUUID32();
-						list.forEach(bean -> {
-							bean.setDataCode(id);
-							bean.setVersion(version);
-						});
-						tableDataList.addAll(list);
-					});
-				} else {
-					List<List<CollTableData>> lists = ExcelUtil.readExcle(excle);
-					if (lists != null) {
-						for (List<CollTableData> list : lists) {
-							String id = CommonUtil.getUUID32();
-							list.forEach(bean -> {
-								bean.setDataCode(id);
-								bean.setBusinessTypeCode("");
-								bean.setDepartmentCode("");
-								bean.setVersion(version);
-								bean.setThisUpdate("0");
-								bean.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
-							});
-							tableDataList.addAll(list);
-						}
-					}
-				}
-				excle.delete();
-			}
-		}
-		if (tableDataList.size() > 0) {
-			result = collTableDataService.insertList(tableDataList);
-		}
+		int result = collTableDataService.inputZip(file, version, rportType);
 		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 

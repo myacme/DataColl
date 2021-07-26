@@ -110,8 +110,8 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 	@Override
 	public void templateDownload(HttpServletResponse response) {
 		Map<String, String> map = new LinkedHashMap<>(4);
-		map.put("配置项名称", "code_name");
-		map.put("配置项值", "code_value");
+		map.put("code_name", "配置项名称");
+		map.put("code_value", "配置项值");
 		Workbook wb = ExcelUtil.generateXSLX(null, map, null);
 		try (OutputStream outputStream = response.getOutputStream()) {
 			response.setContentType("application/octet-stream");

@@ -101,14 +101,14 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
     @Override
     public void templateDownload(HttpServletResponse response){
         Map<String, String> map = new LinkedHashMap<>();
-        map.put("表字段名称", "table_config_name");
-        map.put("表字段代码", "table_config_name_code");
-        map.put("表字段类型", "table_config_type");
-        map.put("表字段长度", "table_config_size");
-        map.put("表字段精度", "table_config_precision");
-        map.put("表字段刻度", "table_config_calibration");
-        map.put("表字段是否可为空（0/1）", "table_config_ifnull");
-        map.put("注释", "remarks");
+        map.put("table_config_name", "表字段名称");
+        map.put("table_config_name_code", "表字段代码");
+        map.put("table_config_type", "表字段类型");
+        map.put("table_config_size", "表字段长度");
+        map.put("table_config_precision", "表字段精度");
+        map.put("table_config_calibration", "表字段刻度");
+        map.put("table_config_ifnull", "表字段是否可为空（0/1）");
+        map.put("remarks", "注释");
         Workbook wb = ExcelUtil.generateXSLX(null, map, null);
         try (OutputStream outputStream = response.getOutputStream();) {
             response.setContentType("application/octet-stream;charset=UTF-8");

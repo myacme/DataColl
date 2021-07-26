@@ -1,26 +1,31 @@
 package com.bonc.colldata.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollBusinessTableTypeDao;
 import com.bonc.colldata.mapper.CollReceiveTaskDao;
 import com.bonc.colldata.mapper.CollTableDataDao;
+import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
 import com.bonc.utils.CommonUtil;
 import com.bonc.utils.ExcelUtil;
+import com.bonc.utils.FileUtil;
 import com.bonc.utils.ZipUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +50,67 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	private CollReceiveTaskDao collReceiveTaskDao;
 	@Resource
 	private CollDepartmentServiceImpl collDepartmentService;
+	@Resource
+	private CollSendTaskServiceImpl collSendTaskService;
+	@Resource
+	private CollPersonnelMapper collPersonnelMapper;
+
+
+	@Override
+	public int inputZip(MultipartFile file, String version, String rportType) {
+		int result = 0;
+		List<CollTableData> tableDataList = new ArrayList<>();
+		File[] files = ZipUtil.unzip(FileUtil.toFile(file), "123");
+		if (files != null && files.length != 0) {
+			for (File excle : files) {
+				String sheetName = ExcelUtil.getSheetName(excle);
+				if ("coll_personnel_maintain".equals(sheetName)) {
+					List<Map<String, String>> listMap = ExcelUtil.readExcleOfCommon(excle);
+					JSONArray jsonArray = new JSONArray();
+					jsonArray.addAll(listMap);
+					List<CollPersonnelMaintain> list = jsonArray.toJavaList(CollPersonnelMaintain.class);
+					result = collPersonnelMapper.insertPersonnelData(list);
+				} else {
+					if ("1".equals(rportType)) {
+						List<Map<String, String>> maps = ExcelUtil.parseExcel(excle);
+						JSONArray jsonArray = new JSONArray();
+						jsonArray.addAll(maps);
+						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
+						collect.forEach((k, list) -> {
+							String id = CommonUtil.getUUID32();
+							list.forEach(bean -> {
+								bean.setDataCode(id);
+								bean.setVersion(version);
+							});
+							tableDataList.addAll(list);
+						});
+					} else {
+						List<List<CollTableData>> lists = ExcelUtil.readExcle(excle);
+						if (lists != null) {
+							for (List<CollTableData> list : lists) {
+								String id = CommonUtil.getUUID32();
+								list.forEach(bean -> {
+									bean.setDataCode(id);
+									bean.setBusinessTypeCode("");
+									bean.setDepartmentCode("");
+									bean.setVersion(version);
+									bean.setThisUpdate("0");
+									bean.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
+								});
+								tableDataList.addAll(list);
+							}
+						}
+					}
+				}
+				excle.delete();
+			}
+		}
+		if (tableDataList.size() > 0) {
+			result = insertList(tableDataList);
+		}
+		return result;
+	}
+
 
 	/**
 	 * 通过版本查询所有的表
@@ -115,7 +181,6 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		});
 		ZipUtil.zipDownload(response, fileList, "数据.zip", "123");
 		fileList.forEach(File::delete);
-//		collReceiveTaskDao.report(version);
 	}
 
 	/**
@@ -129,7 +194,34 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	public void rportDataZip(HttpServletResponse response, String version) {
 		CollReceiveTask task = collReceiveTaskDao.getByVersion(version);
 		String type = task.getSendTaskCollType();
+		ArrayList<File> fileList = new ArrayList<>();
 		if ("cjlx002".equals(type)) {
+			Map<String, Object> map = collSendTaskService.getBaseTemplate("", "", "");
+			String name = map.get("name").toString();
+			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
+			nameMap.forEach((k, v) -> {
+				nameMap.put(k, v.substring(0, v.indexOf("(")));
+			});
+			List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
+			Workbook wb = ExcelUtil.generateXSLX(data, nameMap, name);
+			FileOutputStream outputStream = null;
+			File file = null;
+			try {
+				file = new File(ZipUtil.getProjectPath(), "基础数据" + ".xlsx");
+				outputStream = new FileOutputStream(file);
+				wb.write(outputStream);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (outputStream != null) {
+					try {
+						outputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			fileList.add(file);
 		}
 		List<Map<String, Object>> dataList = collTableDataDao.queryMap(version);
 		Workbook wb = ExcelUtil.generateXSLX(dataList);
@@ -150,7 +242,6 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 				}
 			}
 		}
-		ArrayList<File> fileList = new ArrayList<>();
 		fileList.add(file);
 		ZipUtil.zipDownload(response, fileList, "数据.zip", "123");
 		fileList.forEach(File::delete);
@@ -277,7 +368,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	 */
 	@Override
 	public int copyDataToNewVersion(String rportVersion, String historyVersion) {
-		List<CollTableData> historyDataList = collTableDataDao.queryAllOfTowVersion(rportVersion,historyVersion);
+		List<CollTableData> historyDataList = collTableDataDao.queryAllOfTowVersion(rportVersion, historyVersion);
 		List<CollTableData> newDataList = new ArrayList<>();
 		Map<String, List<CollTableData>> collect = historyDataList.stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
 		collect.forEach((k, list) -> {
