@@ -156,10 +156,6 @@ public class BaseDataController {
 	@RequestMapping(value = "/personnel/list", method = RequestMethod.POST)
 
 	public Object listPersonnel(@RequestBody QueryList queryList) {
-		for(QueryParam queryParam:queryList.getList()){
-			System.out.println(queryParam.getCode());
-		}
-
 		PageHelper.startPage(queryList.getPageNum(),queryList.getPageSize());
 		//获取数据id
 		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByList(queryList.getList());

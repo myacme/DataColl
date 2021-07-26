@@ -1,7 +1,9 @@
 package com.bonc.colldata.service.baseData;
 
 import com.bonc.colldata.entity.CollDepartment;
+import com.bonc.colldata.entity.UserManager;
 import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
+import com.bonc.utils.SessionUtiil;
 import com.bonc.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,21 @@ public class CollDepartmentServiceImpl implements CollDepartmentService {
 
 	@Override
 	public List<CollDepartment> checkCollDepartmentTree(Map<String, Object> map) {
+		UserManager user=SessionUtiil.getUserInfo();
+		//判断用户是否是超级管理员
+		String isAdmin=user.getIsAdmin();
+		if("1".equals(isAdmin)){
+			return collDepartmentMapper.checkCollDepartmentTree(map);
+		}else{
+			//如果不是超级管理员那么只能看部门及以下的数据
+			if(map==null){
+				map=new HashMap<>();
+			}
+			String deptId=user.getDeptId();
+			map.put("pid",deptId);
+			return collDepartmentMapper.checkCollDepartmentTree(map);
+		}
 
-		return collDepartmentMapper.checkCollDepartmentTree(map);
 	}
 
 	@Override
