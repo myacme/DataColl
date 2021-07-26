@@ -1,8 +1,10 @@
 package com.bonc.colldata.service.impl;
 
 import com.bonc.colldata.entity.CollBusinessType;
+import com.bonc.colldata.entity.UserManager;
 import com.bonc.colldata.mapper.CollBusinessTypeDao;
 import com.bonc.colldata.service.CollBusinessTypeService;
+import com.bonc.utils.SessionUtiil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,7 +39,17 @@ public class CollBusinessTypeServiceImpl implements CollBusinessTypeService {
 	 */
 	@Override
 	public List<CollBusinessType> queryAll() {
-		return this.collBusinessTypeDao.queryAll();
+		//获取当前登录用户
+		UserManager user = SessionUtiil.getUserInfo();
+		if (user != null) {
+			return null;
+		}
+		//是否为超级管理员
+		if ("1".equals(user.getIsAdmin())) {
+			return this.collBusinessTypeDao.queryAll(null);
+		}else {
+			return this.collBusinessTypeDao.queryAll(user.getDataType());
+		}
 	}
 
 	/**

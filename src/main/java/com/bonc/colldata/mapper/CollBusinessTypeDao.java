@@ -2,6 +2,7 @@ package com.bonc.colldata.mapper;
 
 import com.bonc.colldata.entity.CollBusinessType;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface CollBusinessTypeDao {
 	 *
 	 * @return 对象列表
 	 */
-	List<CollBusinessType> queryAll();
+	List<CollBusinessType> queryAll(@Param("dataType") String dataType);
 
 
 	/**

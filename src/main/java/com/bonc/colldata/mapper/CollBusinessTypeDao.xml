@@ -24,6 +24,9 @@
           business_code, business_name
         from main.coll_business_type
         where state = '1'
+        <if test="dataType != null and dataType !=''">
+            and business_code = #{dataType}
+        </if>
     </select>
 
     <!--新增所有列-->
