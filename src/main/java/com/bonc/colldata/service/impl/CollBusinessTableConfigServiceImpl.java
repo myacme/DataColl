@@ -117,7 +117,6 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**

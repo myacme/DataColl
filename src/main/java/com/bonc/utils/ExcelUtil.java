@@ -203,7 +203,7 @@ public class ExcelUtil {
 			for (String key : nameMap.keySet()) {
 				sheet.setDefaultColumnStyle(i1, sheetStyle);
 				Cell cell = headRow.createCell(i1);
-				cell.setCellValue(key + "(" + nameMap.get(key) + ")");
+				cell.setCellValue(nameMap.get(key) + "(" + key + ")");
 				cell.setCellStyle(headStyle);
 				i1++;
 			}
@@ -610,11 +610,9 @@ public class ExcelUtil {
 									if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 										double cellValue = cell.getNumericCellValue();
 										map.put(key, String.valueOf(cellValue));
-										map.put(getName(titleCell.getStringCellValue()), String.valueOf(cellValue));
 										continue;
 									}
 									map.put(key, cell.getStringCellValue());
-									map.put(getName(titleCell.getStringCellValue()), cell.getStringCellValue());
 								}
 							}
 							dataList.add(map);

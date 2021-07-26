@@ -41,7 +41,7 @@ public class CollBusinessTypeServiceImpl implements CollBusinessTypeService {
 	public List<CollBusinessType> queryAll() {
 		//获取当前登录用户
 		UserManager user = SessionUtiil.getUserInfo();
-		if (user != null) {
+		if (user == null) {
 			return null;
 		}
 		//是否为超级管理员
