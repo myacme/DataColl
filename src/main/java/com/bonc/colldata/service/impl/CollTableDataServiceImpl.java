@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.bonc.colldata.config.SystemConfig;
 import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollBusinessTableTypeDao;
@@ -59,7 +60,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		UserManager user = SessionUtiil.getUserInfo();
 		int result = 0;
 		List<CollTableData> tableDataList = new ArrayList<>();
-		File[] files = ZipUtil.unzip(FileUtil.toFile(file), "123");
+		File[] files = ZipUtil.unzip(FileUtil.toFile(file), SystemConfig.getZipPassWord());
 		if (files != null && files.length != 0) {
 			for (File excle : files) {
 				String sheetName = ExcelUtil.getSheetName(excle);
@@ -177,7 +178,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 			File file = reportDataExcle(table.getBusinessTypeTableCode(), version, isTemplet);
 			fileList.add(file);
 		});
-		ZipUtil.zipDownload(response, fileList, "数据.zip", "123");
+		ZipUtil.zipDownload(response, fileList, "数据.zip", SystemConfig.getZipPassWord());
 		fileList.forEach(File::delete);
 	}
 
@@ -241,7 +242,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 			}
 		}
 		fileList.add(file);
-		ZipUtil.zipDownload(response, fileList, "数据.zip", "123");
+		ZipUtil.zipDownload(response, fileList, "数据.zip", SystemConfig.getZipPassWord());
 		fileList.forEach(File::delete);
 		collReceiveTaskDao.report(version);
 	}

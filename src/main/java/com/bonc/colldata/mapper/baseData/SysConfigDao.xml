@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.baseData.SysConfigDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.SysConfig">
+        <!--@Table sys_config-->
+        <result property="configCode" column="config_code" jdbcType="VARCHAR"/>
+        <result property="configValue" column="config_value" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          config_code, config_value
+        from main.sys_config
+        where config_code = #{configCode}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          config_code, config_value
+        from main.sys_config
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          config_code, config_value
+        from main.sys_config
+        <where>
+            <if test="configCode != null and configCode != ''">
+                and config_code = #{configCode}
+            </if>
+            <if test="configValue != null and configValue != ''">
+                and config_value = #{configValue}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into main.sys_config(config_code, config_value)
+        values (#{configCode}, #{configValue})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.sys_config
+        <set>
+            <if test="configCode != null and configCode != ''">
+                config_code = #{configCode},
+            </if>
+            <if test="configValue != null and configValue != ''">
+                config_value = #{configValue},
+            </if>
+        </set>
+        where  config_code = #{configCode}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from main.sys_config where  config_code = #{configCode}
+    </delete>
+
+</mapper>
