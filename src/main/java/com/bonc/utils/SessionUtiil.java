@@ -30,7 +30,7 @@ public class SessionUtiil {
 			HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
 			if (request != null) {
 				//解决- 跨服务调用接口时，拦截器session判断null转string异常问题
-				String token = request.getHeader("token");
+				String token = request.getHeader("authorization");
 				Claims claims = JwtTokenUtil.getClaims(token);
 				String username = claims.getSubject();
 				UserManagerServiceImpl userManagerService = (UserManagerServiceImpl) SpringContextUtil.getBean(UserManagerService.class);
