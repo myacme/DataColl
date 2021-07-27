@@ -9,6 +9,7 @@
 		<result column="if_check" property="ifCheck"/>
 		<result column="if_list" property="ifList"/>
 		<result column="is_required" property="isRequired"/>
+		<result column="is_type" property="isType"/>
 	</resultMap>
 	<!--获取人员配置表有用字段信息-->
 	<select id="getTableHead" resultMap="tableHead">

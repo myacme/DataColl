@@ -29,7 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/sendTask")
 @Api(tags = "下发任务管理")
-public class CollSendTaskCoontroller {
+public class CollSendTaskController {
 	@Resource
 	private CollSendTaskServiceImpl collSendTaskService;
 

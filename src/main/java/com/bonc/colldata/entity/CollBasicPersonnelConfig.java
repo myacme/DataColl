@@ -15,6 +15,15 @@ public class CollBasicPersonnelConfig {
 	private String ifList;
 	private String ifCheck;
 	private String isRequired;
+	private String isType;
+
+	public String getIsType() {
+		return isType;
+	}
+
+	public void setIsType(String isType) {
+		this.isType = isType;
+	}
 
 	public String getIfList() {
 		return ifList;

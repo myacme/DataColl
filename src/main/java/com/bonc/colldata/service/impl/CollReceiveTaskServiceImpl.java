@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bonc.colldata.config.SystemConfig;
 import com.bonc.colldata.entity.CollReceiveTask;
 import com.bonc.colldata.entity.CollReceiveTaskTable;
+import com.bonc.colldata.entity.UserManager;
 import com.bonc.colldata.mapper.CollReceiveTaskDao;
 import com.bonc.colldata.service.CollReceiveTaskService;
 
@@ -97,6 +98,8 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 	}
 
 	public CollReceiveTask readZipAndExcel(MultipartFile multipartFile){
+		//获取当前登录用户信息
+		UserManager userManager=SessionUtiil.getUserInfo();
 		//文件名称 zip规则 部门_任务名称_采集类型_版本号
 		String fileName = null;
 		try {
@@ -106,7 +109,8 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		}
 		int index = fileName.indexOf("_");
 		CollReceiveTask task = new CollReceiveTask();
-		task.setSendTaskCollDepartment(fileName.substring(0, index));
+		//部门id为当前导入人员部门id
+		task.setSendTaskCollDepartment(userManager.getDeptId());
 		task.setSendTaskName(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
 		index = fileName.indexOf("_", index + 1);
 		task.setSendTaskCollType(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
@@ -117,7 +121,6 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		task.setCreateTime(CommonUtil.getNowTime());
 		task.setState("1");
 		List<CollReceiveTaskTable> result = new ArrayList<>();
-		//	collReceiveTaskService.insert(task);
 		File[] unzip = ZipUtil.unzip(FileUtil.toFile(multipartFile), SystemConfig.getZipPassWord());
 		if (unzip != null && unzip.length != 0) {
 			for (File file : unzip) {
