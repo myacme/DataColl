@@ -51,7 +51,8 @@
 	</insert>
 
 	<select id="getCollType" resultType="java.util.Map">
-        SELECT CODE_NAME,CODE_VALUE FROM COLL_DATA_DICT_VALUE WHERE CODE_TYPE='CJLX' AND STATE='1'
+		SELECT CODE_NAME,CODE_VALUE FROM COLL_DATA_DICT_VALUE WHERE code_type in
+		    (SELECT dict_code from coll_data_dict_type  WHERE data_dict_type_code='CJLX' AND STATE='1') and STATE='1'
     </select>
 	<select id="getBeforeVersion" resultType="java.util.Map" parameterType="String">
 		SELECT DISTINCT a.version code_value,a.version code_name from coll_table_data a left join
