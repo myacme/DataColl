@@ -1,15 +1,14 @@
 package com.bonc.base.Util;
 
 import cn.hutool.core.codec.Base64;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +60,6 @@ public class JwtTokenUtil {
 		// 创建payload的私有声明（根据特定的业务需要添加）
 		Map<String, Object> claims = new HashMap<String, Object>();
 		claims.put("username", username);
-
 		// 添加payload声明
 		// 设置jwt的body
 		JwtBuilder builder = Jwts.builder()
@@ -76,7 +74,7 @@ public class JwtTokenUtil {
 				// 设置签名使用的签名算法和签名使用的秘钥
 				.signWith(signatureAlgorithm, secret);
 		if (expiration >= 0) {
-			long expMillis = nowMillis+expiration*1000;
+			long expMillis = nowMillis + expiration * 1000;
 			Date exp = new Date(expMillis);
 			// 设置过期时间
 			builder.setExpiration(exp);
@@ -95,6 +93,7 @@ public class JwtTokenUtil {
 		}
 		return true;
 	}
+
 	public static Claims getClaims(String jwtStr) {
 		Claims claims = null;
 		try {
@@ -117,10 +116,28 @@ public class JwtTokenUtil {
 	 *
 	 * @param jwt
 	 * @return
+	 *
 	 * @throws Exception
 	 */
 	public static Claims parseJWT(String jwt) throws Exception {
 		SecretKey secretKey = generalKey();
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+	}
+
+	/**
+	 * 验证token是否过期
+	 *
+	 * @param token
+	 * @return
+	 */
+	public static boolean verifyTokenExpireDate(String token) {
+		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		System.out.println("token签发时间:" + sdf.format(claims.getIssuedAt()));
+		System.out.println("token过期时间:" + sdf.format(claims.getExpiration()));
+		if (new Date().after(claims.getExpiration())) {
+			return false;
+		}
+		return true;
 	}
 }

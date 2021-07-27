@@ -37,6 +37,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 		if (token == null) {
 			return false;
 		}
+		if (!JwtTokenUtil.verifyTokenExpireDate(token)){
+			return false;
+		}
 		boolean flag = JwtTokenUtil.validateJWT(token);
 		return flag;
 	}
