@@ -23,7 +23,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String token = request.getHeader("authorization");
 		if (!(handler instanceof HandlerMethod)) {
-			return false;
+			return true;
 		}
 		if (token == null) {
 			return false;
