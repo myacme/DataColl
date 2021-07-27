@@ -94,7 +94,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 									bean.setDepartmentCode(user.getDeptId());
 									bean.setVersion(version);
 									bean.setThisUpdate("0");
-									bean.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
+									bean.setCreateTime(CommonUtil.getNowTime());
 								});
 								tableDataList.addAll(list);
 							}
@@ -248,13 +248,23 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	}
 
 	/**
-	 * 查询上报版本号
+	 * 查询上报版本号 v
 	 *
 	 * @return
 	 */
 	@Override
 	public List<Map<String, String>> queryVersion() {
 		return collReceiveTaskDao.queryVersionOfnew();
+	}
+
+	/**
+	 * 查询上报版本号 a
+	 *
+	 * @return
+	 */
+	@Override
+	public List<Map<String, String>> queryVersionOfA() {
+		return collTableDataDao.queryVersionOfA();
 	}
 
 	/**

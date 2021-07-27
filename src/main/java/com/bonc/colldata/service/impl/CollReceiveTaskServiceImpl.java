@@ -113,7 +113,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		task.setSendTaskVersion(fileName.substring(index + 1, fileName.indexOf(".", index + 1)));
 		String taskCode = CommonUtil.getUUID32();
 		task.setSendTaskCode(taskCode);
-		task.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
+		task.setCreateTime(CommonUtil.getNowTime());
 		task.setState("1");
 		List<CollReceiveTaskTable> result = new ArrayList<>();
 		//	collReceiveTaskService.insert(task);

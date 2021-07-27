@@ -66,11 +66,18 @@ public interface CollTableDataService {
 	void rportDataZip(HttpServletResponse response, String version);
 
 	/**
-	 * 查询上报版本号
+	 * 查询上报版本号  v
 	 *
 	 * @return
 	 */
 	List<Map<String, String>> queryVersion();
+
+	/**
+	 * 查询上报版本号  a
+	 *
+	 * @return
+	 */
+	List<Map<String, String>> queryVersionOfA();
 
 	/**
 	 * 查询历史版本号

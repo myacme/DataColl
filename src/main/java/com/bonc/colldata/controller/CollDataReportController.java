@@ -85,11 +85,18 @@ public class CollDataReportController {
 		collTableDataService.rportDataZip(response, version);
 	}
 
-	@ApiOperation("查询上报版本列表")
+	@ApiOperation("查询上报版本列表(v开头的版本)")
 	@RequestMapping(value = "version", method = RequestMethod.GET)
 	@ResponseBody
 	public Object queryVersion() {
 		List<Map<String, String>> maps = collTableDataService.queryVersion();
+		return new RestRecord(200, "成功", maps);
+	}
+	@ApiOperation("查询上报版本列表(a开头的版本)")
+	@RequestMapping(value = "versionOfA", method = RequestMethod.GET)
+	@ResponseBody
+	public Object queryVersionOfA() {
+		List<Map<String, String>> maps = collTableDataService.queryVersionOfA();
 		return new RestRecord(200, "成功", maps);
 	}
 
@@ -116,13 +123,16 @@ public class CollDataReportController {
 		JSONObject paramObject = JSONObject.parseObject(param);
 		String tableCode = paramObject.getString("tableCode");
 		String version = paramObject.getString("version");
+		if (version != null & "".equals(version)) {
+			version = CommonUtil.getVersionCode();
+		}
 		Map<String, Object> data = paramObject.getJSONObject("data");
 		List<CollTableData> tableDataList = new ArrayList<>();
 		String id = CommonUtil.getUUID32();
 		for (Map.Entry<String, Object> entry : data.entrySet()) {
 			CollTableData bean = new CollTableData();
 			bean.setBusinessTypeCode("");
-			bean.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
+			bean.setCreateTime(CommonUtil.getNowTime());
 			bean.setDataCode(id);
 			bean.setDataValue(entry.getValue().toString());
 			bean.setDepartmentCode("");
@@ -133,7 +143,7 @@ public class CollDataReportController {
 			tableDataList.add(bean);
 		}
 		int result = collTableDataService.insertList(tableDataList);
-		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", version);
 	}
 
 	@ApiOperation("修改数据")

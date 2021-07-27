@@ -122,4 +122,11 @@ public interface CollTableDataDao {
 	 * @return
 	 */
 	int delete(@Param("list") List<Map<String, Object>> list);
+
+	/**
+	 * 查询所有未上报的版本
+	 *
+	 * @return 实例对象
+	 */
+	List<Map<String, String>> queryVersionOfA();
 }

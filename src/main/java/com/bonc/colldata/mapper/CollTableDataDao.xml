@@ -172,9 +172,6 @@
     <update id="deleteById">
         update main.coll_table_data set state = '0' where data_code = #{id}
     </update>
-<!--    <delete id="deleteById">-->
-<!--        delete from main.coll_table_data where data_code = #{id}-->
-<!--    </delete>-->
 
     <!--通过主键删除-->
     <update id="delete">
@@ -187,19 +184,9 @@
             </foreach>
         </if>
     </update>
-<!--    <delete id="delete">-->
-<!--        delete from main.coll_table_data-->
-<!--        <where>-->
-<!--            <if test="dataCode != null and dataCode != ''">-->
-<!--                and data_code = #{dataCode}-->
-<!--            </if>-->
-<!--            <if test="tableCode != null and tableCode!=''">-->
-<!--                and table_business_code = #{tableCode}-->
-<!--            </if>-->
-<!--            <if test="version != null and version!=''">-->
-<!--                and version = #{version}-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </delete>-->
+
+    <select id="queryVersionOfA" resultType="java.util.Map">
+        SELECT version from coll_table_data GROUP BY version HAVING version like 'a%'
+    </select>
 
 </mapper>

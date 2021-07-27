@@ -86,21 +86,4 @@ public class CollReceiveTaskController {
 	public void getTemplate(HttpServletResponse response, String sendTaskCode) {
 		collSendTaskService.getExcelTemplate(response,sendTaskCode,false,"receive");
 	}
-
-
-	public static void main(String[] args) {
-		String fileName = "电信部_人员信息采集_基本数据_a20210633_123356.zip";
-		int index = fileName.indexOf("_");
-		CollReceiveTask task = new CollReceiveTask();
-		task.setSendTaskCollDepartment(fileName.substring(0, index));
-		task.setSendTaskName(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
-		index = fileName.indexOf("_", index + 1);
-		task.setSendTaskCollType(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
-		index = fileName.indexOf("_", index + 1);
-		task.setSendTaskVersion(fileName.substring(index + 1, fileName.indexOf(".", index + 1)));
-		task.setSendTaskCode(CommonUtil.getUUID32());
-		task.setCreateTime(String.valueOf(Instant.now().toEpochMilli()));
-		task.setState("1");
-		System.out.println("");
-	}
 }
