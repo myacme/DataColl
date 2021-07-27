@@ -1,10 +1,7 @@
 package com.bonc.base.Util;
 
 import cn.hutool.core.codec.Base64;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -131,7 +128,13 @@ public class JwtTokenUtil {
 	 * @return
 	 */
 	public static boolean verifyTokenExpireDate(String token) {
-		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		Claims claims = null;
+		try {
+			claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println("token签发时间:" + sdf.format(claims.getIssuedAt()));
 		System.out.println("token过期时间:" + sdf.format(claims.getExpiration()));
