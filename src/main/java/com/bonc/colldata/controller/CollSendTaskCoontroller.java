@@ -83,12 +83,12 @@ public class CollSendTaskCoontroller {
 	@ApiOperation("生成excl")
 	public  void getExcelTemplate(HttpServletResponse response,String sendTaskCode){
 
-		collSendTaskService.getExcelTemplate(response,sendTaskCode,false,"send");
+		collSendTaskService.getExcelTemplate(response,sendTaskCode,"send");
 	}
 	@RequestMapping(value = "/getTaskZip",method = RequestMethod.GET)
 	@ApiOperation("生成压缩包")
 	public void getSendTaskZip(HttpServletResponse response,String sendTaskCode){
-		collSendTaskService.getExcelTemplate(response,sendTaskCode,true,"send");
+		collSendTaskService.getZipTemplate(response,sendTaskCode,"send");
 	}
 	@RequestMapping(value = "/getExport",method = RequestMethod.GET)
 	@ApiOperation("导出")

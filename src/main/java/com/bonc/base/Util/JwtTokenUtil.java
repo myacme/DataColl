@@ -71,7 +71,7 @@ public class JwtTokenUtil {
 				// 设置签名使用的签名算法和签名使用的秘钥
 				.signWith(signatureAlgorithm, secret);
 		if (expiration >= 0) {
-			long expMillis = nowMillis + expiration * 1000;
+			long expMillis = nowMillis + expiration * 1000*10;
 			Date exp = new Date(expMillis);
 			// 设置过期时间
 			builder.setExpiration(exp);

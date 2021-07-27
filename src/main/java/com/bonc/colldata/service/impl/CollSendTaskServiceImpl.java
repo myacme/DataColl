@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.bonc.colldata.config.SystemConfig;
 import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.CollSendTaskDao;
 import com.bonc.colldata.service.CollReceiveTaskService;
@@ -130,9 +131,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * todo:生成excel及压缩包
 	 * @param response
 	 * @param sendTaskCode
-	 * @param ifZip
 	 */
-	public void getExcelTemplate(HttpServletResponse response, String sendTaskCode, boolean ifZip, String type) {
+	public void getExcelTemplate(HttpServletResponse response, String sendTaskCode, String type) {
 		//根据派发任务编号 获取派发任务详情
 		CollReceiveTask collReceiveTask = null;
 		if ("send".toLowerCase().equals(type.toLowerCase())) {
@@ -158,28 +158,58 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 		}
-		Workbook wb = ExcelUtil.createXSLXTemplate(list);
+		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
 
 		//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
 		String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
-		if (!ifZip) {
-			try {
-				//this.excelToHtml(wb, response);
-             //    String html=ExcelTOHtml.excelWriteToHtml(wb);
-				//System.out.println(html);
-				OutputStream outputStream = response.getOutputStream();
-				response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-				response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(taskName + ".xlsx", "utf-8"));
-				wb.write(outputStream);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			//账密文件
-			//File fileTxt = this.getText(response, null);
-			ArrayList<File> fileList = new ArrayList<File>();
-		//	fileList.add(fileTxt);
-			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
+
+		try {
+			//this.excelToHtml(wb, response);
+			//    String html=ExcelTOHtml.excelWriteToHtml(wb);
+			//System.out.println(html);
+			OutputStream outputStream = response.getOutputStream();
+			response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+			response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(taskName + ".xlsx", "utf-8"));
+			wb.write(outputStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+	public void getZipTemplate(HttpServletResponse response, String sendTaskCode, String type) {
+		//根据派发任务编号 获取派发任务详情
+		CollReceiveTask collReceiveTask = null;
+		if ("send".toLowerCase().equals(type.toLowerCase())) {
+			collReceiveTask = this.getSendTaskById(sendTaskCode);
+		} else if ("receive".toLowerCase().equals(type.toLowerCase())) {
+			collReceiveTask = collReceiveTaskService.queryById(sendTaskCode);
+		}
+
+		//业务数据类型  001是业务数据 002 时候业务+基础
+		String taskCollType = collReceiveTask.getSendTaskCollType();
+		//下发部门
+		String deptId = collReceiveTask.getSendTaskCollDepartment();
+		//任务名称
+		String taskName = collReceiveTask.getSendTaskName();
+		//是否仅模板
+		String ifTemp = collReceiveTask.getSendIfTemp();
+		//数据版本
+		String vsersion = collReceiveTask.getSendTaskVersion();
+		//构建表格
+		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
+		List<Map<String, Object>> list = new ArrayList<>();
+		list = this.getTaskTemplate(listTable);
+		if ("cjlx002".equals(taskCollType)) {
+			list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
+		}
+		String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
+		ArrayList<File> fileList = new ArrayList<File>();
+		for (Map<String, Object> map : list) {
+			Workbook wb = ExcelUtil.createXSLXTemplate(map);
+			//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
+			File file = new File(ZipUtil.getProjectPath(), map.get("tableName").toString() + ".xlsx");
 			FileOutputStream outputStream = null;
 			try {
 				outputStream = new FileOutputStream(file);
@@ -196,11 +226,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 					}
 				}
 			}
-
-			ZipUtil.zipDownload(response, fileList, fileName + ".zip", "123");
-			fileList.forEach(file1 -> file1.delete());
-
 		}
+		ZipUtil.zipDownload(response, fileList, fileName + ".zip", SystemConfig.getZipPassWord());
+		fileList.forEach(file1 -> file1.delete());
+
 
 	}
 
@@ -252,13 +281,19 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		}
 		p.put("nameMap", nameMap);
 		p.put("name", "coll_personnel_maintain");
+		p.put("tableName", "人员基本信息");
 		if ("1".equals(ifTemp)) {
 			p.put("data", null);
 		} else {
-			for (CollPersonnelMaintain collPersonnelMaintain : listData) {
-				list.add(JSON.parseObject(JSON.toJSONString(collPersonnelMaintain), Map.class));
+			if (listData != null && listData.size() > 0) {
+				for (CollPersonnelMaintain collPersonnelMaintain : listData) {
+					list.add(JSON.parseObject(JSON.toJSONString(collPersonnelMaintain), Map.class));
+				}
+				p.put("data", list);
+			} else {
+				p.put("data", null);
 			}
-			p.put("data", list);
+
 		}
 		return p;
 	}
@@ -279,6 +314,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			p.put("nameMap", map);
 			p.put("data", null);
 			p.put("name", tableCode);
+			p.put("tableName",tableName);
 			list.add(p);
 		}
 		return list;
@@ -289,8 +325,9 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 */
 	public void getZipMore(HttpServletResponse response, List<String> list1) {
 		ArrayList<File> filed = new ArrayList<File>();
-		for (String sendTaskCode : list1) {
 
+		for (String sendTaskCode : list1) {
+			ArrayList<File> fileList = new ArrayList<File>();
 			//根据派发任务编号 获取派发任务详情
 			CollReceiveTask collReceiveTask = this.getSendTaskById(sendTaskCode);
 			//业务数据类型  001是业务数据 002 时候业务+基础
@@ -304,44 +341,42 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			//历史数据版本
 			String vsersion = collReceiveTask.getSendTaskDataAgo();
 			//构建表格
+			String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
+
 			List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 			List<Map<String, Object>> list = new ArrayList<>();
 			list = this.getTaskTemplate(listTable);
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 			}
-			//File fileTxt = this.getText(response, null);
-			Workbook wb = ExcelUtil.createXSLXTemplate(list);
-			ArrayList<File> fileList = new ArrayList<File>();
-			//fileList.add(fileTxt);
-			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
-			FileOutputStream outputStream = null;
-			try {
-				outputStream = new FileOutputStream(file);
-				wb.write(outputStream);
-				fileList.add(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+			for(Map<String,Object> map:list){
+				Workbook wb = ExcelUtil.createXSLXTemplate(map);
+				File file = new File(ZipUtil.getProjectPath(), map.get("tableName") + ".xlsx");
+				FileOutputStream outputStream = null;
+				try {
+					outputStream = new FileOutputStream(file);
+					wb.write(outputStream);
+					fileList.add(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
-			String fileName = taskName;
-			String path = ZipUtil.zipTodir(fileList, fileName, "123");
+			String path = ZipUtil.zipTodir(fileList, fileName, SystemConfig.getZipPassWord());
 			File f = new File(path);
 			filed.add(f);
 			fileList.forEach(file1 -> file1.delete());
 		}
-		ZipUtil.zipDownload(response, filed, "数据.zip", "12345");
+		ZipUtil.zipDownload(response, filed, "数据.zip", SystemConfig.getZipPassWord());
 		filed.forEach(f -> f.delete());
 	}
-
-
 	/**
 	 * 导出zip
 	 *
@@ -385,7 +420,4 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		return file;
 	}
 
-	public void excelToHtml(Workbook wb, HttpServletResponse response) throws Exception {
-
-	}
 }
