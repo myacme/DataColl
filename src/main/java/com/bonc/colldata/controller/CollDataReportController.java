@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +91,7 @@ public class CollDataReportController {
 		List<Map<String, String>> maps = collTableDataService.queryVersion();
 		return new RestRecord(200, "成功", maps);
 	}
+
 	@ApiOperation("查询上报版本列表(a开头的版本)")
 	@RequestMapping(value = "versionOfA", method = RequestMethod.GET)
 	@ResponseBody
@@ -117,12 +117,13 @@ public class CollDataReportController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "param", value = "{\"tableCode\":\"表id\",\"version\":\"版本\",\"data\":{\"\":\"\"}}", required = true),
+			@ApiImplicitParam(name = "param", value = "{\"tableCode\":\"表id\",\"deptCode\":\"部门id\",\"version\":\"版本\",\"data\":{\"\":\"\"}}", required = true),
 	})
 	public Object create(@RequestBody String param) {
 		JSONObject paramObject = JSONObject.parseObject(param);
 		String tableCode = paramObject.getString("tableCode");
 		String version = paramObject.getString("version");
+		String deptCode = paramObject.getString("deptCode");
 		if (version != null & "".equals(version)) {
 			version = CommonUtil.getVersionCode();
 		}
@@ -135,7 +136,7 @@ public class CollDataReportController {
 			bean.setCreateTime(CommonUtil.getNowTime());
 			bean.setDataCode(id);
 			bean.setDataValue(entry.getValue().toString());
-			bean.setDepartmentCode("");
+			bean.setDepartmentCode(deptCode);
 			bean.setTableBusinessCode(tableCode);
 			bean.setTableConfigCode(entry.getKey());
 			bean.setVersion(version);
