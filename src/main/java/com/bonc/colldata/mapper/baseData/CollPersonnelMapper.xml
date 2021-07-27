@@ -103,7 +103,7 @@
 				</if>
 			</foreach>
 		</if>
-
+   order by name
 	</select>
 	<!--查询人员数据详情 byid-->
 	<select id="checkById" parameterType="String" resultType="com.bonc.colldata.entity.CollPersonnelMaintain">
