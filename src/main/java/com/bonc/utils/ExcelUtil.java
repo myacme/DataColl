@@ -696,9 +696,9 @@ public class ExcelUtil {
 			//获取所有的Sheet
 			for (int sIndex = 0; sIndex < wb.getNumberOfSheets(); sIndex++) {
 				Sheet sheet = wb.getSheetAt(sIndex);
-					tableName = sheet.getSheetName();
+				tableName = sheet.getSheetName();
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return tableName;

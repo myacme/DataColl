@@ -9,13 +9,16 @@ import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 
 import com.bonc.utils.*;
-import org.apache.poi.ss.usermodel.Workbook;
+
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.*;
 import java.net.URL;
+
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -156,11 +159,16 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplate(list);
+
 		//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
 		String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		if (!ifZip) {
-			try (OutputStream outputStream = response.getOutputStream();) {
-				response.setContentType("application/octet-stream;charset=UTF-8");
+			try {
+				//this.excelToHtml(wb, response);
+             //    String html=ExcelTOHtml.excelWriteToHtml(wb);
+				//System.out.println(html);
+				OutputStream outputStream = response.getOutputStream();
+				response.setContentType("application/vnd.ms-excel;charset=UTF-8");
 				response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(taskName + ".xlsx", "utf-8"));
 				wb.write(outputStream);
 			} catch (Exception e) {
@@ -168,9 +176,9 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			}
 		} else {
 			//账密文件
-			File fileTxt=this.getText(response,null);
+			//File fileTxt = this.getText(response, null);
 			ArrayList<File> fileList = new ArrayList<File>();
-			fileList.add(fileTxt);
+		//	fileList.add(fileTxt);
 			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
 			FileOutputStream outputStream = null;
 			try {
@@ -302,10 +310,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 			}
-			File fileTxt=this.getText(response,null);
+			//File fileTxt = this.getText(response, null);
 			Workbook wb = ExcelUtil.createXSLXTemplate(list);
 			ArrayList<File> fileList = new ArrayList<File>();
-			fileList.add(fileTxt);
+			//fileList.add(fileTxt);
 			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
 			FileOutputStream outputStream = null;
 			try {
@@ -375,5 +383,9 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		}*/
 
 		return file;
+	}
+
+	public void excelToHtml(Workbook wb, HttpServletResponse response) throws Exception {
+
 	}
 }

@@ -3,6 +3,7 @@ package com.bonc.colldata.controller;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.UserManager;
 import com.bonc.colldata.service.impl.UserManagerServiceImpl;
+import com.bonc.utils.PasswordUtil;
 import com.bonc.utils.TimeUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -77,7 +78,8 @@ public class UserManagerController {
     @ApiOperation("口令生成")
 	public Object updatePassword(String userId){
 		//默认生成密码
-		String code="Bonc_qA*9";
+		//String code="Bonc_qA*9"; e
+		String code =PasswordUtil.createPassWord(8);
 		int result=userManagerService.updatePassword(userId,code);
 		return new RestRecord(200,"修改密码成功",result);
 	}

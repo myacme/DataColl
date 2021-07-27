@@ -59,7 +59,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 	/**
 	 * 新增数据
 	 *
-	 * @param  实例对象
+	 * @param
 	 * @return 实例对象
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		collReceiveTask.setCreateTime(TimeUtil.getCurrentTime());
 		collReceiveTask.setState("1");
 		int a = this.collReceiveTaskDao.insert(collReceiveTask);
-		int b =- this.collReceiveTaskDao.addReceiveTaskTable(collReceiveTask);
+		int b = this.collReceiveTaskDao.addReceiveTaskTable(collReceiveTask);
 		return (a+b);
 	}
 
