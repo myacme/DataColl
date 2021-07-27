@@ -96,10 +96,10 @@ public class CollSendTaskCoontroller {
 		collSendTaskService.getZipMore(response,sendTaskCode);
 	}
 
-	/*@RequestMapping(value = "/downloadZip",method = RequestMethod.GET)
-	@ApiOperation("下载zip")
-	public Object downloadZip(String ids){
-		collSendTaskService.downloadZip(ids);
+	@RequestMapping(value = "/downloadTxt",method = RequestMethod.GET)
+	@ApiOperation("下载txt")
+	public Object downloadZip(HttpServletResponse response,String ids){
+		collSendTaskService.getText(response,ids);
 		return new RestRecord(200,"成功","");
-	}*/
+	}
 }

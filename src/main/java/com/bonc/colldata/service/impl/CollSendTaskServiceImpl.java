@@ -8,10 +8,7 @@ import com.bonc.colldata.service.CollSendTaskService;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 
-import com.bonc.utils.CommonUtil;
-import com.bonc.utils.ExcelUtil;
-import com.bonc.utils.TimeUtil;
-import com.bonc.utils.ZipUtil;
+import com.bonc.utils.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +36,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	private CollPersonnelService collPersonnelService;
 	@Resource
 	private CollReceiveTaskService collReceiveTaskService;
+	@Resource
+	private UserManagerServiceImpl userManagerService;
 
 	@Override
 	public List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum) {
@@ -168,7 +167,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 				e.printStackTrace();
 			}
 		} else {
+			//账密文件
+			File fileTxt=this.getText(response,null);
 			ArrayList<File> fileList = new ArrayList<File>();
+			fileList.add(fileTxt);
 			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
 			FileOutputStream outputStream = null;
 			try {
@@ -189,6 +191,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 
 			ZipUtil.zipDownload(response, fileList, fileName + ".zip", "123");
 			fileList.forEach(file1 -> file1.delete());
+
 		}
 
 	}
@@ -299,9 +302,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(taskCollType, deptId, ifTemp));
 			}
-
+			File fileTxt=this.getText(response,null);
 			Workbook wb = ExcelUtil.createXSLXTemplate(list);
 			ArrayList<File> fileList = new ArrayList<File>();
+			fileList.add(fileTxt);
 			File file = new File(ZipUtil.getProjectPath(), taskName + ".xlsx");
 			FileOutputStream outputStream = null;
 			try {
@@ -344,5 +348,32 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 				collTableDataService.reportDataExcle(table.get("").toString(), task.getSendTaskVersion(), "0");
 			});
 		}
+	}
+
+	/***
+	 * todo:生成账密文件.txt
+	 * @param
+	 */
+	public File getText(HttpServletResponse response, String ids) {
+		//根据部门查询该部门下的所有
+		StringBuffer sb = new StringBuffer();
+		sb.append("康兴桥");
+		sb.append("东方国信");
+		File file = TxtUtil.writrTxt(sb.toString(), "账密");
+		/*try {
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ new String(("账密.txt").getBytes(), "iso-8859-1"));
+			OutputStreamWriter write = null;
+			write = new OutputStreamWriter(response.getOutputStream(), "utf-8");
+			BufferedWriter writer = new BufferedWriter(write);
+			writer.write(sb + "\r\n");
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+
+		}*/
+
+		return file;
 	}
 }
