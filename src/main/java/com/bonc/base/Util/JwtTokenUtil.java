@@ -132,7 +132,7 @@ public class JwtTokenUtil {
 	 */
 	public static boolean verifyTokenExpireDate(String token) {
 		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println("token签发时间:" + sdf.format(claims.getIssuedAt()));
 		System.out.println("token过期时间:" + sdf.format(claims.getExpiration()));
 		if (new Date().after(claims.getExpiration())) {

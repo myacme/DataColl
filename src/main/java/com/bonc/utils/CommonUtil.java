@@ -35,9 +35,7 @@ public class CommonUtil {
 	public static String getNowTime() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		// 日期时间转字符串
-		LocalDateTime now = LocalDateTime.now();
-		String nowText = now.format(formatter);
-		return nowText;
+		return LocalDateTime.now().format(formatter);
 	}
 
 	/**
