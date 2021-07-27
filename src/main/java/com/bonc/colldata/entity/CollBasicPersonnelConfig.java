@@ -14,6 +14,7 @@ public class CollBasicPersonnelConfig {
 	private String state;
 	private String ifList;
 	private String ifCheck;
+	private String isRequired;
 
 	public String getIfList() {
 		return ifList;
@@ -61,5 +62,13 @@ public class CollBasicPersonnelConfig {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getIsRequired() {
+		return isRequired;
+	}
+
+	public void setIsRequired(String isRequired) {
+		this.isRequired = isRequired;
 	}
 }
