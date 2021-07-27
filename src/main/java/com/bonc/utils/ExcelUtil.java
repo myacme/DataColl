@@ -303,7 +303,7 @@ public class ExcelUtil {
 	 * @return
 	 * todo:多个sheet页
 	 */
-	public static Workbook createXSLXTemplate(List<Map<String, Object>> list) {
+	public static Workbook createXSLXTemplateList(List<Map<String, Object>> list) {
 		Workbook wb = new XSSFWorkbook();
 		int index = 0;
 		for (Map<String, Object> map : list) {
@@ -399,7 +399,100 @@ public class ExcelUtil {
 		}
 		return wb;
 	}
+	public static Workbook createXSLXTemplate(Map<String, Object> map) {
+		Workbook wb = new XSSFWorkbook();
+		int index = 0;
+			String name = map.get("name").toString();
+			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
+			List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
+			boolean isFrist = true;
+			/*创建表单*/
+			Sheet sheet = wb.createSheet();
+			wb.setSheetName(index, name);
+			//设置字体
+			Font headFont = wb.createFont();
+			headFont.setFontHeightInPoints((short) 14);
+			headFont.setFontName("Courier New");
+			headFont.setItalic(false);
+			headFont.setStrikeout(false);
+			//设置单元格为文本
+			CellStyle sheetStyle = wb.createCellStyle();
+			XSSFDataFormat dataFormat = (XSSFDataFormat) wb.createDataFormat();
+			sheetStyle.setDataFormat(dataFormat.getFormat("@"));
+			//设置头部单元格样式
+			CellStyle headStyle = wb.createCellStyle();
+			headStyle.setBorderBottom(BorderStyle.THICK);  //设置单元格线条
+			//设置填充方案
+			headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			//设置自定义填充颜色
+			headStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+			headStyle.setBorderLeft(BorderStyle.THICK);
+			headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+			headStyle.setBorderRight(BorderStyle.THICK);
+			headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			headStyle.setBorderTop(BorderStyle.THICK);
+			headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+			headStyle.setAlignment(HorizontalAlignment.CENTER);    //设置水平对齐方式
+			headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+//		headStyle.setShrinkToFit(true);  //自动伸缩
+			headStyle.setFont(headFont);  //设置字体
+			headStyle.setDataFormat(dataFormat.getFormat("@"));
+			/*设置数据单元格格式*/
+			CellStyle dataStyle = wb.createCellStyle();
+			dataStyle.setBorderBottom(BorderStyle.THIN);  //设置单元格线条
+			dataStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());   //设置单元格颜色
+			dataStyle.setBorderLeft(BorderStyle.THIN);
+			dataStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+			dataStyle.setBorderRight(BorderStyle.THIN);
+			dataStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+			dataStyle.setBorderTop(BorderStyle.THIN);
+			dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+			dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
+			dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+//		dataStyle.setShrinkToFit(true);  //自动伸缩
+			dataStyle.setDataFormat(dataFormat.getFormat("@"));
+			/*创建行Rows及单元格Cells*/
+			//第一行为标题
+			Row headRow = sheet.createRow(0);
+			if (data != null) {
+				for (int i = 1; i <= data.size(); i++) {
+					Row dataRow = sheet.createRow(i);
+					int i1 = 0;
+					for (String key : nameMap.keySet()) {
+						System.out.println(key);
+						sheet.setDefaultColumnStyle(i1, sheetStyle);
+						if (isFrist) {
+							Cell cell = headRow.createCell(i1);
+							cell.setCellValue(nameMap.get(key));
+							headStyle.setShrinkToFit(true);  //自动伸缩
+							cell.setCellStyle(headStyle);
+						}
+						Cell cell = dataRow.createCell(i1);
+						cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+						cell.setCellValue(data.get(i - 1).get(key).toString());
+						cell.setCellStyle(dataStyle);
+						i1++;
+					}
+					isFrist = false;
+				}
+			} else {
+				int i1 = 0;
+				for (String key : nameMap.keySet()) {
+					sheet.setDefaultColumnStyle(i1, sheetStyle);
+					Cell cell = headRow.createCell(i1);
+					cell.setCellValue(nameMap.get(key));
+					headStyle.setShrinkToFit(true);
+					cell.setCellStyle(headStyle);
+					i1++;
+				}
+			}
+			/*设置列自动对齐*/
+			for (int i = 0; i < headRow.getLastCellNum(); i++) {
+				sheet.autoSizeColumn(i);
+			}
 
+		return wb;
+	}
 	/**
 	 * 处理数据长度不一定的情况
 	 *

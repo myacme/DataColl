@@ -84,6 +84,6 @@ public class CollReceiveTaskController {
 	@ApiOperation("下载模板")
 	@RequestMapping(value = "/getTemplate", method = RequestMethod.GET)
 	public void getTemplate(HttpServletResponse response, String sendTaskCode) {
-		collSendTaskService.getExcelTemplate(response,sendTaskCode,false,"receive");
+		collSendTaskService.getExcelTemplate(response,sendTaskCode,"receive");
 	}
 }

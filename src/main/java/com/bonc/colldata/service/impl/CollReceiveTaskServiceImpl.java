@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.bonc.colldata.config.SystemConfig;
 import com.bonc.colldata.entity.CollReceiveTask;
 import com.bonc.colldata.entity.CollReceiveTaskTable;
 import com.bonc.colldata.mapper.CollReceiveTaskDao;
@@ -117,7 +118,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		task.setState("1");
 		List<CollReceiveTaskTable> result = new ArrayList<>();
 		//	collReceiveTaskService.insert(task);
-		File[] unzip = ZipUtil.unzip(FileUtil.toFile(multipartFile), "123");
+		File[] unzip = ZipUtil.unzip(FileUtil.toFile(multipartFile), SystemConfig.getZipPassWord());
 		if (unzip != null && unzip.length != 0) {
 			for (File file : unzip) {
 				if ("txt".equals(FileUtil.getExtensionName(file.getName()))) {
