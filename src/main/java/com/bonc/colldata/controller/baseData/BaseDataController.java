@@ -162,5 +162,12 @@ public class BaseDataController {
 		PageInfo pageInfo=new PageInfo(list);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
+
+	@ApiOperation("获取系统名称")
+	@RequestMapping(value = "/sysName", method = RequestMethod.GET)
+	public Object getSystemName() {
+		String systemName = collPersonnelService.getSystemName();
+		return new RestRecord(200, "查询成功", systemName);
+	}
 }
 

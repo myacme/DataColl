@@ -4,6 +4,7 @@ import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.QueryParam;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
+import com.bonc.colldata.mapper.baseData.SysConfigDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class CollPersonnelServiceImpl implements CollPersonnelService {
 	@Resource
 	private CollPersonnelMapper collPersonnelMapper;
+	@Resource
+	private SysConfigDao sysConfigDao;
 
 	@Override
 	public List<CollBasicPersonnelConfig> getTableHead() {
@@ -61,4 +64,8 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 		return collPersonnelMapper.getTableDesc();
 	}
 
+	@Override
+	public String getSystemName() {
+		return sysConfigDao.queryById("sys_name").getConfigValue();
+	}
 }

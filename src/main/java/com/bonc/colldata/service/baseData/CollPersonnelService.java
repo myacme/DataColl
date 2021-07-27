@@ -36,4 +36,6 @@ public interface CollPersonnelService {
 	int deletePersonnelById(List<String> id);
 
 	List<Map<String,Object>> getTableDesc();
+
+	String getSystemName();
 }
