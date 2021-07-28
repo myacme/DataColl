@@ -195,7 +195,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		String type = task.getSendTaskCollType();
 		ArrayList<File> fileList = new ArrayList<>();
 		if ("cjlx002".equals(type)) {
-			Map<String, Object> map = collSendTaskService.getBaseTemplate("", "", "");
+			Map<String, Object> map = collSendTaskService.getBaseTemplate("", "");
 			String name = map.get("name").toString();
 			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
 			nameMap.forEach((k, v) -> {
