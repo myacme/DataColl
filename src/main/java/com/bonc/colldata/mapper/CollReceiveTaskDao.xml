@@ -16,11 +16,11 @@
 
     <select id="queryVersionOfnew" resultType="java.util.Map">
         SELECT distinct(send_task_version) FROM "coll_receive_task"
-        where state = '1' and is_report = '0'
+        where state = '1' and is_report = '0' ORDER BY send_task_version  desc
     </select>
     <select id="queryVersionOfHistory" resultType="java.util.Map">
         SELECT distinct(send_task_version) FROM "coll_receive_task"
-        where state = '1' and is_report = '1'
+        where state = '1' and is_report = '1' ORDER BY send_task_version  desc
     </select>
 
     <select id="getByVersion" resultMap="BaseResultMap">

@@ -65,6 +65,7 @@
             and state = '1'
         </where>
         GROUP BY data_code,business_type_code,table_business_code,version,department_code
+        ORDER BY create_time desc
     </select>
 
     <select id="queryAll" resultMap="BaseResultMap">

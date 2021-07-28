@@ -95,7 +95,12 @@ public class ExcelUtil {
 						cell.setCellStyle(headStyle);
 					}
 					Cell cell = dataRow.createCell(i1);
-					cell.setCellValue(data.get(i - 1).get(nameList.get(i1).getTableConfigCode()).toString());
+					Object o = data.get(i - 1).get(nameList.get(i1).getTableConfigCode());
+					if (o != null) {
+						cell.setCellValue(o.toString());
+					} else {
+						cell.setCellValue("");
+					}
 					cell.setCellStyle(dataStyle);
 				}
 				isFrist = false;
@@ -189,7 +194,7 @@ public class ExcelUtil {
 					Cell cell = dataRow.createCell(i1);
 					Object o = data.get(i - 1).get(key);
 					if (o != null) {
-						cell.setCellValue(data.get(i - 1).get(key).toString());
+						cell.setCellValue(o.toString());
 					} else {
 						cell.setCellValue("");
 					}
@@ -283,7 +288,7 @@ public class ExcelUtil {
 				Cell cell = dataRow.createCell(i1);
 				Object o = data.get(i - 1).get(key);
 				if (o != null) {
-					cell.setCellValue(data.get(i - 1).get(key).toString());
+					cell.setCellValue(o.toString());
 				} else {
 					cell.setCellValue("");
 				}
