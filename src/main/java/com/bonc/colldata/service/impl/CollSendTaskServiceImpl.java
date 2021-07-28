@@ -53,6 +53,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	public int addCollTask(CollTask collTask) {
 		String uuid = CommonUtil.getUUID32();
 		collTask.setCollTaskCode(uuid);
+		collTask.setCreateTime(TimeUtil.getCurrentTime());
 		return collSendTaskDao.addCollTask(collTask);
 	}
 

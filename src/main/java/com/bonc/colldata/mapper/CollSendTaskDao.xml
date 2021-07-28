@@ -108,7 +108,7 @@
    select *  from coll_task where coll_task_code=#{code}
 	</select>
 	<insert id="addCollTask" parameterType="com.bonc.colldata.entity.CollTask">
-      INSERT INTO coll_task(coll_task_code,coll_task_name,coll_task_version,coll_type_task,create_time) values(
+      INSERT INTO coll_task(coll_task_code,coll_task_name,coll_task_version,coll_task_type,create_time) values(
       #{collTaskCode},
       #{collTaskName},
       #{collTaskVersion},
