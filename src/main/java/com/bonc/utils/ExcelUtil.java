@@ -370,7 +370,6 @@ public class ExcelUtil {
 					Row dataRow = sheet.createRow(i);
 					int i1 = 0;
 					for (String key : nameMap.keySet()) {
-						System.out.println(key);
 						sheet.setDefaultColumnStyle(i1, sheetStyle);
 						if (isFrist) {
 							Cell cell = headRow.createCell(i1);
@@ -380,7 +379,12 @@ public class ExcelUtil {
 						}
 						Cell cell = dataRow.createCell(i1);
 						cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
-						cell.setCellValue(data.get(i - 1).get(key).toString());
+						Object obj=data.get(i - 1).get(key);
+						if(obj!=null){
+							cell.setCellValue(obj.toString());
+						}else{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(dataStyle);
 						i1++;
 					}
@@ -464,7 +468,6 @@ public class ExcelUtil {
 					Row dataRow = sheet.createRow(i);
 					int i1 = 0;
 					for (String key : nameMap.keySet()) {
-						System.out.println(key);
 						sheet.setDefaultColumnStyle(i1, sheetStyle);
 						if (isFrist) {
 							Cell cell = headRow.createCell(i1);
@@ -474,7 +477,13 @@ public class ExcelUtil {
 						}
 						Cell cell = dataRow.createCell(i1);
 						cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
-						cell.setCellValue(data.get(i - 1).get(key).toString());
+						System.out.println(key);
+						Object str=data.get(i - 1).get(key);
+						if(str!=null){
+							cell.setCellValue(str.toString());
+						}else{
+							cell.setCellValue("");
+						}
 						cell.setCellStyle(dataStyle);
 						i1++;
 					}

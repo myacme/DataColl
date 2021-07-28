@@ -3,6 +3,7 @@ package com.bonc.colldata.controller;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollDataDictValue;
 import com.bonc.colldata.entity.CollReceiveTask;
+import com.bonc.colldata.entity.CollTask;
 import com.bonc.colldata.service.impl.CollSendTaskServiceImpl;
 import com.bonc.utils.TimeUtil;
 import com.github.pagehelper.PageHelper;
@@ -32,6 +33,25 @@ import java.util.Map;
 public class CollSendTaskController {
 	@Resource
 	private CollSendTaskServiceImpl collSendTaskService;
+
+	@RequestMapping(value = "/task/list",method = RequestMethod.GET)
+	@ApiOperation("管理员任务列表")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "pageSize",value = "分页大小",dataType = "int",required = true),
+			@ApiImplicitParam(name = "pageNum",value = "当前页码",dataType = "int",required = true),
+	})
+	public Object taskList(int pageSize,int pageNum){
+		PageHelper.startPage(pageNum,pageSize);
+		List<CollTask> list=collSendTaskService.checkCollTasks();
+		PageInfo pageInfo=new PageInfo(list);
+		return new RestRecord(200,"查询成功",pageInfo);
+	}
+	@RequestMapping(value = "/task/add",method = RequestMethod.POST)
+	@ApiOperation("管理员新增任务")
+	public Object addTask(@RequestBody CollTask cllTask){
+		int result=collSendTaskService.addCollTask(cllTask);
+		return new RestRecord(200,"新增成功",result);
+	}
 
 	@RequestMapping(value = "/list",method = RequestMethod.GET)
 	@ApiOperation("下发任务列表")

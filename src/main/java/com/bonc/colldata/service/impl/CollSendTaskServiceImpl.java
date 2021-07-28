@@ -45,6 +45,23 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	private CollDepartmentServiceImpl collDepartmentService;
 
 	@Override
+	public List<CollTask> checkCollTasks() {
+		return collSendTaskDao.checkCollTasks();
+	}
+
+	@Override
+	public int addCollTask(CollTask collTask) {
+		String uuid = CommonUtil.getUUID32();
+		collTask.setCollTaskCode(uuid);
+		return collSendTaskDao.addCollTask(collTask);
+	}
+
+	@Override
+	public CollTask checkCollTaskById(String code) {
+		return collSendTaskDao.checkCollTaskById(code);
+	}
+
+	@Override
 	public List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum) {
 		return collSendTaskDao.getSendTaskList(pageSize, pageNum);
 	}
@@ -154,15 +171,13 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		String vsersion = collReceiveTask.getSendTaskVersion();
 		//构建表格
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
+		System.out.println(listTable.size());
 		List<Map<String, Object>> list = new ArrayList<>();
 		list = this.getTaskTemplate(listTable);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate( deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
-
-		//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
-		String fileName = deptId + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 
 		try {
 			//this.excelToHtml(wb, response);
@@ -207,6 +222,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate( deptId, ifTemp));
 		}
+
 		String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		ArrayList<File> fileList = new ArrayList<File>();
 		for (Map<String, Object> map : list) {
@@ -262,13 +278,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 
 		for (Map<String, Object> m : listDesc) {
 
-			if (String.valueOf(m.get("name")).toLowerCase().equals("id")) {
-				nameMap.put("id", "编号(id)");
-			} else if (String.valueOf(m.get("name")).toLowerCase().equals("dept_id")) {
-				nameMap.put("dept_id", "部门(dept_id)");
-			} else if (String.valueOf(m.get("name")).toLowerCase().equals("name")) {
-				nameMap.put("name", "姓名(name)");
-			} else {
 				String key = String.valueOf(m.get("name"));
 				String value = key;
 				for (CollBasicPersonnelConfig collBasicPersonnelConfig : listHead) {
@@ -280,8 +289,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 					}
 				}
 				nameMap.put(key, value);
-			}
 		}
+		System.out.println(nameMap);
 		p.put("nameMap", nameMap);
 		p.put("name", "coll_personnel_maintain");
 		p.put("tableName", "人员基本信息");
@@ -302,6 +311,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	}
 
 	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable) {
+		System.out.println(listTable.size());
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
 			//

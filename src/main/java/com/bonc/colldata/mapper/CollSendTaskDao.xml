@@ -65,12 +65,12 @@
 
 	</select>
 	<resultMap id="baseTaskTable" type="com.bonc.colldata.entity.CollReceiveTaskTable">
-		<id column="send_task_code" property="sendTaskCode" javaType="String" />
-		<result column="send_task_table_code" property="sendTaskTableCode" javaType="String" />
-		<result column="send_task_table_name" property="sendTaskTableName" javaType="String" />
+		<id column="send_task_code" property="sendTaskCode" javaType="String"/>
+		<result column="send_task_table_code" property="sendTaskTableCode" javaType="String"/>
+		<result column="send_task_table_name" property="sendTaskTableName" javaType="String"/>
 	</resultMap>
 
-	<select id="getTaskTables"  resultMap="baseTaskTable" parameterType="String">
+	<select id="getTaskTables" resultMap="baseTaskTable" parameterType="String">
 		select a.send_task_code,a.send_task_table_code,b.business_type_table_name send_task_table_name from
 		coll_send_task_table a left join coll_business_table_type b on a.send_task_table_code=b.business_type_table_code where
 		 a.state='1' and a.send_task_code=#{sendTaskCode}
@@ -93,4 +93,27 @@
 		coll_business_table_config
 		where table_config_table_code=#{tableCode}
 	</select>
+
+	<resultMap id="baseCollTask" type="com.bonc.colldata.entity.CollTask">
+		<id property="collTaskCode" column="coll_task_code" jdbcType="VARCHAR"/>
+		<result property="collTaskName" column="coll_task_name" jdbcType="VARCHAR"/>
+		<result property="collTaskVersion" column="coll_task_version" jdbcType="VARCHAR"/>
+		<result property="collTaskType" column="coll_task_type" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="checkCollTasks" resultMap="baseCollTask">
+		select *  from coll_task
+	</select>
+	<select id="checkCollTaskById" resultMap="baseCollTask" parameterType="String">
+   select *  from coll_task where coll_task_code=#{code}
+	</select>
+	<insert id="addCollTask" parameterType="com.bonc.colldata.entity.CollTask">
+      INSERT INTO coll_task(coll_task_code,coll_task_name,coll_task_version,coll_type_task,create_time) values(
+      #{collTaskCode},
+      #{collTaskName},
+      #{collTaskVersion},
+      #{collTaskType},
+      #{createTime}
+      )
+	</insert>
 </mapper>

@@ -1,9 +1,6 @@
 package com.bonc.colldata.mapper;
 
-import com.bonc.colldata.entity.CollBusinessTableConfig;
-import com.bonc.colldata.entity.CollDataDictValue;
-import com.bonc.colldata.entity.CollReceiveTask;
-import com.bonc.colldata.entity.CollReceiveTaskTable;
+import com.bonc.colldata.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,16 +8,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
-todo:下发任务
+ * todo:下发任务
  */
 
 @Mapper
 public interface CollSendTaskDao {
 	/***
+	 * todo：新建任务列表
+	 * @return
+	 */
+	List<CollTask> checkCollTasks();
+
+	/**
+	 * todo:新增任务
+	 * @param collTask
+	 * @return
+	 */
+	int addCollTask(CollTask collTask);
+
+	/***
+	 * todo:查询任务
+	 * @param code
+	 * @return
+	 */
+	CollTask checkCollTaskById(@Param("code") String code);
+
+	/***
 	 * todo:获取下发任务列表
 	 * @return
 	 */
-	List<CollReceiveTask> getSendTaskList(int pageSize,int pageNum);
+	List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum);
 
 	/***
 	 * todo:获取下发任务列表
@@ -47,7 +64,7 @@ public interface CollSendTaskDao {
 	 * @param id
 	 * @return
 	 */
-	List<Map<String,Object>> getSendTaskTable(@Param("id") String id);
+	List<Map<String, Object>> getSendTaskTable(@Param("id") String id);
 
 	/***
 	 * todo:下发采集类型
@@ -59,7 +76,7 @@ public interface CollSendTaskDao {
 	 * todo:获取历史版本编号
 	 * @return
 	 */
-	List<Map<String,Object>> getBeforeVersion(@Param("departmentCode") String departmentCode);
+	List<Map<String, Object>> getBeforeVersion(@Param("departmentCode") String departmentCode);
 
 	/****
 	 * todo:获取派发任务详情

@@ -1,9 +1,7 @@
 package com.bonc.colldata.service;
 
-import com.bonc.colldata.entity.CollBusinessTableConfig;
-import com.bonc.colldata.entity.CollDataDictValue;
-import com.bonc.colldata.entity.CollReceiveTask;
-import com.bonc.colldata.entity.CollReceiveTaskTable;
+import com.bonc.colldata.entity.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +12,12 @@ todo:下发任务
 
 
 public interface CollSendTaskService {
+
+	List<CollTask> checkCollTasks();
+
+	int addCollTask(CollTask collTask);
+
+	CollTask checkCollTaskById( String code);
 
 	List<CollReceiveTask> getSendTaskList(int pageSize, int pageNum);
 
