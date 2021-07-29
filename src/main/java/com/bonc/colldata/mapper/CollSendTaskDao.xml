@@ -102,7 +102,7 @@
 		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
 	</resultMap>
 	<select id="checkCollTasks" resultMap="baseCollTask">
-		select *  from coll_task
+		select *  from coll_task  ORDER BY create_time desc
 	</select>
 	<select id="checkCollTaskById" resultMap="baseCollTask" parameterType="String">
    select *  from coll_task where coll_task_code=#{code}
