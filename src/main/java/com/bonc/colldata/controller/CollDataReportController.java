@@ -44,7 +44,7 @@ public class CollDataReportController {
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "version", value = "版本", required = true),
-			@ApiImplicitParam(name = "rportType", value = "数据类型（本级数据：0，下级数据：1）", required = true),
+			@ApiImplicitParam(name = "rportType", value = "数据类型（本级数据：1，下级数据：0）", required = true),
 	})
 	public Object inputZip(@RequestBody MultipartFile file, @RequestParam String version, @RequestParam String rportType) {
 		int result = collTableDataService.inputZip(file, version, rportType);
@@ -124,7 +124,7 @@ public class CollDataReportController {
 		String tableCode = paramObject.getString("tableCode");
 		String version = paramObject.getString("version");
 		String deptCode = paramObject.getString("deptCode");
-		if (version != null & "".equals(version)) {
+		if ("".equals(version)) {
 			version = CommonUtil.getVersionCode();
 		}
 		Map<String, Object> data = paramObject.getJSONObject("data");

@@ -70,7 +70,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 					List<CollPersonnelMaintain> list = jsonArray.toJavaList(CollPersonnelMaintain.class);
 					result = collPersonnelMapper.insertPersonnelData(list);
 				} else {
-					if ("1".equals(rportType)) {
+					if ("0".equals(rportType)) {
 						List<Map<String, String>> maps = ExcelUtil.parseExcel(excle);
 						JSONArray jsonArray = new JSONArray();
 						jsonArray.addAll(maps);
@@ -79,7 +79,6 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 							String id = CommonUtil.getUUID20();
 							list.forEach(bean -> {
 								bean.setDataCode(id);
-								bean.setVersion(version);
 							});
 							tableDataList.addAll(list);
 						});
@@ -94,6 +93,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 									bean.setVersion(version);
 									bean.setThisUpdate("0");
 									bean.setCreateTime(CommonUtil.getNowTime());
+									bean.setBusinessTypeCode("");
 								});
 								tableDataList.addAll(list);
 							}

@@ -611,7 +611,7 @@ public class ExcelUtil {
 				Sheet sheet = wb.getSheetAt(sIndex);
 				String tableName = null;
 				try {
-					tableName = getName(sheet.getSheetName());
+					tableName = sheet.getSheetName();
 					if ("导出数据".equals(tableName)) {
 						tableName = null;
 					}
