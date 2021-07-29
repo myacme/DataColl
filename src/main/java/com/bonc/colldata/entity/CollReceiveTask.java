@@ -24,11 +24,21 @@ public class CollReceiveTask implements Serializable {
     
     private String sendTaskCollDepartment;
 
+    private String sendTaskCollDepartmentName;
+
     private String sendIfTemp;
 
     private String createTime;
     
     private String state;
+
+    public String getSendTaskCollDepartmentName() {
+        return sendTaskCollDepartmentName;
+    }
+
+    public void setSendTaskCollDepartmentName(String sendTaskCollDepartmentName) {
+        this.sendTaskCollDepartmentName = sendTaskCollDepartmentName;
+    }
 
     public String getSendIfTemp() {
         return sendIfTemp;

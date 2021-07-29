@@ -47,7 +47,10 @@ public class CollDepartmentServiceImpl implements CollDepartmentService {
 				map=new HashMap<>();
 			}
 			String deptId=user.getDeptId();
-			map.put("pid",deptId);
+			CollDepartment collDepartment= collDepartmentMapper.checkDepartmentById(deptId);
+			//获取本级的父节点
+			String parentCode=collDepartment.getParentCode();
+			map.put("pid",parentCode);
 			return collDepartmentMapper.checkCollDepartmentTree(map);
 		}
 

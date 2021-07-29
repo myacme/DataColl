@@ -50,11 +50,13 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	}
 
 	@Override
-	public int addCollTask(CollTask collTask) {
+	public String  addCollTask(CollTask collTask) {
 		String uuid = CommonUtil.getUUID20();
 		collTask.setCollTaskCode(uuid);
 		collTask.setCreateTime(TimeUtil.getCurrentTime());
-		return collSendTaskDao.addCollTask(collTask);
+		int result=collSendTaskDao.addCollTask(collTask);
+
+		return uuid;
 	}
 
 	@Override
@@ -77,7 +79,8 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		collReceiveTask.setState("1");
 		int resultTask = collSendTaskDao.addSendTask(collReceiveTask);
 		int resultTable = collSendTaskDao.addSendTaskTable(collReceiveTask);
-		return ("插入任务表数据条数:" + resultTask + ";插入关联表数据:" + resultTable);
+	//	return ("插入任务表数据条数:" + resultTask + ";插入关联表数据:" + resultTable);
+		return uuid;
 	}
 
 	@Override
@@ -164,6 +167,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
+		String deptName=collReceiveTask.getSendTaskCollDepartmentName();
 		//任务名称
 		String taskName = collReceiveTask.getSendTaskName();
 		//是否仅模板
@@ -208,6 +212,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
+
 		//获取部门名称
 		String deptName=collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
 		//任务名称

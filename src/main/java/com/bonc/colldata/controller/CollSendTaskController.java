@@ -49,7 +49,7 @@ public class CollSendTaskController {
 	@RequestMapping(value = "/task/add",method = RequestMethod.POST)
 	@ApiOperation("管理员新增任务")
 	public Object addTask(@RequestBody CollTask cllTask){
-		int result=collSendTaskService.addCollTask(cllTask);
+		String result=collSendTaskService.addCollTask(cllTask);
 		return new RestRecord(200,"新增成功",result);
 	}
 

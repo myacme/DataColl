@@ -15,7 +15,7 @@ public interface CollSendTaskService {
 
 	List<CollTask> checkCollTasks();
 
-	int addCollTask(CollTask collTask);
+	String addCollTask(CollTask collTask);
 
 	CollTask checkCollTaskById( String code);
 

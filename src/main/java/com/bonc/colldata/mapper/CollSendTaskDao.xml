@@ -10,15 +10,24 @@
 		<result property="sendTaskCollType" column="send_task_coll_type" jdbcType="VARCHAR"/>
 		<result property="sendTaskDataAgo" column="send_task_data_ago" jdbcType="VARCHAR"/>
 		<result property="sendTaskCollDepartment" column="send_task_coll_department" jdbcType="VARCHAR"/>
+		<result property="sendTaskCollDepartmentName" column="instiutions_name" jdbcType="VARCHAR"/>
 		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
 		<result property="state" column="state" jdbcType="VARCHAR"/>
 	</resultMap>
 	<!--查询指定行数据-->
 	<select id="getSendTaskList" resultMap="BaseResultMap">
         select
-          send_task_code, send_task_name, send_task_version, send_task_coll_type, send_task_data_ago, send_task_coll_department, create_time, state
-        from coll_send_task
-        where state='1'
+          a.send_task_code,
+          a. send_task_name,
+          a.send_task_version,
+          a.send_task_coll_type,
+          a.send_task_data_ago,
+          a.send_task_coll_department,
+          a.create_time,
+          a.state,
+          b.instiutions_name
+        from coll_send_task a left join  coll_instiutions b on b.instiutions_id=a.send_task_coll_department
+        where a.state='1'
 	    order by create_time  desc
     </select>
 	<insert id="addSendTask" parameterType="com.bonc.colldata.entity.CollReceiveTask">
