@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +115,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		task.setSendTaskCollType(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
 		index = fileName.indexOf("_", index + 1);
 		task.setSendTaskVersion(fileName.substring(index + 1, fileName.indexOf(".", index + 1)));
-		String taskCode = CommonUtil.getUUID32();
+		String taskCode = CommonUtil.getUUID20();
 		task.setSendTaskCode(taskCode);
 		task.setCreateTime(CommonUtil.getNowTime());
 		task.setState("1");

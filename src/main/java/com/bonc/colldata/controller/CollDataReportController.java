@@ -129,7 +129,7 @@ public class CollDataReportController {
 		}
 		Map<String, Object> data = paramObject.getJSONObject("data");
 		List<CollTableData> tableDataList = new ArrayList<>();
-		String id = CommonUtil.getUUID32();
+		String id = CommonUtil.getUUID20();
 		for (Map.Entry<String, Object> entry : data.entrySet()) {
 			CollTableData bean = new CollTableData();
 			bean.setBusinessTypeCode("");

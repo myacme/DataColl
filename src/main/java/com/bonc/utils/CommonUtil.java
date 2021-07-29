@@ -1,9 +1,9 @@
 package com.bonc.utils;
 
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 /**
  * 〈公共工具类〉
@@ -18,6 +18,7 @@ public class CommonUtil {
 
 	/**
 	 * 生产版本编号
+	 *
 	 * @return
 	 */
 	public static String getVersionCode() {
@@ -29,7 +30,6 @@ public class CommonUtil {
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	public static String getNowTime() {
@@ -40,14 +40,24 @@ public class CommonUtil {
 
 	/**
 	 * 使用UUID生成主键
+	 *
 	 * @return
 	 */
-	public static String getUUID32() {
-		return UUID.randomUUID().toString().replace("-", "").toLowerCase();
+	public static String getUUID20() {
+		StringBuilder code = new StringBuilder(20);
+		for (int i = 0; i < 7; i++) {
+			char c = (char) (int) (Math.random() * 26 + 'a');
+			code.append(c);
+		}
+		code.append(Instant.now().toEpochMilli());
+		return code.toString();
 	}
 
 	public static void main(String[] args) {
 		System.out.println(getVersionCode());
-		System.out.println(getUUID32());
+		for (int i = 0; i < 10; i++) {
+			System.out.println(getUUID20());
+		}
+
 	}
 }

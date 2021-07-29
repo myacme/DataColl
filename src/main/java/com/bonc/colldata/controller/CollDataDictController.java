@@ -82,7 +82,7 @@ public class CollDataDictController {
 	@ApiOperation("增加字典")
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollDataDictType collDataDictType) {
-		collDataDictType.setDictCode(CommonUtil.getUUID32());
+		collDataDictType.setDictCode(CommonUtil.getUUID20());
 		collDataDictType.setState("1");
 		int result = collDataDictTypeService.insert(collDataDictType);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
@@ -160,7 +160,7 @@ public class CollDataDictController {
 	@ApiOperation("增加字典配置项")
 	@RequestMapping(value = "/data", method = RequestMethod.POST)
 	public Object createDictData(@RequestBody CollDataDictValue collDataDictValue) {
-		collDataDictValue.setCodeId(CommonUtil.getUUID32());
+		collDataDictValue.setCodeId(CommonUtil.getUUID20());
 		collDataDictValue.setState("1");
 		int result = collDataDictValueService.insert(collDataDictValue);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);

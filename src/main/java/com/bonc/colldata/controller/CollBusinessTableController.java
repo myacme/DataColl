@@ -84,7 +84,7 @@ public class CollBusinessTableController {
 	@ApiOperation("增加表清单")
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollBusinessTableType collBusinessTableType) {
-		collBusinessTableType.setBusinessTypeTableCode(CommonUtil.getUUID32());
+		collBusinessTableType.setBusinessTypeTableCode(CommonUtil.getUUID20());
 		int result = collBusinessTableTypeService.insert(collBusinessTableType);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result>0?collBusinessTableType:null);
 	}
@@ -162,7 +162,7 @@ public class CollBusinessTableController {
 	@ApiOperation("增加表清单配置项")
 	@RequestMapping(value = "/config", method = RequestMethod.POST)
 	public Object createTableData(@RequestBody CollBusinessTableConfig collBusinessTableConfig) {
-		collBusinessTableConfig.setTableConfigCode(CommonUtil.getUUID32());
+		collBusinessTableConfig.setTableConfigCode(CommonUtil.getUUID20());
 		int result = collBusinessTableConfigService.insert(collBusinessTableConfig);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
 	}

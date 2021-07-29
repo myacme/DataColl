@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +76,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 						jsonArray.addAll(maps);
 						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
 						collect.forEach((k, list) -> {
-							String id = CommonUtil.getUUID32();
+							String id = CommonUtil.getUUID20();
 							list.forEach(bean -> {
 								bean.setDataCode(id);
 								bean.setVersion(version);
@@ -88,7 +87,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 						List<List<CollTableData>> lists = ExcelUtil.readExcle(excle);
 						if (lists != null) {
 							for (List<CollTableData> list : lists) {
-								String id = CommonUtil.getUUID32();
+								String id = CommonUtil.getUUID20();
 								list.forEach(bean -> {
 									bean.setDataCode(id);
 									bean.setDepartmentCode(user.getDeptId());
@@ -381,7 +380,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		List<CollTableData> newDataList = new ArrayList<>();
 		Map<String, List<CollTableData>> collect = historyDataList.stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
 		collect.forEach((k, list) -> {
-			String id = CommonUtil.getUUID32();
+			String id = CommonUtil.getUUID20();
 			list.forEach(collTableData -> {
 				collTableData.setVersion(rportVersion);
 				collTableData.setCreateTime(CommonUtil.getNowTime());

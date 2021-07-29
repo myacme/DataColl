@@ -70,7 +70,7 @@ public class CollBusinessTypeController {
 	@ApiOperation("增加业务类型")
 	@RequestMapping(method = RequestMethod.POST)
 	public Object create(@RequestBody CollBusinessType collBusinessType) {
-		collBusinessType.setBusinessCode(CommonUtil.getUUID32());
+		collBusinessType.setBusinessCode(CommonUtil.getUUID20());
 		int insert = collBusinessTypeService.insert(collBusinessType);
 		return new RestRecord(200, "成功", insert);
 	}

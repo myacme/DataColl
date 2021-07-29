@@ -117,7 +117,7 @@ public class BaseDataController {
 	public Object addPersonnel(@RequestBody CollPersonnelMaintain collPersonnelMaintain) {
 		//获取数据id
 		System.out.println();
-		String uuid = CommonUtil.getUUID32();
+		String uuid = CommonUtil.getUUID20();
 		collPersonnelMaintain.setId(uuid);
 		collPersonnelMaintain.setState("1");
 		System.out.println(collPersonnelMaintain);

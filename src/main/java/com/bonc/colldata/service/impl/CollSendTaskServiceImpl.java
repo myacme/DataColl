@@ -51,7 +51,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 
 	@Override
 	public int addCollTask(CollTask collTask) {
-		String uuid = CommonUtil.getUUID32();
+		String uuid = CommonUtil.getUUID20();
 		collTask.setCollTaskCode(uuid);
 		collTask.setCreateTime(TimeUtil.getCurrentTime());
 		return collSendTaskDao.addCollTask(collTask);
@@ -71,7 +71,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	public String addSendTask(CollReceiveTask collReceiveTask) {
 		//插入表
 		//获取任务下发编号
-		String uuid = CommonUtil.getUUID32();
+		String uuid = CommonUtil.getUUID20();
 		collReceiveTask.setSendTaskCode(uuid);
 		collReceiveTask.setCreateTime(TimeUtil.getCurrentTime());
 		collReceiveTask.setState("1");

@@ -132,7 +132,7 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
         if (list != null){
             list.forEach(map -> {
                 CollBusinessTableConfig bean = JSON.parseObject(JSON.toJSONString(map), CollBusinessTableConfig.class);
-                bean.setTableConfigCode(CommonUtil.getUUID32());
+                bean.setTableConfigCode(CommonUtil.getUUID20());
                 bean.setTableConfigTableCode(id);
                 datalist.add(bean);
             });

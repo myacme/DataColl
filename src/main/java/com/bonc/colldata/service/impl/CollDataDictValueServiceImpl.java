@@ -135,7 +135,7 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 		if (list != null){
 			list.forEach(map -> {
 				CollDataDictValue bean = JSON.parseObject(JSON.toJSONString(map), CollDataDictValue.class);
-				bean.setCodeId(CommonUtil.getUUID32());
+				bean.setCodeId(CommonUtil.getUUID20());
 				bean.setCodeType(id);
 				bean.setState("1");
 				datalist.add(bean);
