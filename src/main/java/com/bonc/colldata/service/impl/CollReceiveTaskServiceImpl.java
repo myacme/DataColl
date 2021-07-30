@@ -66,12 +66,12 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 	@Override
 	public int insert(MultipartFile multipartFile) {
 
-		CollReceiveTask collReceiveTask=this.readZipAndExcel(multipartFile);
+		CollReceiveTask collReceiveTask = this.readZipAndExcel(multipartFile);
 		collReceiveTask.setCreateTime(TimeUtil.getCurrentTime());
 		collReceiveTask.setState("1");
 		int a = this.collReceiveTaskDao.insert(collReceiveTask);
 		int b = this.collReceiveTaskDao.addReceiveTaskTable(collReceiveTask);
-		return (a+b);
+		return (a + b);
 	}
 
 	/**
@@ -96,35 +96,25 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 		return this.collReceiveTaskDao.deleteById(id) > 0;
 	}
 
-	public CollReceiveTask readZipAndExcel(MultipartFile multipartFile){
+	public CollReceiveTask readZipAndExcel(MultipartFile multipartFile) {
 		//获取当前登录用户信息
-		UserManager userManager=SessionUtiil.getUserInfo();
+		UserManager userManager = SessionUtiil.getUserInfo();
 		//文件名称 zip规则 部门_任务名称_采集类型_版本号
 		String fileName = null;
 		try {
-			fileName = URLDecoder.decode(multipartFile.getOriginalFilename(),"utf-8");
+			fileName = URLDecoder.decode(multipartFile.getOriginalFilename(), "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		int index = fileName.indexOf("_");
 		CollReceiveTask task = new CollReceiveTask();
-		//部门id为当前导入人员部门id
-		task.setSendTaskCollDepartment(userManager.getDeptId());
-		task.setSendTaskName(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
-		index = fileName.indexOf("_", index + 1);
-		task.setSendTaskCollType(fileName.substring(index + 1, fileName.indexOf("_", index + 1)));
-		index = fileName.indexOf("_", index + 1);
-		task.setSendTaskVersion(fileName.substring(index + 1, fileName.indexOf(".", index + 1)));
-		String taskCode = CommonUtil.getUUID20();
-		task.setSendTaskCode(taskCode);
-		task.setCreateTime(CommonUtil.getNowTime());
-		task.setState("1");
 		List<CollReceiveTaskTable> result = new ArrayList<>();
 		File[] unzip = ZipUtil.unzip(FileUtil.toFile(multipartFile), SystemConfig.getZipPassWord());
 		if (unzip != null && unzip.length != 0) {
 			for (File file : unzip) {
 				if ("txt".equals(FileUtil.getExtensionName(file.getName()))) {
 					String s = TxtUtil.readTxtToString(file);
+					task = JSON.parseObject(s, CollReceiveTask.class);
+
 				}
 				if ("pdf".equals(FileUtil.getExtensionName(file.getName()))) {
 				}
@@ -139,6 +129,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 			}
 		}
 		task.setList(result);
+		//System.out.println(task.getSendTaskName()+"======"+task.getList().size());
 		return task;
 	}
 }

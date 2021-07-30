@@ -3,7 +3,9 @@ package com.bonc.colldata.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.bonc.colldata.config.SystemConfig;
 import com.bonc.colldata.entity.*;
+import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollSendTaskDao;
+import com.bonc.colldata.mapper.CollTableDataDao;
 import com.bonc.colldata.service.CollReceiveTaskService;
 import com.bonc.colldata.service.CollSendTaskService;
 import com.bonc.colldata.service.CollTableDataService;
@@ -43,6 +45,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	private CollReceiveTaskService collReceiveTaskService;
 	@Resource
 	private CollDepartmentServiceImpl collDepartmentService;
+	@Resource
+	private CollTableDataDao collTableDataDao;
+	@Resource
+	private CollBusinessTableConfigDao collBusinessTableConfigDao;
 
 	@Override
 	public List<CollTask> checkCollTasks() {
@@ -50,11 +56,11 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	}
 
 	@Override
-	public String  addCollTask(CollTask collTask) {
+	public String addCollTask(CollTask collTask) {
 		String uuid = CommonUtil.getUUID20();
 		collTask.setCollTaskCode(uuid);
 		collTask.setCreateTime(TimeUtil.getCurrentTime());
-		int result=collSendTaskDao.addCollTask(collTask);
+		int result = collSendTaskDao.addCollTask(collTask);
 
 		return uuid;
 	}
@@ -79,7 +85,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		collReceiveTask.setState("1");
 		int resultTask = collSendTaskDao.addSendTask(collReceiveTask);
 		int resultTable = collSendTaskDao.addSendTaskTable(collReceiveTask);
-	//	return ("插入任务表数据条数:" + resultTask + ";插入关联表数据:" + resultTable);
+		//	return ("插入任务表数据条数:" + resultTask + ";插入关联表数据:" + resultTable);
 		return uuid;
 	}
 
@@ -167,20 +173,21 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
-		String deptName=collReceiveTask.getSendTaskCollDepartmentName();
+		String deptName = collReceiveTask.getSendTaskCollDepartmentName();
 		//任务名称
 		String taskName = collReceiveTask.getSendTaskName();
 		//是否仅模板
 		String ifTemp = collReceiveTask.getSendIfTemp();
 		//数据版本
 		String vsersion = collReceiveTask.getSendTaskVersion();
+		String befVsersion = collReceiveTask.getSendTaskDataAgo();
 		//构建表格
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		System.out.println(listTable.size());
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable);
+		list = this.getTaskTemplate(listTable, befVsersion);
 		if ("cjlx002".equals(taskCollType)) {
-			list.add(this.getBaseTemplate( deptId, ifTemp));
+			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
 
@@ -214,23 +221,26 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
 
 		//获取部门名称
-		String deptName=collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
+		String deptName = collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
 		//任务名称
 		String taskName = collReceiveTask.getSendTaskName();
 		//是否仅模板
 		String ifTemp = collReceiveTask.getSendIfTemp();
 		//数据版本
 		String vsersion = collReceiveTask.getSendTaskVersion();
+		String befVersion = collReceiveTask.getSendTaskDataAgo();
 		//构建表格
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable);
+		list = this.getTaskTemplate(listTable, befVersion);
 		if ("cjlx002".equals(taskCollType)) {
-			list.add(this.getBaseTemplate( deptId, ifTemp));
+			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
 
 		String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		ArrayList<File> fileList = new ArrayList<File>();
+		File fileTxt = this.getText(collReceiveTask);
+		fileList.add(fileTxt);
 		for (Map<String, Object> map : list) {
 			Workbook wb = ExcelUtil.createXSLXTemplate(map);
 			//zip 或者文件名称 zip规则 部门_任务名称_采集类型_版本号
@@ -284,17 +294,17 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 
 		for (Map<String, Object> m : listDesc) {
 
-				String key = String.valueOf(m.get("name"));
-				String value = key;
-				for (CollBasicPersonnelConfig collBasicPersonnelConfig : listHead) {
-					if (collBasicPersonnelConfig.getPersonnelConfigValue().toLowerCase().equals(key.toLowerCase())) {
-						value = collBasicPersonnelConfig.getPersonnelConfigName() + "(" + key + ")";
-						break;
-					} else {
-						value = key + "(" + key + ")";
-					}
+			String key = String.valueOf(m.get("name"));
+			String value = key;
+			for (CollBasicPersonnelConfig collBasicPersonnelConfig : listHead) {
+				if (collBasicPersonnelConfig.getPersonnelConfigValue().toLowerCase().equals(key.toLowerCase())) {
+					value = collBasicPersonnelConfig.getPersonnelConfigName() + "(" + key + ")";
+					break;
+				} else {
+					value = key + "(" + key + ")";
 				}
-				nameMap.put(key, value);
+			}
+			nameMap.put(key, value);
 		}
 		System.out.println(nameMap);
 		p.put("nameMap", nameMap);
@@ -316,14 +326,16 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		return p;
 	}
 
-	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable) {
-		System.out.println(listTable.size());
+	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version) {
+
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
-			//
 			String tableCode = collReceiveTaskTable.getSendTaskTableCode();
+
 			String tableName = collReceiveTaskTable.getSendTaskTableName();
 			List<CollBusinessTableConfig> fieldList = this.getTableFieldConfig(tableCode);
+			List<Map<String, Object>> tableDataList = collTableDataDao.getDataList(fieldList, tableCode, version, null, "this_update", null);
+
 			//封装数据标题数据
 			Map<String, String> map = new LinkedHashMap<>();
 			for (CollBusinessTableConfig collBusinessTableConfig : fieldList) {
@@ -331,9 +343,9 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			}
 			Map<String, Object> p = new HashMap<>();
 			p.put("nameMap", map);
-			p.put("data", null);
+			p.put("data", tableDataList);
 			p.put("name", tableCode);
-			p.put("tableName",tableName);
+			p.put("tableName", tableName);
 			list.add(p);
 		}
 		return list;
@@ -354,23 +366,25 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			//下发部门
 			String deptId = collReceiveTask.getSendTaskCollDepartment();
 			//获取部门名称
-			String deptName=collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
+			String deptName = collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
 			//任务名称
 			String taskName = collReceiveTask.getSendTaskName();
 			//是否仅模板
 			String ifTemp = collReceiveTask.getSendIfTemp();
 			//历史数据版本
-			String vsersion = collReceiveTask.getSendTaskDataAgo();
+			String befvsersion = collReceiveTask.getSendTaskDataAgo();
+
+			String vsersion = collReceiveTask.getSendTaskVersion();
 			//构建表格
 			String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 
 			List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 			List<Map<String, Object>> list = new ArrayList<>();
-			list = this.getTaskTemplate(listTable);
+			list = this.getTaskTemplate(listTable, befvsersion);
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(deptId, ifTemp));
 			}
-			for(Map<String,Object> map:list){
+			for (Map<String, Object> map : list) {
 				Workbook wb = ExcelUtil.createXSLXTemplate(map);
 				File file = new File(ZipUtil.getProjectPath(), map.get("tableName") + ".xlsx");
 				FileOutputStream outputStream = null;
@@ -398,6 +412,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		ZipUtil.zipDownload(response, filed, "数据.zip", SystemConfig.getZipPassWord());
 		filed.forEach(f -> f.delete());
 	}
+
 	/**
 	 * 导出zip
 	 *
@@ -418,25 +433,12 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * todo:生成账密文件.txt
 	 * @param
 	 */
-	public File getText(HttpServletResponse response, String ids) {
+	public File getText(CollReceiveTask collReceiveTask) {
 		//根据部门查询该部门下的所有
 		StringBuffer sb = new StringBuffer();
-		sb.append("text");
-		File file = TxtUtil.writrTxt(sb.toString(), "账密");
-		/*try {
-			response.setHeader("Content-Disposition", "attachment;filename="
-					+ new String(("账密.txt").getBytes(), "iso-8859-1"));
-			OutputStreamWriter write = null;
-			write = new OutputStreamWriter(response.getOutputStream(), "utf-8");
-			BufferedWriter writer = new BufferedWriter(write);
-			writer.write(sb + "\r\n");
-			writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-
-		}*/
-
+		Map<String, Object> map = JSON.parseObject(JSON.toJSONString(collReceiveTask));
+		sb.append(map.toString());
+		File file = TxtUtil.writrTxt(sb.toString(), collReceiveTask.getSendTaskName());
 		return file;
 	}
 

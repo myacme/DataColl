@@ -31,6 +31,15 @@ public class CollReceiveTask implements Serializable {
     private String createTime;
     
     private String state;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getSendTaskCollDepartmentName() {
         return sendTaskCollDepartmentName;

@@ -13,6 +13,7 @@
 		<result property="sendTaskCollDepartmentName" column="instiutions_name" jdbcType="VARCHAR"/>
 		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
 		<result property="state" column="state" jdbcType="VARCHAR"/>
+		<result property="remarks" column="remarks" jdbcType="VARCHAR"/>
 	</resultMap>
 
 	<select id="queryVersionOfnew" resultType="java.util.Map">
@@ -53,6 +54,7 @@
         a.send_task_coll_department,
         a.create_time,
         a.state,
+        a.remarks,
         b.instiutions_name
         from main.coll_receive_task  a left join  coll_instiutions b on b.instiutions_id=a.send_task_coll_department
         where a.state='1'
@@ -108,8 +110,8 @@
           #{sendIfTemp},
           #{createTime},
           #{state},
-          '0'
-
+          '0',
+          #{remarks}
           )
      </insert>
 	<insert id="addReceiveTaskTable" parameterType="com.bonc.colldata.entity.CollReceiveTask">

@@ -13,6 +13,7 @@
 		<result property="sendTaskCollDepartmentName" column="instiutions_name" jdbcType="VARCHAR"/>
 		<result property="createTime" column="create_time" jdbcType="VARCHAR"/>
 		<result property="state" column="state" jdbcType="VARCHAR"/>
+		<result property="remarks" column="remarks" jdbcType="VARCHAR"/>
 	</resultMap>
 	<!--查询指定行数据-->
 	<select id="getSendTaskList" resultMap="BaseResultMap">
@@ -25,6 +26,7 @@
           a.send_task_coll_department,
           a.create_time,
           a.state,
+          a.remarks,
           b.instiutions_name
         from coll_send_task a left join  coll_instiutions b on b.instiutions_id=a.send_task_coll_department
         where a.state='1'
@@ -42,7 +44,8 @@
           #{sendTaskCollDepartment},
           #{sendIfTemp},
           #{createTime},
-          #{state}
+          #{state},
+          #{remarks}
 
           )
      </insert>
@@ -100,7 +103,7 @@
 		table_config_name
 		from
 		coll_business_table_config
-		where table_config_table_code=#{tableCode}
+		where table_config_table_code=#{tableCode} and state='1'
 	</select>
 
 	<resultMap id="baseCollTask" type="com.bonc.colldata.entity.CollTask">

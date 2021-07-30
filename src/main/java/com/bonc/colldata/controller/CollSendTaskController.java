@@ -119,7 +119,7 @@ public class CollSendTaskController {
 	@RequestMapping(value = "/downloadTxt",method = RequestMethod.GET)
 	@ApiOperation("下载txt")
 	public Object downloadZip(HttpServletResponse response,String ids){
-		collSendTaskService.getText(response,ids);
+		collSendTaskService.getText(null);
 		return new RestRecord(200,"成功","");
 	}
 }
