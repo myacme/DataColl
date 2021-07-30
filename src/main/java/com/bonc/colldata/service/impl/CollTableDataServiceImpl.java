@@ -54,10 +54,13 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 
 
 	@Override
-	public int inputZip(MultipartFile file, String version, String rportType) {
+	public Map<String, Object> inputZip(MultipartFile file, String version, String rportType) {
 		//获取当前登录用户
 		UserManager user = SessionUtiil.getUserInfo();
+		Map<String, Object> resultMap = new HashMap<>(4);
+		Map<String, Object> map = new HashMap<>(2);
 		int result = 0;
+		int size = 0;
 		List<CollTableData> tableDataList = new ArrayList<>();
 		File[] files = ZipUtil.unzip(FileUtil.toFile(file), SystemConfig.getZipPassWord());
 		if (files != null && files.length != 0) {
@@ -69,12 +72,15 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 					jsonArray.addAll(listMap);
 					List<CollPersonnelMaintain> list = jsonArray.toJavaList(CollPersonnelMaintain.class);
 					result = collPersonnelMapper.insertPersonnelData(list);
+					size += result;
 				} else {
+					//下级数据
 					if ("0".equals(rportType)) {
 						List<Map<String, String>> maps = ExcelUtil.parseExcel(excle);
 						JSONArray jsonArray = new JSONArray();
 						jsonArray.addAll(maps);
 						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
+						size += collect.size();
 						collect.forEach((k, list) -> {
 							String id = CommonUtil.getUUID20();
 							list.forEach(bean -> {
@@ -82,8 +88,9 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 							});
 							tableDataList.addAll(list);
 						});
-					} else {
-						List<List<CollTableData>> lists = ExcelUtil.readExcle(excle);
+					} else { //本级数据
+						Map<String, Object> temp = new HashMap<>(4);
+						List<List<CollTableData>> lists = ExcelUtil.readExcle(excle, temp);
 						if (lists != null) {
 							for (List<CollTableData> list : lists) {
 								String id = CommonUtil.getUUID20();
@@ -98,6 +105,8 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 								tableDataList.addAll(list);
 							}
 						}
+						size += lists.size();
+						map.put(excle.getName(), temp);
 					}
 				}
 				excle.delete();
@@ -106,7 +115,9 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		if (tableDataList.size() > 0) {
 			result = insertList(tableDataList);
 		}
-		return result;
+		resultMap.put("success", size);
+		resultMap.put("fail", map);
+		return resultMap;
 	}
 
 
@@ -177,6 +188,11 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 			File file = reportDataExcle(table.getBusinessTypeTableCode(), version, isTemplet);
 			fileList.add(file);
 		});
+		//获取基础数据excle
+		File excle = getBasicDataExcle(version);
+		if (excle != null) {
+			fileList.add(excle);
+		}
 		ZipUtil.zipDownload(response, fileList, "数据.zip", SystemConfig.getZipPassWord());
 		fileList.forEach(File::delete);
 	}
@@ -190,36 +206,11 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	 */
 	@Override
 	public void rportDataZip(HttpServletResponse response, String version) {
-		CollReceiveTask task = collReceiveTaskDao.getByVersion(version);
-		String type = task.getSendTaskCollType();
 		ArrayList<File> fileList = new ArrayList<>();
-		if ("cjlx002".equals(type)) {
-			Map<String, Object> map = collSendTaskService.getBaseTemplate("", "");
-			String name = map.get("name").toString();
-			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
-			nameMap.forEach((k, v) -> {
-				nameMap.put(k, v.substring(0, v.indexOf("(")));
-			});
-			List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
-			Workbook wb = ExcelUtil.generateXSLX(data, nameMap, name);
-			FileOutputStream outputStream = null;
-			File file = null;
-			try {
-				file = new File(ZipUtil.getProjectPath(), "基础数据" + ".xlsx");
-				outputStream = new FileOutputStream(file);
-				wb.write(outputStream);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			fileList.add(file);
+		//获取基础数据excle
+		File excle = getBasicDataExcle(version);
+		if (excle != null) {
+			fileList.add(excle);
 		}
 		List<Map<String, Object>> dataList = collTableDataDao.queryMap(version);
 		Workbook wb = ExcelUtil.generateXSLX(dataList);
@@ -244,6 +235,40 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		ZipUtil.zipDownload(response, fileList, "数据.zip", SystemConfig.getZipPassWord());
 		fileList.forEach(File::delete);
 		collReceiveTaskDao.report(version);
+	}
+
+
+	public File getBasicDataExcle(String version) {
+		CollReceiveTask task = collReceiveTaskDao.getByVersion(version);
+		String type = task.getSendTaskCollType();
+		File file = null;
+		if ("cjlx002".equals(type)) {
+			Map<String, Object> map = collSendTaskService.getBaseTemplate("", "");
+			String name = map.get("name").toString();
+			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
+			nameMap.forEach((k, v) -> {
+				nameMap.put(k, v.substring(0, v.indexOf("(")));
+			});
+			List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
+			Workbook wb = ExcelUtil.generateXSLX(data, nameMap, name);
+			FileOutputStream outputStream = null;
+			try {
+				file = new File(ZipUtil.getProjectPath(), "基础数据" + ".xlsx");
+				outputStream = new FileOutputStream(file);
+				wb.write(outputStream);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (outputStream != null) {
+					try {
+						outputStream.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return file;
 	}
 
 	/**
@@ -303,9 +328,9 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	public HashMap<String, Object> queryAllByLimit(String tableCode, String version, String deptCode, Pageable pageable) {
 		//获取表头
 		List<CollBusinessTableConfig> configList = collBusinessTableConfigDao.getConfigList(tableCode);
-		Map<String, String> nameMap = new HashMap<>();
+		Map<String, Object> nameMap = new HashMap<>();
 		configList.forEach(bean -> {
-			nameMap.put(bean.getTableConfigCode(), bean.getTableConfigName());
+			nameMap.put(bean.getTableConfigCode(), bean);
 		});
 		//获取本级及下级部门id
 		Map<String, Object> map = new HashMap<>(2);

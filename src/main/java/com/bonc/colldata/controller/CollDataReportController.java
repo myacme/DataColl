@@ -47,8 +47,8 @@ public class CollDataReportController {
 			@ApiImplicitParam(name = "rportType", value = "数据类型（本级数据：1，下级数据：0）", required = true),
 	})
 	public Object inputZip(@RequestBody MultipartFile file, @RequestParam String version, @RequestParam String rportType) {
-		int result = collTableDataService.inputZip(file, version, rportType);
-		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
+		Map<String, Object> map = collTableDataService.inputZip(file, version, rportType);
+		return new RestRecord( 200 ,"成功", map);
 	}
 
 	@ApiOperation("查询数据表数据")

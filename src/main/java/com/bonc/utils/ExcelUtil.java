@@ -1,12 +1,16 @@
 package com.bonc.utils;
 
+import com.bonc.colldata.config.SpringContextUtil;
 import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollBusinessTableType;
 import com.bonc.colldata.entity.CollTableData;
+import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,16 +88,16 @@ public class ExcelUtil {
 		/*创建行Rows及单元格Cells*/
 		//第一行为标题
 		Row headRow = sheet.createRow(0);
+		for (int i1 = 0; i1 < nameList.size(); i1++) {
+			sheet.setDefaultColumnStyle(i1, sheetStyle);
+			Cell cell = headRow.createCell(i1);
+			cell.setCellValue(nameList.get(i1).getTableConfigName() + "(" + nameList.get(i1).getTableConfigCode() + ")");
+			cell.setCellStyle(headStyle);
+		}
 		if (data != null) {
 			for (int i = 1; i <= data.size(); i++) {
 				Row dataRow = sheet.createRow(i);
 				for (int i1 = 0; i1 < nameList.size(); i1++) {
-					sheet.setDefaultColumnStyle(i1, sheetStyle);
-					if (isFrist) {
-						Cell cell = headRow.createCell(i1);
-						cell.setCellValue(nameList.get(i1).getTableConfigName() + "(" + nameList.get(i1).getTableConfigCode() + ")");
-						cell.setCellStyle(headStyle);
-					}
 					Cell cell = dataRow.createCell(i1);
 					Object o = data.get(i - 1).get(nameList.get(i1).getTableConfigCode());
 					if (o != null) {
@@ -104,13 +108,6 @@ public class ExcelUtil {
 					cell.setCellStyle(dataStyle);
 				}
 				isFrist = false;
-			}
-		} else {
-			for (int i1 = 0; i1 < nameList.size(); i1++) {
-				sheet.setDefaultColumnStyle(i1, sheetStyle);
-				Cell cell = headRow.createCell(i1);
-				cell.setCellValue(nameList.get(i1).getTableConfigName() + "(" + nameList.get(i1).getTableConfigCode() + ")");
-				cell.setCellStyle(headStyle);
 			}
 		}
 		/*设置列自动对齐*/
@@ -180,17 +177,18 @@ public class ExcelUtil {
 		/*创建行Rows及单元格Cells*/
 		//第一行为标题
 		Row headRow = sheet.createRow(0);
+		int i1 = 0;
+		for (String key : nameMap.keySet()) {
+			sheet.setDefaultColumnStyle(i1, sheetStyle);
+			Cell cell = headRow.createCell(i1);
+			cell.setCellValue(nameMap.get(key) + "(" + key + ")");
+			cell.setCellStyle(headStyle);
+			i1++;
+		}
 		if (data != null) {
 			for (int i = 1; i <= data.size(); i++) {
 				Row dataRow = sheet.createRow(i);
-				int i1 = 0;
 				for (String key : nameMap.keySet()) {
-					sheet.setDefaultColumnStyle(i1, sheetStyle);
-					if (isFrist) {
-						Cell cell = headRow.createCell(i1);
-						cell.setCellValue(nameMap.get(key) + "(" + key + ")");
-						cell.setCellStyle(headStyle);
-					}
 					Cell cell = dataRow.createCell(i1);
 					Object o = data.get(i - 1).get(key);
 					if (o != null) {
@@ -202,15 +200,6 @@ public class ExcelUtil {
 					i1++;
 				}
 				isFrist = false;
-			}
-		} else {
-			int i1 = 0;
-			for (String key : nameMap.keySet()) {
-				sheet.setDefaultColumnStyle(i1, sheetStyle);
-				Cell cell = headRow.createCell(i1);
-				cell.setCellValue(nameMap.get(key) + "(" + key + ")");
-				cell.setCellStyle(headStyle);
-				i1++;
 			}
 		}
 		/*设置列自动对齐*/
@@ -379,10 +368,10 @@ public class ExcelUtil {
 						}
 						Cell cell = dataRow.createCell(i1);
 						cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
-						Object obj=data.get(i - 1).get(key);
-						if(obj!=null){
+						Object obj = data.get(i - 1).get(key);
+						if (obj != null) {
 							cell.setCellValue(obj.toString());
-						}else{
+						} else {
 							cell.setCellValue("");
 						}
 						cell.setCellStyle(dataStyle);
@@ -408,105 +397,106 @@ public class ExcelUtil {
 		}
 		return wb;
 	}
+
 	public static Workbook createXSLXTemplate(Map<String, Object> map) {
 		Workbook wb = new XSSFWorkbook();
 		int index = 0;
-			String name = map.get("name").toString();
-			Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
-			List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
-			boolean isFrist = true;
-			/*创建表单*/
-			Sheet sheet = wb.createSheet();
-			wb.setSheetName(index, name);
-			//设置字体
-			Font headFont = wb.createFont();
-			headFont.setFontHeightInPoints((short) 14);
-			headFont.setFontName("Courier New");
-			headFont.setItalic(false);
-			headFont.setStrikeout(false);
-			//设置单元格为文本
-			CellStyle sheetStyle = wb.createCellStyle();
-			XSSFDataFormat dataFormat = (XSSFDataFormat) wb.createDataFormat();
-			sheetStyle.setDataFormat(dataFormat.getFormat("@"));
-			//设置头部单元格样式
-			CellStyle headStyle = wb.createCellStyle();
-			headStyle.setBorderBottom(BorderStyle.THICK);  //设置单元格线条
-			//设置填充方案
-			headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			//设置自定义填充颜色
-			headStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-			headStyle.setBorderLeft(BorderStyle.THICK);
-			headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-			headStyle.setBorderRight(BorderStyle.THICK);
-			headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-			headStyle.setBorderTop(BorderStyle.THICK);
-			headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-			headStyle.setAlignment(HorizontalAlignment.CENTER);    //设置水平对齐方式
-			headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+		String name = map.get("name").toString();
+		Map<String, String> nameMap = (Map<String, String>) map.get("nameMap");
+		List<Map<String, Object>> data = (List<Map<String, Object>>) map.get("data");
+		boolean isFrist = true;
+		/*创建表单*/
+		Sheet sheet = wb.createSheet();
+		wb.setSheetName(index, name);
+		//设置字体
+		Font headFont = wb.createFont();
+		headFont.setFontHeightInPoints((short) 14);
+		headFont.setFontName("Courier New");
+		headFont.setItalic(false);
+		headFont.setStrikeout(false);
+		//设置单元格为文本
+		CellStyle sheetStyle = wb.createCellStyle();
+		XSSFDataFormat dataFormat = (XSSFDataFormat) wb.createDataFormat();
+		sheetStyle.setDataFormat(dataFormat.getFormat("@"));
+		//设置头部单元格样式
+		CellStyle headStyle = wb.createCellStyle();
+		headStyle.setBorderBottom(BorderStyle.THICK);  //设置单元格线条
+		//设置填充方案
+		headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		//设置自定义填充颜色
+		headStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+		headStyle.setBorderLeft(BorderStyle.THICK);
+		headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setBorderRight(BorderStyle.THICK);
+		headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setBorderTop(BorderStyle.THICK);
+		headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		headStyle.setAlignment(HorizontalAlignment.CENTER);    //设置水平对齐方式
+		headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
 //		headStyle.setShrinkToFit(true);  //自动伸缩
-			headStyle.setFont(headFont);  //设置字体
-			headStyle.setDataFormat(dataFormat.getFormat("@"));
-			/*设置数据单元格格式*/
-			CellStyle dataStyle = wb.createCellStyle();
-			dataStyle.setBorderBottom(BorderStyle.THIN);  //设置单元格线条
-			dataStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());   //设置单元格颜色
-			dataStyle.setBorderLeft(BorderStyle.THIN);
-			dataStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-			dataStyle.setBorderRight(BorderStyle.THIN);
-			dataStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
-			dataStyle.setBorderTop(BorderStyle.THIN);
-			dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
-			dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
-			dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
+		headStyle.setFont(headFont);  //设置字体
+		headStyle.setDataFormat(dataFormat.getFormat("@"));
+		/*设置数据单元格格式*/
+		CellStyle dataStyle = wb.createCellStyle();
+		dataStyle.setBorderBottom(BorderStyle.THIN);  //设置单元格线条
+		dataStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());   //设置单元格颜色
+		dataStyle.setBorderLeft(BorderStyle.THIN);
+		dataStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setBorderRight(BorderStyle.THIN);
+		dataStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setBorderTop(BorderStyle.THIN);
+		dataStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+		dataStyle.setAlignment(HorizontalAlignment.LEFT);    //设置水平对齐方式
+		dataStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
 //		dataStyle.setShrinkToFit(true);  //自动伸缩
-			dataStyle.setDataFormat(dataFormat.getFormat("@"));
-			/*创建行Rows及单元格Cells*/
-			//第一行为标题
-			Row headRow = sheet.createRow(0);
-			if (data != null) {
-				for (int i = 1; i <= data.size(); i++) {
-					Row dataRow = sheet.createRow(i);
-					int i1 = 0;
-					for (String key : nameMap.keySet()) {
-						sheet.setDefaultColumnStyle(i1, sheetStyle);
-						if (isFrist) {
-							Cell cell = headRow.createCell(i1);
-							cell.setCellValue(nameMap.get(key));
-							headStyle.setShrinkToFit(true);  //自动伸缩
-							cell.setCellStyle(headStyle);
-						}
-						Cell cell = dataRow.createCell(i1);
-						cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
-						System.out.println(key);
-						Object str=data.get(i - 1).get(key);
-						if(str!=null){
-							cell.setCellValue(str.toString());
-						}else{
-							cell.setCellValue("");
-						}
-						cell.setCellStyle(dataStyle);
-						i1++;
-					}
-					isFrist = false;
-				}
-			} else {
+		dataStyle.setDataFormat(dataFormat.getFormat("@"));
+		/*创建行Rows及单元格Cells*/
+		//第一行为标题
+		Row headRow = sheet.createRow(0);
+		if (data != null) {
+			for (int i = 1; i <= data.size(); i++) {
+				Row dataRow = sheet.createRow(i);
 				int i1 = 0;
 				for (String key : nameMap.keySet()) {
 					sheet.setDefaultColumnStyle(i1, sheetStyle);
-					Cell cell = headRow.createCell(i1);
-					cell.setCellValue(nameMap.get(key));
-					headStyle.setShrinkToFit(true);
-					cell.setCellStyle(headStyle);
+					if (isFrist) {
+						Cell cell = headRow.createCell(i1);
+						cell.setCellValue(nameMap.get(key));
+						headStyle.setShrinkToFit(true);  //自动伸缩
+						cell.setCellStyle(headStyle);
+					}
+					Cell cell = dataRow.createCell(i1);
+					cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
+					System.out.println(key);
+					Object str = data.get(i - 1).get(key);
+					if (str != null) {
+						cell.setCellValue(str.toString());
+					} else {
+						cell.setCellValue("");
+					}
+					cell.setCellStyle(dataStyle);
 					i1++;
 				}
+				isFrist = false;
 			}
-			/*设置列自动对齐*/
-			for (int i = 0; i < headRow.getLastCellNum(); i++) {
-				sheet.autoSizeColumn(i);
+		} else {
+			int i1 = 0;
+			for (String key : nameMap.keySet()) {
+				sheet.setDefaultColumnStyle(i1, sheetStyle);
+				Cell cell = headRow.createCell(i1);
+				cell.setCellValue(nameMap.get(key));
+				headStyle.setShrinkToFit(true);
+				cell.setCellStyle(headStyle);
+				i1++;
 			}
-
+		}
+		/*设置列自动对齐*/
+		for (int i = 0; i < headRow.getLastCellNum(); i++) {
+			sheet.autoSizeColumn(i);
+		}
 		return wb;
 	}
+
 	/**
 	 * 处理数据长度不一定的情况
 	 *
@@ -555,7 +545,7 @@ public class ExcelUtil {
 				}
 				Map<String, String> map = new LinkedHashMap<>();
 				//循环取每个单元格(cell)的数据
-				for (int cellIndex = 0; cellIndex < xssfRow.getPhysicalNumberOfCells(); cellIndex++) {
+				for (int cellIndex = 0; cellIndex < titleRow.getPhysicalNumberOfCells(); cellIndex++) {
 					XSSFCell titleCell = titleRow.getCell(cellIndex);
 					XSSFCell xssfCell = xssfRow.getCell(cellIndex);
 					map.put(titleCell.getStringCellValue(), getValue(xssfCell));
@@ -590,8 +580,9 @@ public class ExcelUtil {
 	 * @param excle
 	 * @return
 	 */
-	public static List<List<CollTableData>> readExcle(File excle) {
+	public static List<List<CollTableData>> readExcle(File excle, Map<String, Object> map) {
 		List<List<CollTableData>> tableDate = new ArrayList<>();
+		List<Integer> failList = new ArrayList<>();
 		try {
 			//.是特殊字符，需要转义！！！！！
 			String[] split = excle.getName().split("\\.");
@@ -621,6 +612,7 @@ public class ExcelUtil {
 				//获取字段名
 				Row title = sheet.getRow(0);
 				//跳过上面1行提示数据
+				a:
 				for (int rIndex = sheet.getFirstRowNum() + 1; rIndex <= sheet.getLastRowNum(); rIndex++) {
 					Row row = sheet.getRow(rIndex);
 					StringBuilder cellString = new StringBuilder();
@@ -635,22 +627,44 @@ public class ExcelUtil {
 						if (cellString != null && !"".equals(cellString.toString())) {
 							List<CollTableData> rowData = new ArrayList<>();
 							//读取每个单元格
-							for (int cIndex = row.getFirstCellNum(); cIndex < row.getLastCellNum(); cIndex++) {
+							for (int cIndex = title.getFirstCellNum(); cIndex < title.getLastCellNum(); cIndex++) {
 								Cell titleCell = title.getCell(cIndex);
 								Cell cell = row.getCell(cIndex);
 								CollTableData bean = new CollTableData();
-								if (titleCell != null && cell != null) {
-									//格式化数字类型数据
-									if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-										double cellValue = cell.getNumericCellValue();
-										bean.setTableConfigCode(getName(titleCell.getStringCellValue()));
-										bean.setDataValue(String.valueOf(cellValue));
+								String key = getName(titleCell.getStringCellValue());
+								CollBusinessTableConfig config = SpringContextUtil.getBean(CollBusinessTableConfigDao.class).queryById(key);
+								if (titleCell != null) {
+									if (cell != null) {
+										//格式化数字类型数据
+										if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+											double cellValue = cell.getNumericCellValue();
+											String value = String.valueOf(cellValue);
+											if (!verifyValue(config, value)) {
+												failList.add(rIndex + 1);
+												continue a;
+											}
+											bean.setTableConfigCode(key);
+											bean.setDataValue(value);
+											bean.setTableBusinessCode(tableName);
+											continue;
+										}
+										String value = cell.getStringCellValue();
+										if (!verifyValue(config, value)) {
+											failList.add(rIndex + 1);
+											continue a;
+										}
+										bean.setTableConfigCode(key);
+										bean.setDataValue(value);
 										bean.setTableBusinessCode(tableName);
-										continue;
+									}else {
+										if (!verifyValue(config, "")) {
+											failList.add(rIndex + 1);
+											continue a;
+										}
+										bean.setTableConfigCode(key);
+										bean.setDataValue("");
+										bean.setTableBusinessCode(tableName);
 									}
-									bean.setTableConfigCode(getName(titleCell.getStringCellValue()));
-									bean.setDataValue(cell.getStringCellValue());
-									bean.setTableBusinessCode(tableName);
 								}
 								rowData.add(bean);
 							}
@@ -663,6 +677,9 @@ public class ExcelUtil {
 			e.printStackTrace();
 			return null;
 		}
+		String join = StringUtils.join(failList.toArray(), ",");
+		map.put("failList", join);
+		map.put("failSize", String.valueOf(failList.size()));
 		return tableDate;
 	}
 
@@ -708,7 +725,7 @@ public class ExcelUtil {
 						if (cellString != null && !"".equals(cellString.toString())) {
 							Map<String, String> map = new HashMap<>();
 							//读取每个单元格
-							for (int cIndex = row.getFirstCellNum(); cIndex < row.getLastCellNum(); cIndex++) {
+							for (int cIndex = title.getFirstCellNum(); cIndex < title.getLastCellNum(); cIndex++) {
 								Cell titleCell = title.getCell(cIndex);
 								Cell cell = row.getCell(cIndex);
 								String key = getName(titleCell.getStringCellValue());
@@ -811,4 +828,67 @@ public class ExcelUtil {
 		return tableName;
 	}
 
+	public static boolean verifyValue(CollBusinessTableConfig config, String value) {
+		boolean result = true;
+		String size = config.getTableConfigSize();
+		String ifNull = config.getTableConfigIfnull();
+		if (value.length() > Integer.parseInt(size)) {
+			return false;
+		}
+		if ("1".equals(ifNull)) {
+			if (value == null || "".equals(value)) {
+				return false;
+			}
+		}
+		switch (config.getTableConfigType()) {
+			case "Date":
+				String[] parsePatterns = {"yyyy-MM-dd", "yyyy年MM月dd日",
+						"yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy/MM/dd",
+						"yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyyMMdd"};
+				try {
+					DateUtils.parseDate(value, parsePatterns);
+				} catch (Exception e) {
+					e.printStackTrace();
+					result = false;
+				}
+				break;
+			case "Float":
+				String regex = "[0-9]+(\\.[0-9]{1,4})?";
+				result = value.matches(regex);
+				break;
+			case "Int":
+				String regex1 = "[0-9]+";
+				result = value.matches(regex1);
+				break;
+			case "IDcard":
+				result = CommonUtil.verifyIDCard(value);
+				break;
+			case "TelNo":
+				result = CommonUtil.verifyPhone(value);
+				break;
+			default:
+				break;
+		}
+		return result;
+	}
+
+
+	public static void main(String[] args) {
+//		CollBusinessTableConfig config =new CollBusinessTableConfig();
+//		config.setTableConfigSize("20");
+//		config.setTableConfigIfnull("1");
+//		config.setTableConfigType("IDcard");
+//		System.out.println(verifyValue(config,""));
+		a:
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 2; j++) {
+				if(i == 5){
+					continue a;
+				}
+
+				System.out.println("  j:" + j);
+			}
+			System.out.println("i:" + i);
+		}
+	}
 }

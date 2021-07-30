@@ -26,7 +26,7 @@ public interface CollTableDataService {
 	 * @param rportType
 	 * @return
 	 */
-	int inputZip(MultipartFile file, String version, String rportType);
+	Map<String, Object> inputZip(MultipartFile file, String version, String rportType);
 	/**
 	 * 通过版本查询所有的表
 	 *

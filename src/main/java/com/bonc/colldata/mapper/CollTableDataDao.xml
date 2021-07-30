@@ -36,7 +36,6 @@
         where a.table_business_code = #{tableCode}
             and a.version = #{version}
             and state = '1'
-
     </select>
 
     <select id="getDataList" resultType="java.util.Map">

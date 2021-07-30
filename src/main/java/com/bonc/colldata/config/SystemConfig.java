@@ -19,13 +19,18 @@ public class SystemConfig {
 
 	/**
 	 * 获取压缩文件密码
+	 *
 	 * @return
 	 */
 	public static String getZipPassWord() {
 		if (zipPassWord == null) {
 			SysConfigDao sysConfigDao = SpringContextUtil.getBean(SysConfigDao.class);
 			SysConfig bean = sysConfigDao.queryById("zip_password");
-			zipPassWord = bean.getConfigValue();
+			if (bean != null) {
+				zipPassWord = bean.getConfigValue();
+			} else {
+				return "Bonc123";
+			}
 		}
 		return zipPassWord;
 	}
