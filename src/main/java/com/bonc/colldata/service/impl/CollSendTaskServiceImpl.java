@@ -185,7 +185,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		System.out.println(listTable.size());
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable, befVsersion);
+		list = this.getTaskTemplate(listTable, befVsersion,deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
@@ -232,7 +232,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		//构建表格
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable, befVersion);
+		list = this.getTaskTemplate(listTable, befVersion,deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
@@ -326,15 +326,16 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		return p;
 	}
 
-	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version) {
+	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version,String deptId) {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
 			String tableCode = collReceiveTaskTable.getSendTaskTableCode();
+             String [] array=new String[]{deptId};
 
 			String tableName = collReceiveTaskTable.getSendTaskTableName();
 			List<CollBusinessTableConfig> fieldList = this.getTableFieldConfig(tableCode);
-			List<Map<String, Object>> tableDataList = collTableDataDao.getDataList(fieldList, tableCode, version, null, "this_update", null);
+			List<Map<String, Object>> tableDataList = collTableDataDao.getDataList(fieldList, tableCode, version, null, "this_update", array);
 
 			//封装数据标题数据
 			Map<String, String> map = new LinkedHashMap<>();
@@ -380,7 +381,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 
 			List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 			List<Map<String, Object>> list = new ArrayList<>();
-			list = this.getTaskTemplate(listTable, befvsersion);
+			list = this.getTaskTemplate(listTable, befvsersion,deptId);
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(deptId, ifTemp));
 			}
