@@ -68,7 +68,7 @@ public class ExcelUtil {
 		headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
 		headStyle.setAlignment(HorizontalAlignment.CENTER);    //设置水平对齐方式
 		headStyle.setVerticalAlignment(VerticalAlignment.CENTER);  //设置垂直对齐方式
-		headStyle.setShrinkToFit(true);  //自动伸缩
+//		headStyle.setShrinkToFit(true);  //自动伸缩
 		headStyle.setFont(headFont);  //设置字体
 		headStyle.setDataFormat(dataFormat.getFormat("@"));
 		/*设置数据单元格格式*/
@@ -107,7 +107,6 @@ public class ExcelUtil {
 					}
 					cell.setCellStyle(dataStyle);
 				}
-				isFrist = false;
 			}
 		}
 		/*设置列自动对齐*/
@@ -188,8 +187,9 @@ public class ExcelUtil {
 		if (data != null) {
 			for (int i = 1; i <= data.size(); i++) {
 				Row dataRow = sheet.createRow(i);
+				int i2 = 0;
 				for (String key : nameMap.keySet()) {
-					Cell cell = dataRow.createCell(i1);
+					Cell cell = dataRow.createCell(i2);
 					Object o = data.get(i - 1).get(key);
 					if (o != null) {
 						cell.setCellValue(o.toString());
@@ -197,9 +197,8 @@ public class ExcelUtil {
 						cell.setCellValue("");
 					}
 					cell.setCellStyle(dataStyle);
-					i1++;
+					i2++;
 				}
-				isFrist = false;
 			}
 		}
 		/*设置列自动对齐*/
@@ -879,16 +878,5 @@ public class ExcelUtil {
 //		config.setTableConfigIfnull("1");
 //		config.setTableConfigType("IDcard");
 //		System.out.println(verifyValue(config,""));
-		a:
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 2; j++) {
-				if(i == 5){
-					continue a;
-				}
-
-				System.out.println("  j:" + j);
-			}
-			System.out.println("i:" + i);
-		}
 	}
 }
