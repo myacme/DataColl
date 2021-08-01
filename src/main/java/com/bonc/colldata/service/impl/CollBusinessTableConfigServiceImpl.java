@@ -1,7 +1,6 @@
 package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollTableConfigDataSource;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.*;
@@ -172,13 +170,29 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 		}
 		//部门信息
 		if ("coll_instiutions".equals(tableName)) {
-			List<Map<String, Object>> tableHead1 = collDepartmentMapper.getTableHead();
-			tableHead1.forEach(map1 -> {
-				HashMap<String, Object> map = new HashMap<>();
-				map.put("name", map1.get("name").toString());
-				map.put("code", map1.get("name").toString());
-				tableHead.add(map);
-			});
+//			List<Map<String, Object>> tableHead1 = collDepartmentMapper.getTableHead();
+//			tableHead1.forEach(map1 -> {
+//				HashMap<String, Object> map = new HashMap<>();
+//				map.put("name", map1.get("name").toString());
+//				map.put("code", map1.get("name").toString());
+//				tableHead.add(map);
+//			});
+			HashMap<String, Object> map1 = new HashMap<>();
+			map1.put("name", "部门编号");
+			map1.put("code", "instiutions_id");
+			tableHead.add(map1);
+			HashMap<String, Object> map2 = new HashMap<>();
+			map2.put("name", "部门名称");
+			map2.put("code", "instiutions_name");
+			tableHead.add(map2);
+			HashMap<String, Object> map3 = new HashMap<>();
+			map3.put("name", "联系人");
+			map3.put("code", "instiutions_contact");
+			tableHead.add(map3);
+			HashMap<String, Object> map4 = new HashMap<>();
+			map4.put("name", "联系人电话");
+			map4.put("code", "instiutions_phone");
+			tableHead.add(map4);
 		}
 		return tableHead;
 	}
