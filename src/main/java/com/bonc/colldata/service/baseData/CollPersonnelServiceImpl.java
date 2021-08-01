@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.baseData;
 
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
+import com.bonc.colldata.entity.CollDepartment;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.QueryParam;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
@@ -24,6 +25,8 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	private CollPersonnelMapper collPersonnelMapper;
 	@Resource
 	private SysConfigDao sysConfigDao;
+	@Resource
+	private CollDepartmentServiceImpl collDepartmentService;
 
 	@Override
 	public List<CollBasicPersonnelConfig> getTableHead() {
@@ -42,9 +45,21 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 
 	@Override
 	public List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list) {
-		Map<String, Object> map=new HashMap<>();
-		map.put("list",list);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
 		return collPersonnelMapper.getPersonnelByList(map);
+	}
+
+	@Override
+	public List<CollPersonnelMaintain> getPersonnelByDept(String deptCode) {
+		//获取本级及下级部门id
+		Map<String, Object> map = new HashMap<>(2);
+		map.put("pid", deptCode);
+		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
+		List<String> idList = collDepartmentService.getAllNode(list);
+		idList.add(deptCode);
+		String[] ids = idList.toArray(new String[idList.size()]);
+		return collPersonnelMapper.getPersonnelByDept(ids);
 	}
 
 	@Override
@@ -54,8 +69,8 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 
 	@Override
 	public int deletePersonnelById(List<String> id) {
-		Map<String,Object> map=new HashMap<>();
-		map.put("list",id);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", id);
 		return collPersonnelMapper.deletePersonnelById(map);
 	}
 

@@ -85,4 +85,9 @@
             #{i}
         </foreach>
     </update>
+
+
+    <select id="getTableHead" resultType="java.util.Map">
+        pragma table_info ('coll_instiutions')
+    </select>
 </mapper>

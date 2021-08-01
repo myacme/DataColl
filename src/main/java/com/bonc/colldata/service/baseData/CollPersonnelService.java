@@ -28,6 +28,7 @@ public interface CollPersonnelService {
 
 
 	List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list);
+	List<CollPersonnelMaintain> getPersonnelByDept(String deptCode);
 
 
 	int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain);

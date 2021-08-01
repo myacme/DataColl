@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonc.colldata.mapper.CollTableConfigDataSourceDao">
+
+    <resultMap id="BaseResultMap" type="com.bonc.colldata.entity.CollTableConfigDataSource">
+        <!--@Table coll_table_config_data_source-->
+        <result property="dataSourceCode" column="data_source_code" jdbcType="VARCHAR"/>
+        <result property="tableConfigCode" column="table_config_code" jdbcType="VARCHAR"/>
+        <result property="dataSourceTable" column="data_source_table" jdbcType="VARCHAR"/>
+        <result property="dataSourceField" column="data_source_field" jdbcType="VARCHAR"/>
+        <result property="isKey" column="is_key" jdbcType="VARCHAR"/>
+        <result property="isEdit" column="is_edit" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        from main.coll_table_config_data_source
+        where data_source_code = #{dataSourceCode}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        from main.coll_table_config_data_source
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        from main.coll_table_config_data_source
+        <where>
+            <if test="dataSourceCode != null and dataSourceCode != ''">
+                and data_source_code = #{dataSourceCode}
+            </if>
+            <if test="tableConfigCode != null and tableConfigCode != ''">
+                and table_config_code = #{tableConfigCode}
+            </if>
+            <if test="dataSourceTable != null and dataSourceTable != ''">
+                and data_source_table = #{dataSourceTable}
+            </if>
+            <if test="dataSourceField != null and dataSourceField != ''">
+                and data_source_field = #{dataSourceField}
+            </if>
+            <if test="isKey != null and isKey != ''">
+                and is_key = #{isKey}
+            </if>
+            <if test="isEdit != null and isEdit != ''">
+                and is_edit = #{isEdit}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" >
+        insert into main.coll_table_config_data_source(data_source_code,table_config_code, data_source_table, data_source_field, is_key, is_edit)
+        values (#{item.dataSourceCode}, #{tableConfigCode}, #{dataSourceTable}, #{dataSourceField}, #{isKey}, #{isEdit})
+    </insert>
+
+    <!--新增所有列-->
+    <insert id="insertList" >
+        replace into main.coll_table_config_data_source(data_source_code,table_config_code, data_source_table, data_source_field, is_key, is_edit)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+               (#{item.dataSourceCode}, #{item.tableConfigCode}, #{item.dataSourceTable}, #{item.dataSourceField}, #{item.isKey}, #{item.isEdit})
+        </foreach>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update main.coll_table_config_data_source
+        <set>
+            <if test="tableConfigCode != null and tableConfigCode != ''">
+                table_config_code = #{tableConfigCode},
+            </if>
+            <if test="dataSourceTable != null and dataSourceTable != ''">
+                data_source_table = #{dataSourceTable},
+            </if>
+            <if test="dataSourceField != null and dataSourceField != ''">
+                data_source_field = #{dataSourceField},
+            </if>
+            <if test="isKey != null and isKey != ''">
+                is_key = #{isKey},
+            </if>
+            <if test="isEdit != null and isEdit != ''">
+                is_edit = #{isEdit},
+            </if>
+        </set>
+        where data_source_code = #{dataSourceCode}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from main.coll_table_config_data_source where data_source_code = #{dataSourceCode}
+    </delete>
+
+</mapper>

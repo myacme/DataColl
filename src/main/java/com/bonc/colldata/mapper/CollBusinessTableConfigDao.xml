@@ -16,13 +16,18 @@
         <result property="state" column="state" jdbcType="VARCHAR"/>
         <result property="tableConfigNameCode" column="table_config_name_code" jdbcType="VARCHAR"/>
         <result property="dataDictTypeCode" column="data_dict_type_code" jdbcType="VARCHAR"/>
+        <result property="dataSourceCode" column="data_source_code" jdbcType="VARCHAR"/>
+        <result property="dataSourceTable" column="data_source_table" jdbcType="VARCHAR"/>
+        <result property="dataSourceField" column="data_source_field" jdbcType="VARCHAR"/>
+        <result property="isKey" column="is_key" jdbcType="VARCHAR"/>
+        <result property="isEdit" column="is_edit" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="getConfigList" resultMap="BaseResultMap">
         SELECT
-            table_config_code, table_config_table_code, table_config_name, table_config_type, table_config_size, table_config_precision, table_config_calibration, table_config_ifnull, remarks,table_config_name_code,data_dict_type_code
+            a.*,b.data_source_code,b.data_source_table,b.data_source_field,b.is_key,b.is_edit
         FROM
-            coll_business_table_config
+            coll_business_table_config a LEFT JOIN coll_table_config_data_source b on a.table_config_code = b.table_config_code
         WHERE
             table_config_table_code = #{tableCode}
           and state = '1'

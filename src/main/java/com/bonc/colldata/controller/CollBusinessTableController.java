@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollBusinessTableType;
+import com.bonc.colldata.entity.CollTableConfigDataSource;
 import com.bonc.colldata.service.CollBusinessTableConfigService;
 import com.bonc.colldata.service.CollBusinessTableTypeService;
 import com.bonc.utils.CommonUtil;
@@ -217,6 +218,26 @@ public class CollBusinessTableController {
 	})
 	public Object batchImport(@RequestBody MultipartFile file, @RequestParam String id) {
 		int result = collBusinessTableConfigService.batchImport(file,id);
+		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+	}
+	/**
+	 * 查询数据源字段
+	 *
+	 */
+	@ApiOperation("查询数据源字段")
+	@RequestMapping(value = "sourceField/list", method = RequestMethod.GET)
+	public Object queryDataSourceField(String tableName){
+		List<Map<String, Object>>  list = collBusinessTableConfigService.queryDataSourceField(tableName);
+		return new RestRecord(200, "成功", list);
+	}
+	/**
+	 * 数据绑定
+	 *
+	 */
+	@ApiOperation("数据绑定")
+	@RequestMapping(value = "dataBinding", method = RequestMethod.POST)
+	public Object dataBinding(@RequestBody List<CollTableConfigDataSource> list){
+		int result = collBusinessTableConfigService.dataBinding(list);
 		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
 	}
 

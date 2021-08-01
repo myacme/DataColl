@@ -3,8 +3,10 @@ package com.bonc.colldata.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollBusinessTableType;
+import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.CollTableData;
 import com.bonc.colldata.service.CollTableDataService;
+import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,6 +39,8 @@ public class CollDataReportController {
 	 */
 	@Resource
 	private CollTableDataService collTableDataService;
+	@Resource
+	private CollPersonnelService collPersonnelService;
 
 
 	@ApiOperation("导入数据")
@@ -178,5 +182,16 @@ public class CollDataReportController {
 	public Object delete(@RequestBody List<Map<String, Object>> ids) {
 		int result = collTableDataService.delete(ids);
 		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
+	}
+
+	@ApiOperation("查询关联表数据")
+	@RequestMapping(value = "dataSource/list", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "deptCode", value = "部门", required = true),
+	})
+	public Object dataSource(String deptCode) {
+		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByDept(deptCode);
+		return new RestRecord(200, "成功", list);
 	}
 }

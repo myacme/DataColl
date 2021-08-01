@@ -57,6 +57,16 @@ public class CollBusinessTableConfig implements Serializable {
 
 	private String dataDictTypeCode;
 
+	private String dataSourceCode;
+
+	private String dataSourceTable;
+
+	private String dataSourceField;
+
+	private String isKey;
+
+	private String isEdit;
+
 
 	public String getTableConfigCode() {
 		return tableConfigCode;
@@ -152,5 +162,45 @@ public class CollBusinessTableConfig implements Serializable {
 
 	public void setDataDictTypeCode(String dataDictTypeCode) {
 		this.dataDictTypeCode = dataDictTypeCode;
+	}
+
+	public String getDataSourceTable() {
+		return dataSourceTable;
+	}
+
+	public void setDataSourceTable(String dataSourceTable) {
+		this.dataSourceTable = dataSourceTable;
+	}
+
+	public String getDataSourceField() {
+		return dataSourceField;
+	}
+
+	public void setDataSourceField(String dataSourceField) {
+		this.dataSourceField = dataSourceField;
+	}
+
+	public String getIsKey() {
+		return isKey;
+	}
+
+	public void setIsKey(String isKey) {
+		this.isKey = isKey;
+	}
+
+	public String getIsEdit() {
+		return isEdit;
+	}
+
+	public void setIsEdit(String isEdit) {
+		this.isEdit = isEdit;
+	}
+
+	public String getDataSourceCode() {
+		return dataSourceCode;
+	}
+
+	public void setDataSourceCode(String dataSourceCode) {
+		this.dataSourceCode = dataSourceCode;
 	}
 }

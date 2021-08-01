@@ -106,6 +106,18 @@
 		</if>
    order by name
 	</select>
+	<!--查询列表-->
+	<select id="getPersonnelByDept" resultType="com.bonc.colldata.entity.CollPersonnelMaintain" parameterType="java.util.Map">
+		SELECT *  FROM coll_personnel_maintain WHERE STATE='1'
+        <if test="array != null">
+            and dept_id in
+            <foreach collection="array" index="index" item="item" open="(" close=")"
+                     separator=",">
+                #{item}
+            </foreach>
+        </if>
+   order by name
+	</select>
 	<!--查询人员数据详情 byid-->
 	<select id="checkById" parameterType="String" resultType="com.bonc.colldata.entity.CollPersonnelMaintain">
           SELECT *  FROM coll_personnel_maintain WHERE STATE='1' and id=#{id}

@@ -51,6 +51,13 @@ public interface CollPersonnelMapper {
 	 */
 	List<CollPersonnelMaintain> getPersonnelByList(Map<String,Object> map);
 
+	/****
+	 * todo:查询人员列表
+	 * @param array
+	 * @return
+	 */
+	List<CollPersonnelMaintain> getPersonnelByDept(@Param("array") String[] array);
+
 	/***
 	 * todo:修改人员信息
 	 * @param collPersonnelMaintain

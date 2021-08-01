@@ -1,8 +1,11 @@
 package com.bonc.colldata.service;
 
+import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollBusinessTableConfig;
+import com.bonc.colldata.entity.CollTableConfigDataSource;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -69,8 +72,21 @@ public interface CollBusinessTableConfigService {
 	 * 批量导入
 	 *
 	 * @param file excle
-	 * @param id 表id
+	 * @param id   表id
 	 */
 	int batchImport(MultipartFile file, String id);
 
+	/**
+	 * 数据绑定
+	 *
+	 * @param tableName 表名称
+	 */
+	List<Map<String, Object>>  queryDataSourceField(String tableName);
+
+	/**
+	 * 数据绑定
+	 *
+	 * @param list 对象列表
+	 */
+	int dataBinding(List<CollTableConfigDataSource> list);
 }

@@ -56,4 +56,10 @@ public interface CollDepartmentMapper {
 	 * @return
 	 */
 	int deleteDepartment(Map<String, Object> map);
+
+	/***
+	 * todo:获取表字段描述
+	 * @return
+	 */
+	List<Map<String,Object>> getTableHead();
 }
