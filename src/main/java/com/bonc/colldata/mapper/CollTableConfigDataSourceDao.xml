@@ -14,16 +14,24 @@
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
-        select
-          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        select data_source_code,
+               table_config_code,
+               data_source_table,
+               data_source_field,
+               is_key,
+               is_edit
         from main.coll_table_config_data_source
         where data_source_code = #{dataSourceCode}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
-        select
-          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        select data_source_code,
+               table_config_code,
+               data_source_table,
+               data_source_field,
+               is_key,
+               is_edit
         from main.coll_table_config_data_source
         limit #{offset}, #{limit}
     </select>
@@ -31,7 +39,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
+        data_source_code, table_config_code, data_source_table, data_source_field, is_key, is_edit
         from main.coll_table_config_data_source
         <where>
             <if test="dataSourceCode != null and dataSourceCode != ''">
@@ -56,17 +64,20 @@
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" >
-        insert into main.coll_table_config_data_source(data_source_code,table_config_code, data_source_table, data_source_field, is_key, is_edit)
+    <insert id="insert">
+        insert into main.coll_table_config_data_source(data_source_code, table_config_code, data_source_table,
+                                                       data_source_field, is_key, is_edit)
         values (#{item.dataSourceCode}, #{tableConfigCode}, #{dataSourceTable}, #{dataSourceField}, #{isKey}, #{isEdit})
     </insert>
 
     <!--新增所有列-->
-    <insert id="insertList" >
-        replace into main.coll_table_config_data_source(data_source_code,table_config_code, data_source_table, data_source_field, is_key, is_edit)
+    <insert id="insertList">
+        replace into main.coll_table_config_data_source(data_source_code,table_config_code, data_source_table,
+        data_source_field, is_key, is_edit)
         values
         <foreach collection="list" index="index" item="item" separator=",">
-               (#{item.dataSourceCode}, #{item.tableConfigCode}, #{item.dataSourceTable}, #{item.dataSourceField}, #{item.isKey}, #{item.isEdit})
+            (#{item.dataSourceCode}, #{item.tableConfigCode}, #{item.dataSourceTable}, #{item.dataSourceField},
+            #{item.isKey}, #{item.isEdit})
         </foreach>
     </insert>
 
@@ -95,7 +106,12 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from main.coll_table_config_data_source where data_source_code = #{dataSourceCode}
+        <if test="list != null">
+            delete from main.coll_table_config_data_source where table_config_code in
+            <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+                #{item.id}
+            </foreach>
+        </if>
     </delete>
 
 </mapper>

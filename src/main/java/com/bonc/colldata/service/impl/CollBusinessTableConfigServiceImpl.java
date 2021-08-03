@@ -39,8 +39,6 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 	private CollTableConfigDataSourceDao collTableConfigDataSourceDao;
 	@Resource
 	private CollPersonnelMapper collPersonnelMapper;
-	@Resource
-	private CollDepartmentMapper collDepartmentMapper;
 
 	/**
 	 * 通过ID查询单条数据
@@ -97,6 +95,7 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 	 */
 	@Override
 	public int deleteById(List<Map<String, Object>> ids) {
+		collTableConfigDataSourceDao.deleteById(ids);
 		return this.collBusinessTableConfigDao.deleteById(ids);
 	}
 

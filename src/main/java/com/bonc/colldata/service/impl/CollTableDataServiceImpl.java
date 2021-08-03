@@ -7,6 +7,7 @@ import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollBusinessTableTypeDao;
 import com.bonc.colldata.mapper.CollReceiveTaskDao;
 import com.bonc.colldata.mapper.CollTableDataDao;
+import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
@@ -14,6 +15,7 @@ import com.bonc.utils.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +53,8 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	private CollSendTaskServiceImpl collSendTaskService;
 	@Resource
 	private CollPersonnelMapper collPersonnelMapper;
+	@Autowired
+	private CollDepartmentMapper collDepartmentMapper;
 
 
 	@Override
@@ -333,9 +337,12 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 			nameMap.put(bean.getTableConfigCode(), bean);
 		});
 		//获取本级及下级部门id
-		Map<String, Object> map = new HashMap<>(2);
-		map.put("pid", deptCode);
-		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
+		UserManager user=SessionUtiil.getUserInfo();
+		if (deptCode == null || "".equals(deptCode)) {
+			deptCode = user.getDeptId();
+		}
+		CollDepartment collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
+		List<CollDepartment> list = checkCollDepartmentTree(collDepartment);
 		List<String> idList = collDepartmentService.getAllNode(list);
 		idList.add(deptCode);
 		String[] ids = idList.toArray(new String[idList.size()]);
@@ -459,5 +466,21 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	@Override
 	public int delete(List<Map<String, Object>> list) {
 		return this.collTableDataDao.delete(list);
+	}
+
+
+	public List<CollDepartment> checkCollDepartmentTree(CollDepartment dept) {
+		List<CollDepartment> list = new ArrayList<>();
+		list.add(dept);
+		Map<String, Object> map = new HashMap<>(2);
+		map.put("pid", dept.getInstiutionsId());
+		List<CollDepartment> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
+		if (list1 != null) {
+			list1.forEach(l->{
+				List<CollDepartment> list2 = checkCollDepartmentTree(l);
+				list.addAll(list2);
+			});
+		}
+		return list;
 	}
 }

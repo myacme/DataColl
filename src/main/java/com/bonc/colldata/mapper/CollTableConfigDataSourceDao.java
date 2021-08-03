@@ -4,6 +4,7 @@ import com.bonc.colldata.entity.CollTableConfigDataSource;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (CollTableConfigDataSource)表数据库访问层
@@ -66,9 +67,9 @@ public interface CollTableConfigDataSourceDao {
     /**
      * 通过主键删除数据
      *
-     * @param dataSourceCode 主键
+     * @param list 主键
      * @return 影响行数
      */
-    int deleteById(String dataSourceCode);
+    int deleteById(@Param("list") List<Map<String, Object>> list);
 
 }
