@@ -168,7 +168,7 @@ public class ZipUtil {
 	 * 使用给定密码解压指定的ZIP压缩文件返回文件
 	 *
 	 * @param zipFile 指定的ZIP压缩文件
-	 * @param passwd      ZIP文件的密码
+	 * @param passwd  ZIP文件的密码
 	 * @return 解压后文件数组
 	 *
 	 * @Author
@@ -189,8 +189,8 @@ public class ZipUtil {
 			List<File> extractedFileList = new ArrayList<File>();
 			for (FileHeader fileHeader : headerList) {
 				if (!fileHeader.isDirectory()) {
-					System.out.println(fileHeader.getFileName()+"kang");
-					extractedFileList.add(new File(getProjectPath()+fileHeader.getFileName()));
+					System.out.println(fileHeader.getFileName() + "kang");
+					extractedFileList.add(new File(getProjectPath() + fileHeader.getFileName()));
 				}
 			}
 			extractedFiles = new File[extractedFileList.size()];
@@ -481,12 +481,13 @@ public class ZipUtil {
 
 	/**
 	 * 获取当前工程的父路径
+	 *
 	 * @return String
 	 */
 	public static String getProjectPath() {
 //		String path = System.getProperty("user.dir");
 //		return path.substring(0, path.lastIndexOf(File.separatorChar));
-		String folder=System.getProperty("java.io.tmpdir");
+		String folder = System.getProperty("java.io.tmpdir");
 		String canonicalPath = null;
 		try {
 			canonicalPath = new File("..").getCanonicalPath() + File.separator;

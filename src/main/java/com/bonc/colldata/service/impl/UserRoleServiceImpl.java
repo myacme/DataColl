@@ -20,9 +20,10 @@ import java.util.Map;
 public class UserRoleServiceImpl implements UserRoleService {
 	@Resource
 	private UserRoleDao userRoleDao;
+
 	@Override
 	public List<UserRole> getRoleList(String roleId, String roleName, String state) {
-		return userRoleDao.getRoleList(roleId,roleName,state);
+		return userRoleDao.getRoleList(roleId, roleName, state);
 	}
 
 	@Override
@@ -32,9 +33,9 @@ public class UserRoleServiceImpl implements UserRoleService {
 
 	@Override
 	public int updateState(List<String> list, String state) {
-		Map<String,Object> map=new HashMap<>();
-		map.put("list",list);
-		map.put("state",state);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("state", state);
 		return userRoleDao.updateState(map);
 	}
 }

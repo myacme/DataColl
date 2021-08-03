@@ -6,7 +6,6 @@ import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollTableConfigDataSource;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollTableConfigDataSourceDao;
-import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.service.CollBusinessTableConfigService;
 import com.bonc.utils.CommonUtil;

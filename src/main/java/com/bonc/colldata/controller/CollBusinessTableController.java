@@ -87,7 +87,7 @@ public class CollBusinessTableController {
 	public Object create(@RequestBody CollBusinessTableType collBusinessTableType) {
 		collBusinessTableType.setBusinessTypeTableCode(CommonUtil.getUUID20());
 		int result = collBusinessTableTypeService.insert(collBusinessTableType);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result>0?collBusinessTableType:null);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result > 0 ? collBusinessTableType : null);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class CollBusinessTableController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public Object update(@RequestBody CollBusinessTableType collBusinessTableType) {
 		int result = collBusinessTableTypeService.update(collBusinessTableType);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class CollBusinessTableController {
 	public Object delete(@RequestBody String id) {
 		id = JSONObject.parseObject(id).getString("id");
 		int result = collBusinessTableTypeService.deleteById(id);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 
@@ -165,7 +165,7 @@ public class CollBusinessTableController {
 	public Object createTableData(@RequestBody CollBusinessTableConfig collBusinessTableConfig) {
 		collBusinessTableConfig.setTableConfigCode(CommonUtil.getUUID20());
 		int result = collBusinessTableConfigService.insert(collBusinessTableConfig);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class CollBusinessTableController {
 	@RequestMapping(value = "/config", method = RequestMethod.PUT)
 	public Object updataTableData(@RequestBody CollBusinessTableConfig collBusinessTableConfig) {
 		int result = collBusinessTableConfigService.update(collBusinessTableConfig);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -194,12 +194,11 @@ public class CollBusinessTableController {
 	})
 	public Object deleteTableData(@RequestBody List<Map<String, Object>> ids) {
 		int result = collBusinessTableConfigService.deleteById(ids);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
 	 * 模板下载
-	 *
 	 */
 	@ApiOperation("模板下载")
 	@RequestMapping(value = "templateDownload", method = RequestMethod.GET)
@@ -209,7 +208,6 @@ public class CollBusinessTableController {
 
 	/**
 	 * 批量导入
-	 *
 	 */
 	@ApiOperation("批量导入")
 	@RequestMapping(value = "import", method = RequestMethod.POST)
@@ -217,30 +215,27 @@ public class CollBusinessTableController {
 			@ApiImplicitParam(name = "id", value = "表清单id", required = true),
 	})
 	public Object batchImport(@RequestBody MultipartFile file, @RequestParam String id) {
-		int result = collBusinessTableConfigService.batchImport(file,id);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		int result = collBusinessTableConfigService.batchImport(file, id);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
+
 	/**
 	 * 查询数据源字段
-	 *
 	 */
 	@ApiOperation("查询数据源字段")
 	@RequestMapping(value = "sourceField/list", method = RequestMethod.GET)
-	public Object queryDataSourceField(String tableName){
-		List<Map<String, Object>>  list = collBusinessTableConfigService.queryDataSourceField(tableName);
+	public Object queryDataSourceField(String tableName) {
+		List<Map<String, Object>> list = collBusinessTableConfigService.queryDataSourceField(tableName);
 		return new RestRecord(200, "成功", list);
 	}
+
 	/**
 	 * 数据绑定
-	 *
 	 */
 	@ApiOperation("数据绑定")
 	@RequestMapping(value = "dataBinding", method = RequestMethod.POST)
-	public Object dataBinding(@RequestBody List<CollTableConfigDataSource> list){
+	public Object dataBinding(@RequestBody List<CollTableConfigDataSource> list) {
 		int result = collBusinessTableConfigService.dataBinding(list);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
-
-
-
 }

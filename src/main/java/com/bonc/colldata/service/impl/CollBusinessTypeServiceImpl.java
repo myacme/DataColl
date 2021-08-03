@@ -47,7 +47,7 @@ public class CollBusinessTypeServiceImpl implements CollBusinessTypeService {
 		//是否为超级管理员
 		if ("1".equals(user.getIsAdmin())) {
 			return this.collBusinessTypeDao.queryAll(null);
-		}else {
+		} else {
 			return this.collBusinessTypeDao.queryAll(user.getDataType());
 		}
 	}

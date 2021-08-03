@@ -17,6 +17,7 @@ public interface CollBusinessTableTypeDao {
 
 	/**
 	 * 通过版本查询所有的表
+	 *
 	 * @param version
 	 * @return
 	 */

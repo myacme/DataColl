@@ -1,7 +1,10 @@
 package com.bonc.colldata.controller.baseData;
 
 import com.bonc.base.RestRecord;
-import com.bonc.colldata.entity.*;
+import com.bonc.colldata.entity.CollBasicPersonnelConfig;
+import com.bonc.colldata.entity.CollDepartment;
+import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.QueryList;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
@@ -51,7 +54,7 @@ public class BaseDataController {
 			@ApiImplicitParam(name = "instiutions_phone", value = "联系电话", dataType = "String", paramType = "query"),
 			@ApiImplicitParam(name = "pid", value = "节点编号", dataType = "String", paramType = "query")
 	})
-	public Object departmentList(String instiutions_id, String instiutions_name, String instiutions_contact, String instiutions_phone,String pid,int pageSize,int pageNum) {
+	public Object departmentList(String instiutions_id, String instiutions_name, String instiutions_contact, String instiutions_phone, String pid, int pageSize, int pageNum) {
 		Map<String, Object> map = new HashMap<>();
 		String pCode = StringUtils.isBlank(pid) == true ? "0" : pid;
 		map.put("pid", pCode);
@@ -61,11 +64,11 @@ public class BaseDataController {
 		map.put("instiutions_phone", instiutions_phone);
 		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
 		List<String> idList = collDepartmentService.getAllNode(list);
-		PageHelper.startPage(pageNum,pageSize);
+		PageHelper.startPage(pageNum, pageSize);
 		idList.add(pCode);
-		map.put("list",idList);
+		map.put("list", idList);
 		List<CollDepartment> result = collDepartmentService.checkCollDepartmentList(map);
-		PageInfo pageInfo=new PageInfo(result);
+		PageInfo pageInfo = new PageInfo(result);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
 
@@ -144,7 +147,7 @@ public class BaseDataController {
 	@ApiOperation("删除人员数据详情")
 	@RequestMapping(value = "/personnel/delete", method = RequestMethod.GET)
 	public Object deletePersonnel(@RequestParam(value = "id") List<String> id) {
-		for(String s:id){
+		for (String s : id) {
 			System.out.println(s);
 		}
 		//获取数据id
@@ -154,12 +157,11 @@ public class BaseDataController {
 
 	@ApiOperation("人员数据列表")
 	@RequestMapping(value = "/personnel/list", method = RequestMethod.POST)
-
 	public Object listPersonnel(@RequestBody QueryList queryList) {
-		PageHelper.startPage(queryList.getPageNum(),queryList.getPageSize());
+		PageHelper.startPage(queryList.getPageNum(), queryList.getPageSize());
 		//获取数据id
 		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByList(queryList.getList());
-		PageInfo pageInfo=new PageInfo(list);
+		PageInfo pageInfo = new PageInfo(list);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
 

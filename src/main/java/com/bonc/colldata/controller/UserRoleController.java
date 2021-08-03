@@ -32,8 +32,8 @@ public class UserRoleController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ApiOperation("分页查询角色")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "pageSize", value = "分页大小", dataType = "int", paramType = "query",required = true),
-			@ApiImplicitParam(name = "pageNum", value = "当前页", dataType = "int", paramType = "query",required = true),
+			@ApiImplicitParam(name = "pageSize", value = "分页大小", dataType = "int", paramType = "query", required = true),
+			@ApiImplicitParam(name = "pageNum", value = "当前页", dataType = "int", paramType = "query", required = true),
 			@ApiImplicitParam(name = "roleId", value = "角色id", dataType = "String", paramType = "query"),
 			@ApiImplicitParam(name = "roleName", value = "角色名", dataType = "String", paramType = "query"),
 			@ApiImplicitParam(name = "state", value = "状态", dataType = "String", paramType = "query")
@@ -69,10 +69,11 @@ public class UserRoleController {
 		int result = userRoleService.updateState(userIdList, state);
 		return new RestRecord(200, "修改成功", result);
 	}
+
 	@ApiOperation("获取角色编码")
-	@RequestMapping(value = "/getCode",method = RequestMethod.GET)
-	public Object getRoleCode(){
-		String code=TimeUtil.getCode();
-		return new RestRecord(200,"查询成功","role_"+code);
+	@RequestMapping(value = "/getCode", method = RequestMethod.GET)
+	public Object getRoleCode() {
+		String code = TimeUtil.getCode();
+		return new RestRecord(200, "查询成功", "role_" + code);
 	}
 }

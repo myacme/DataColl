@@ -18,10 +18,12 @@ public interface CollBusinessTableConfigDao {
 
 	/**
 	 * 通过表id查询所有的字段
+	 *
 	 * @param tableCode
 	 * @return
 	 */
 	List<CollBusinessTableConfig> getConfigList(@Param("tableCode") String tableCode);
+
 	/**
 	 * 通过ID查询单条数据
 	 *

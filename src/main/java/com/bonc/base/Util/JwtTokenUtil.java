@@ -1,11 +1,13 @@
 package com.bonc.base.Util;
 
 import cn.hutool.core.codec.Base64;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +73,7 @@ public class JwtTokenUtil {
 				// 设置签名使用的签名算法和签名使用的秘钥
 				.signWith(signatureAlgorithm, secret);
 		if (expiration >= 0) {
-			long expMillis = nowMillis + expiration * 1000*10;
+			long expMillis = nowMillis + expiration * 1000 * 10;
 			Date exp = new Date(expMillis);
 			// 设置过期时间
 			builder.setExpiration(exp);

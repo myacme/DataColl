@@ -75,5 +75,4 @@ public class CollBusinessTableTypeServiceImpl implements CollBusinessTableTypeSe
 	public int deleteById(String id) {
 		return this.collBusinessTableTypeDao.deleteById(id);
 	}
-
 }

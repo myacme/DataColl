@@ -19,24 +19,23 @@ package com.bonc.utils;
  * @author Zheng Jie
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
-public class StringUtils  {
+public class StringUtils {
 
-    public static boolean isBlank(CharSequence cs) {
-        int strLen;
-        if (cs != null && (strLen = cs.length()) != 0) {
-            for(int i = 0; i < strLen; ++i) {
-                if (!Character.isWhitespace(cs.charAt(i))) {
-                    return false;
-                }
-            }
+	public static boolean isBlank(CharSequence cs) {
+		int strLen;
+		if (cs != null && (strLen = cs.length()) != 0) {
+			for (int i = 0; i < strLen; ++i) {
+				if (!Character.isWhitespace(cs.charAt(i))) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return true;
+		}
+	}
 
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
-    }
+	public static boolean isEmpty(CharSequence cs) {
+		return cs == null || cs.length() == 0;
+	}
 }

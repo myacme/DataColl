@@ -35,6 +35,7 @@ import java.util.List;
 
 /**
  * api页面 /doc.html
+ *
  * @author Zheng Jie
  * @date 2018-11-23
  */
@@ -43,35 +44,33 @@ import java.util.List;
 public class SwaggerConfig {
 
 
-    @Bean
-    @SuppressWarnings("all")
-    public Docket createRestApi() {
-        List<Parameter> parameters = new ArrayList<>();
-        parameters.add(new ParameterBuilder()
-                .name("authorization")
-                .description("认证token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build());
+	@Bean
+	@SuppressWarnings("all")
+	public Docket createRestApi() {
+		List<Parameter> parameters = new ArrayList<>();
+		parameters.add(new ParameterBuilder()
+				.name("authorization")
+				.description("认证token")
+				.modelRef(new ModelRef("string"))
+				.parameterType("header")
+				.required(false)
+				.build());
+		return new Docket(DocumentationType.SWAGGER_2)
+				.enable(true)
+				.apiInfo(apiInfo())
+				.select()
+				.paths(Predicates.not(PathSelectors.regex("/error.*")))
+				.build().globalOperationParameters(parameters)
+				;
+	}
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(true)
-                .apiInfo(apiInfo())
-                .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
-                .build().globalOperationParameters(parameters)
-               ;
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .description("后台接口文档说明文档")
-                .title("采集系统接口文档")
-                .version("2.4")
-                .build();
-    }
-
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder()
+				.description("后台接口文档说明文档")
+				.title("采集系统接口文档")
+				.version("2.4")
+				.build();
+	}
 }
 
 

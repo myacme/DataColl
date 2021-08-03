@@ -9,27 +9,26 @@ import java.io.Serializable;
  * @since 2021-07-26 17:04:44
  */
 public class SysConfig implements Serializable {
-    private static final long serialVersionUID = 515820317527882783L;
-    
-    private String configCode;
-    
-    private String configValue;
+	private static final long serialVersionUID = 515820317527882783L;
+
+	private String configCode;
+
+	private String configValue;
 
 
-    public String getConfigCode() {
-        return configCode;
-    }
+	public String getConfigCode() {
+		return configCode;
+	}
 
-    public void setConfigCode(String configCode) {
-        this.configCode = configCode;
-    }
+	public void setConfigCode(String configCode) {
+		this.configCode = configCode;
+	}
 
-    public String getConfigValue() {
-        return configValue;
-    }
+	public String getConfigValue() {
+		return configValue;
+	}
 
-    public void setConfigValue(String configValue) {
-        this.configValue = configValue;
-    }
-
+	public void setConfigValue(String configValue) {
+		this.configValue = configValue;
+	}
 }

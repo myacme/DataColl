@@ -3,7 +3,6 @@ package com.bonc.colldata.config;
 
 import com.bonc.colldata.Interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -25,52 +24,51 @@ import java.util.concurrent.Executors;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
-    @Autowired
-    private TokenInterceptor tokenInterceptor;
+	@Autowired
+	private TokenInterceptor tokenInterceptor;
 
-    /**
-     * 跨域处理
-     * @param registry
-     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedHeaders("*")
-                .allowedMethods("*")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true);
-    }
+	/**
+	 * 跨域处理
+	 *
+	 * @param registry
+	 */
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedHeaders("*")
+				.allowedMethods("*")
+				.allowedOriginPatterns("*")
+				.allowCredentials(true);
+	}
 
-    /**
-     * 异步请求配置
-     * @param configurer
-     */
-    @Override
-    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-        configurer.setTaskExecutor(new ConcurrentTaskExecutor(Executors.newFixedThreadPool(3)));
-        configurer.setDefaultTimeout(30000);
-    }
+	/**
+	 * 异步请求配置
+	 *
+	 * @param configurer
+	 */
+	@Override
+	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		configurer.setTaskExecutor(new ConcurrentTaskExecutor(Executors.newFixedThreadPool(3)));
+		configurer.setDefaultTimeout(30000);
+	}
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        List<String> excludePath = new ArrayList<>();
-        //排除拦截，除了注册登录(此时还没token)，其他都拦截
-        excludePath.add("/register");  //登录
-        excludePath.add("/login");     //注册
-        excludePath.add("/static/**");  //静态资源
-        excludePath.add("/assets/**");  //静态资源
-        excludePath.add("/baseData/sysName");  //系统名称
-        excludePath.add("/swagger-ui.html");
-        excludePath.add("/swagger-resources/**");
-        excludePath.add("/webjars/**");
-        excludePath.add("/*/api-docs");
-        excludePath.add("/druid/**");
-        registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(excludePath);
-        WebMvcConfigurer.super.addInterceptors(registry);
-
-    }
-
-
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		List<String> excludePath = new ArrayList<>();
+		//排除拦截，除了注册登录(此时还没token)，其他都拦截
+		excludePath.add("/register");  //登录
+		excludePath.add("/login");     //注册
+		excludePath.add("/static/**");  //静态资源
+		excludePath.add("/assets/**");  //静态资源
+		excludePath.add("/baseData/sysName");  //系统名称
+		excludePath.add("/swagger-ui.html");
+		excludePath.add("/swagger-resources/**");
+		excludePath.add("/webjars/**");
+		excludePath.add("/*/api-docs");
+		excludePath.add("/druid/**");
+		registry.addInterceptor(tokenInterceptor)
+				.addPathPatterns("/**")
+				.excludePathPatterns(excludePath);
+		WebMvcConfigurer.super.addInterceptors(registry);
+	}
 }

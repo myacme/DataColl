@@ -16,6 +16,7 @@ public interface UserManagerService {
 
 
 	UserManager checkUserById(String userId);
+
 	UserManager checkUserByName(String userName);
 
 	int updateUser(UserManager userManager);

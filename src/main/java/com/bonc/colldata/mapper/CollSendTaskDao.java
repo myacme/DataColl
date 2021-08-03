@@ -21,6 +21,7 @@ public interface CollSendTaskDao {
 
 	/**
 	 * todo:新增任务
+	 *
 	 * @param collTask
 	 * @return
 	 */

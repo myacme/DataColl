@@ -21,9 +21,10 @@ import java.util.Map;
 public class UserManagerServiceImpl implements UserManagerService {
 
 	private final UserManagerDao userManagerDao;
+
 	@Override
 	public List<UserManager> checkList(String userName, String name, String phone, String state) {
-		return userManagerDao.checkList(userName,name,phone,state);
+		return userManagerDao.checkList(userName, name, phone, state);
 	}
 
 	@Override
@@ -33,34 +34,32 @@ public class UserManagerServiceImpl implements UserManagerService {
 
 	@Override
 	public UserManager checkUserByName(String userName) {
-		 return userManagerDao.checkUserByName(userName);
+		return userManagerDao.checkUserByName(userName);
 	}
 
 	@Override
 	public int updateUser(UserManager userManager) {
-
 		return userManagerDao.updateUser(userManager);
 	}
 
 	@Override
 	public int checkState(List<String> userIdList, String state) {
-		Map<String,Object> map=new HashMap<>();
-		map.put("state",state);
-		map.put("list",userIdList);
+		Map<String, Object> map = new HashMap<>();
+		map.put("state", state);
+		map.put("list", userIdList);
 		return userManagerDao.checkState(map);
 	}
 
 	@Override
 	public int updatePassword(String userId, String newPassword) {
-		String passwordEncode=newPassword;
-
-		return userManagerDao.updatePassword(userId,newPassword,passwordEncode);
+		String passwordEncode = newPassword;
+		return userManagerDao.updatePassword(userId, newPassword, passwordEncode);
 	}
 
 	@Override
 	public int addUserManager(UserManager userManager) {
 		//默认明码bonc_1234
-		String code="bonc_1234";
+		String code = "bonc_1234";
 		userManager.setPasswordCode(code);
 		userManager.setPassword(code);
 		userManager.setEnabled("1");

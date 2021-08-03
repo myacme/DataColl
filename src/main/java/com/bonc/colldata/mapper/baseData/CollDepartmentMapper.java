@@ -29,6 +29,7 @@ public interface CollDepartmentMapper {
 	 * @return
 	 */
 	List<CollDepartment> checkCollDepartmentList(Map<String, Object> map);
+
 	/****
 	 * todo:查询机构列表树
 	 * @param map
@@ -61,5 +62,5 @@ public interface CollDepartmentMapper {
 	 * todo:获取表字段描述
 	 * @return
 	 */
-	List<Map<String,Object>> getTableHead();
+	List<Map<String, Object>> getTableHead();
 }

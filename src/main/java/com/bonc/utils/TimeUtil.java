@@ -32,18 +32,19 @@ public class TimeUtil {
 		Date date = new Date();
 		SimpleDateFormat df1 = new SimpleDateFormat(DATE_FORMAT);
 		SimpleDateFormat df2 = new SimpleDateFormat(TIME_FORMAT);
-		String d=df1.format(date);
-		String d2=df2.format(date);
-		return "v"+d+"_"+d2;
+		String d = df1.format(date);
+		String d2 = df2.format(date);
+		return "v" + d + "_" + d2;
 	}
+
 	public static String getCode() {
 		final String DATE_FORMAT = "yyyyMMddHHmmss";
-
 		Date date = new Date();
 		SimpleDateFormat df1 = new SimpleDateFormat(DATE_FORMAT);
-		String d=df1.format(date);
+		String d = df1.format(date);
 		return d;
 	}
+
 	public static void main(String[] args) {
 		System.out.println(TimeUtil.getCode());
 	}

@@ -58,8 +58,8 @@ public class CollDataDictController {
 	/**
 	 * 查询所有数据
 	 *
-	 * @param name     字典名称
-	 * @param state    状态
+	 * @param name  字典名称
+	 * @param state 状态
 	 * @return 单条数据
 	 */
 	@ApiOperation("字典列表")
@@ -85,7 +85,7 @@ public class CollDataDictController {
 		collDataDictType.setDictCode(CommonUtil.getUUID20());
 		collDataDictType.setState("1");
 		int result = collDataDictTypeService.insert(collDataDictType);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class CollDataDictController {
 	public Object delete(@RequestBody String id) {
 		id = JSONObject.parseObject(id).getString("id");
 		int result = collDataDictTypeService.deleteById(id);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class CollDataDictController {
 		collDataDictValue.setCodeId(CommonUtil.getUUID20());
 		collDataDictValue.setState("1");
 		int result = collDataDictValueService.insert(collDataDictValue);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class CollDataDictController {
 	@RequestMapping(value = "/data", method = RequestMethod.PUT)
 	public Object updataDictData(@RequestBody CollDataDictValue collDataDictValue) {
 		int result = collDataDictValueService.update(collDataDictValue);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class CollDataDictController {
 	})
 	public Object deleteDictData(@RequestBody List<Map<String, Object>> ids) {
 		int result = collDataDictValueService.deleteById(ids);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class CollDataDictController {
 	})
 	public Object updataDictDataUse(@RequestBody List<Map<String, Object>> ids) {
 		int result = collDataDictValueService.updateState(ids, "1");
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
@@ -224,12 +224,11 @@ public class CollDataDictController {
 	})
 	public Object updataDictDataDisuse(@RequestBody List<Map<String, Object>> ids) {
 		int result = collDataDictValueService.updateState(ids, "0");
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
 	/**
 	 * 模板下载
-	 *
 	 */
 	@ApiOperation("模板下载")
 	@RequestMapping(value = "templateDownload", method = RequestMethod.GET)
@@ -239,15 +238,14 @@ public class CollDataDictController {
 
 	/**
 	 * 批量导入
-	 *
 	 */
 	@ApiOperation("批量导入")
 	@RequestMapping(value = "import", method = RequestMethod.POST)
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
 	})
-	public Object batchImport(@RequestBody MultipartFile file,@RequestParam String id) {
+	public Object batchImport(@RequestBody MultipartFile file, @RequestParam String id) {
 		int result = collDataDictValueService.batchImport(file, id);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 }

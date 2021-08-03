@@ -102,6 +102,6 @@ public class CollBusinessTypeController {
 	public Object delete(@RequestBody String id) {
 		id = JSONObject.parseObject(id).getString("id");
 		int result = collBusinessTypeService.deleteById(id);
-		return new RestRecord(result>0?200:400, result>0?"成功":"失败", result);
+		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 }

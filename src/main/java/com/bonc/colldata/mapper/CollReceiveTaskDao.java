@@ -80,6 +80,7 @@ public interface CollReceiveTaskDao {
 	int insert(CollReceiveTask collReceiveTask);
 
 	int addReceiveTaskTable(CollReceiveTask collReceiveTask);
+
 	/**
 	 * 修改数据
 	 *

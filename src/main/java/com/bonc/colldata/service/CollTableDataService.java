@@ -21,12 +21,14 @@ public interface CollTableDataService {
 
 	/**
 	 * 导入zip
+	 *
 	 * @param file
 	 * @param version
 	 * @param rportType
 	 * @return
 	 */
 	Map<String, Object> inputZip(MultipartFile file, String version, String rportType);
+
 	/**
 	 * 通过版本查询所有的表
 	 *

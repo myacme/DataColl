@@ -66,14 +66,15 @@ public interface CollTableDataDao {
 	 * @param historyVersion
 	 * @return 对象列表String rportVersion, String historyVersion
 	 */
-	List<CollTableData> queryAllOfTowVersion(@Param("rportVersion") String rportVersion,@Param("historyVersion") String historyVersion);
+	List<CollTableData> queryAllOfTowVersion(@Param("rportVersion") String rportVersion, @Param("historyVersion") String historyVersion);
+
 	/**
 	 * 通过版本所有的数据
 	 *
 	 * @param verssion 实例对象
 	 * @return 对象列表
 	 */
-	List<Map<String,Object>> queryMap(@Param("version") String verssion);
+	List<Map<String, Object>> queryMap(@Param("version") String verssion);
 
 	/**
 	 * 新增数据

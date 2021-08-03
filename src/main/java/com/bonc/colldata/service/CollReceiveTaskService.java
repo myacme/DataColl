@@ -34,7 +34,7 @@ public interface CollReceiveTaskService {
 	/**
 	 * 新增数据
 	 *
-	 * @param  实例对象
+	 * @param 实例对象
 	 * @return int
 	 */
 	int insert(MultipartFile multipartFile);

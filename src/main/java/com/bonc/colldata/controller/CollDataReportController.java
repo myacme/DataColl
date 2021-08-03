@@ -52,7 +52,7 @@ public class CollDataReportController {
 	})
 	public Object inputZip(@RequestBody MultipartFile file, @RequestParam String version, @RequestParam String rportType) {
 		Map<String, Object> map = collTableDataService.inputZip(file, version, rportType);
-		return new RestRecord( 200 ,"成功", map);
+		return new RestRecord(200, "成功", map);
 	}
 
 	@ApiOperation("查询数据表数据")

@@ -337,7 +337,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 			nameMap.put(bean.getTableConfigCode(), bean);
 		});
 		//获取本级及下级部门id
-		UserManager user=SessionUtiil.getUserInfo();
+		UserManager user = SessionUtiil.getUserInfo();
 		if (deptCode == null || "".equals(deptCode)) {
 			deptCode = user.getDeptId();
 		}
@@ -468,7 +468,12 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		return this.collTableDataDao.delete(list);
 	}
 
-
+	/**
+	 * 获取本级及下级部门
+	 *
+	 * @param dept
+	 * @return
+	 */
 	public List<CollDepartment> checkCollDepartmentTree(CollDepartment dept) {
 		List<CollDepartment> list = new ArrayList<>();
 		list.add(dept);
@@ -476,7 +481,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		map.put("pid", dept.getInstiutionsId());
 		List<CollDepartment> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
 		if (list1 != null) {
-			list1.forEach(l->{
+			list1.forEach(l -> {
 				List<CollDepartment> list2 = checkCollDepartmentTree(l);
 				list.addAll(list2);
 			});

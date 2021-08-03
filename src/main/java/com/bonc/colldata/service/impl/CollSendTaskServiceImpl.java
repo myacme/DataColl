@@ -11,18 +11,14 @@ import com.bonc.colldata.service.CollSendTaskService;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
-
 import com.bonc.utils.*;
-
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.*;
 import java.net.URL;
-
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -61,7 +57,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		collTask.setCollTaskCode(uuid);
 		collTask.setCreateTime(TimeUtil.getCurrentTime());
 		int result = collSendTaskDao.addCollTask(collTask);
-
 		return uuid;
 	}
 
@@ -122,7 +117,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * @throws IOException
 	 */
 	public void scanPdf(HttpServletResponse response, boolean isOnLine, String sendTaskCode) throws IOException {
-
 		String filePath = "e:/pdf/Test111.pdf";
 		System.out.println("filePath:" + filePath);
 		File f = new File(filePath);
@@ -168,7 +162,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		} else if ("receive".toLowerCase().equals(type.toLowerCase())) {
 			collReceiveTask = collReceiveTaskService.queryById(sendTaskCode);
 		}
-
 		//业务数据类型  001是业务数据 002 时候业务+基础
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
@@ -185,12 +178,11 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		System.out.println(listTable.size());
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable, befVsersion,deptId);
+		list = this.getTaskTemplate(listTable, befVsersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
-
 		try {
 			//this.excelToHtml(wb, response);
 			//    String html=ExcelTOHtml.excelWriteToHtml(wb);
@@ -202,8 +194,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	public void getZipTemplate(HttpServletResponse response, String sendTaskCode, String type) {
@@ -214,12 +204,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		} else if ("receive".toLowerCase().equals(type.toLowerCase())) {
 			collReceiveTask = collReceiveTaskService.queryById(sendTaskCode);
 		}
-
 		//业务数据类型  001是业务数据 002 时候业务+基础
 		String taskCollType = collReceiveTask.getSendTaskCollType();
 		//下发部门
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
-
 		//获取部门名称
 		String deptName = collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
 		//任务名称
@@ -232,11 +220,10 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		//构建表格
 		List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 		List<Map<String, Object>> list = new ArrayList<>();
-		list = this.getTaskTemplate(listTable, befVersion,deptId);
+		list = this.getTaskTemplate(listTable, befVersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
 		}
-
 		String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		ArrayList<File> fileList = new ArrayList<File>();
 		File fileTxt = this.getText(collReceiveTask);
@@ -264,8 +251,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		}
 		ZipUtil.zipDownload(response, fileList, fileName + ".zip", SystemConfig.getZipPassWord());
 		fileList.forEach(file1 -> file1.delete());
-
-
 	}
 
 	/***
@@ -291,9 +276,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		queryParam.setValue(deptId);
 		listp.add(queryParam);
 		List<CollPersonnelMaintain> listData = collPersonnelService.getPersonnelByList(listp);
-
 		for (Map<String, Object> m : listDesc) {
-
 			String key = String.valueOf(m.get("name"));
 			String value = key;
 			for (CollBasicPersonnelConfig collBasicPersonnelConfig : listHead) {
@@ -321,22 +304,18 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			} else {
 				p.put("data", null);
 			}
-
 		}
 		return p;
 	}
 
-	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version,String deptId) {
-
+	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version, String deptId) {
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
 			String tableCode = collReceiveTaskTable.getSendTaskTableCode();
-             String [] array=new String[]{deptId};
-
+			String[] array = new String[]{deptId};
 			String tableName = collReceiveTaskTable.getSendTaskTableName();
 			List<CollBusinessTableConfig> fieldList = this.getTableFieldConfig(tableCode);
 			List<Map<String, Object>> tableDataList = collTableDataDao.getDataList(fieldList, tableCode, version, null, "this_update", array);
-
 			//封装数据标题数据
 			Map<String, String> map = new LinkedHashMap<>();
 			for (CollBusinessTableConfig collBusinessTableConfig : fieldList) {
@@ -357,7 +336,6 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 */
 	public void getZipMore(HttpServletResponse response, List<String> list1) {
 		ArrayList<File> filed = new ArrayList<File>();
-
 		for (String sendTaskCode : list1) {
 			ArrayList<File> fileList = new ArrayList<File>();
 			//根据派发任务编号 获取派发任务详情
@@ -374,14 +352,12 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			String ifTemp = collReceiveTask.getSendIfTemp();
 			//历史数据版本
 			String befvsersion = collReceiveTask.getSendTaskDataAgo();
-
 			String vsersion = collReceiveTask.getSendTaskVersion();
 			//构建表格
 			String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
-
 			List<CollReceiveTaskTable> listTable = this.getTaskTables(sendTaskCode);
 			List<Map<String, Object>> list = new ArrayList<>();
-			list = this.getTaskTemplate(listTable, befvsersion,deptId);
+			list = this.getTaskTemplate(listTable, befvsersion, deptId);
 			if ("cjlx002".equals(taskCollType)) {
 				list.add(this.getBaseTemplate(deptId, ifTemp));
 			}
@@ -442,5 +418,4 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		File file = TxtUtil.writrTxt(sb.toString(), collReceiveTask.getSendTaskName());
 		return file;
 	}
-
 }

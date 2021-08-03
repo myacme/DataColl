@@ -3,6 +3,7 @@ package com.bonc.colldata.mapper;
 import com.bonc.colldata.entity.CollTableConfigDataSource;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 

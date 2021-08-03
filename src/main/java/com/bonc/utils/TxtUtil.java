@@ -17,6 +17,7 @@ public class TxtUtil {
 
 	/**
 	 * 读取txt 返回字符串
+	 *
 	 * @param txt 文件
 	 * @return String
 	 */
@@ -36,13 +37,14 @@ public class TxtUtil {
 
 	/**
 	 * 字符串写入到txt
-	 * @param content 内容
+	 *
+	 * @param content  内容
 	 * @param fileName 文件
 	 * @return File
 	 */
-	public static File writrTxt(String content, String fileName){
-		File txt = new File(ZipUtil.getProjectPath() +fileName+ ".txt");
-		try(FileOutputStream fos = new FileOutputStream(txt)) {
+	public static File writrTxt(String content, String fileName) {
+		File txt = new File(ZipUtil.getProjectPath() + fileName + ".txt");
+		try (FileOutputStream fos = new FileOutputStream(txt)) {
 			fos.write(content.getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();

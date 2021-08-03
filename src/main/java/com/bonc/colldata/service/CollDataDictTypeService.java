@@ -23,8 +23,8 @@ public interface CollDataDictTypeService {
 	/**
 	 * 查询多条数据
 	 *
-	 * @param name     字典名称
-	 * @param state    状态
+	 * @param name  字典名称
+	 * @param state 状态
 	 * @return 对象列表
 	 */
 	List<CollDataDictType> queryAllByLimit(String name, String state);

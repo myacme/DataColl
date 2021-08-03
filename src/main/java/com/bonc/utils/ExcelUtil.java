@@ -5,12 +5,12 @@ import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollBusinessTableType;
 import com.bonc.colldata.entity.CollTableData;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -655,7 +655,7 @@ public class ExcelUtil {
 										bean.setTableConfigCode(key);
 										bean.setDataValue(value);
 										bean.setTableBusinessCode(tableName);
-									}else {
+									} else {
 										if (!verifyValue(config, "")) {
 											failList.add(rIndex + 1);
 											continue a;

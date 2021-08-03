@@ -126,13 +126,13 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 	 * 批量导入
 	 *
 	 * @param file excle
-	 * @param id 字典id
+	 * @param id   字典id
 	 */
 	@Override
-	public int batchImport(MultipartFile file, String id){
+	public int batchImport(MultipartFile file, String id) {
 		List<CollDataDictValue> datalist = new ArrayList<>();
 		List<Map<String, String>> list = ExcelUtil.readExcleOfCommon(FileUtil.toFile(file));
-		if (list != null){
+		if (list != null) {
 			list.forEach(map -> {
 				CollDataDictValue bean = JSON.parseObject(JSON.toJSONString(map), CollDataDictValue.class);
 				bean.setCodeId(CommonUtil.getUUID20());
@@ -141,10 +141,8 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 				datalist.add(bean);
 			});
 			return collDataDictValueDao.insertList(datalist);
-		}else {
+		} else {
 			return 0;
 		}
-
 	}
-
 }

@@ -34,6 +34,7 @@ public interface UserManagerDao {
 	UserManager checkUserById(@Param("userId") String userId);
 
 	UserManager checkUserByName(@Param("userName") String userName);
+
 	/****
 	 * todo: 修改用户
 	 * @param userManager
@@ -63,5 +64,4 @@ public interface UserManagerDao {
 	 * @return
 	 */
 	int addUserManager(UserManager userManager);
-
 }

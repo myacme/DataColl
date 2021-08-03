@@ -37,7 +37,7 @@ public class CollPersonnelMaintain {
 	private String x;
 	private String y;
 	private String z;
-    private String state;
+	private String state;
 
 	public String getDept_id() {
 		return dept_id;

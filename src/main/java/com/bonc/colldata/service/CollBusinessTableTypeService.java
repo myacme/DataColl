@@ -53,5 +53,4 @@ public interface CollBusinessTableTypeService {
 	 * @return 是否成功
 	 */
 	int deleteById(String id);
-
 }

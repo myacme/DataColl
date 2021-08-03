@@ -34,92 +34,99 @@ public class CollSendTaskController {
 	@Resource
 	private CollSendTaskServiceImpl collSendTaskService;
 
-	@RequestMapping(value = "/task/list",method = RequestMethod.GET)
+	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
 	@ApiOperation("管理员任务列表")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "pageSize",value = "分页大小",dataType = "int",required = true),
-			@ApiImplicitParam(name = "pageNum",value = "当前页码",dataType = "int",required = true),
+			@ApiImplicitParam(name = "pageSize", value = "分页大小", dataType = "int", required = true),
+			@ApiImplicitParam(name = "pageNum", value = "当前页码", dataType = "int", required = true),
 	})
-	public Object taskList(int pageSize,int pageNum){
-		PageHelper.startPage(pageNum,pageSize);
-		List<CollTask> list=collSendTaskService.checkCollTasks();
-		PageInfo pageInfo=new PageInfo(list);
-		return new RestRecord(200,"查询成功",pageInfo);
-	}
-	@RequestMapping(value = "/task/add",method = RequestMethod.POST)
-	@ApiOperation("管理员新增任务")
-	public Object addTask(@RequestBody CollTask cllTask){
-		String result=collSendTaskService.addCollTask(cllTask);
-		return new RestRecord(200,"新增成功",result);
+	public Object taskList(int pageSize, int pageNum) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<CollTask> list = collSendTaskService.checkCollTasks();
+		PageInfo pageInfo = new PageInfo(list);
+		return new RestRecord(200, "查询成功", pageInfo);
 	}
 
-	@RequestMapping(value = "/list",method = RequestMethod.GET)
+	@RequestMapping(value = "/task/add", method = RequestMethod.POST)
+	@ApiOperation("管理员新增任务")
+	public Object addTask(@RequestBody CollTask cllTask) {
+		String result = collSendTaskService.addCollTask(cllTask);
+		return new RestRecord(200, "新增成功", result);
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ApiOperation("下发任务列表")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "pageSize",value = "分页大小",dataType = "int",required = true),
-			@ApiImplicitParam(name = "pageNum",value = "当前页码",dataType = "int",required = true),
+			@ApiImplicitParam(name = "pageSize", value = "分页大小", dataType = "int", required = true),
+			@ApiImplicitParam(name = "pageNum", value = "当前页码", dataType = "int", required = true),
 	})
-	public Object sendTaskList(int pageSize,int pageNum){
-		PageHelper.startPage(pageNum,pageSize);
-		List<CollReceiveTask> list=collSendTaskService.getSendTaskList(pageSize,pageNum);
-		PageInfo pageInfo=new PageInfo(list);
-		return new RestRecord(200,"查询成功",pageInfo);
+	public Object sendTaskList(int pageSize, int pageNum) {
+		PageHelper.startPage(pageNum, pageSize);
+		List<CollReceiveTask> list = collSendTaskService.getSendTaskList(pageSize, pageNum);
+		PageInfo pageInfo = new PageInfo(list);
+		return new RestRecord(200, "查询成功", pageInfo);
 	}
-	@RequestMapping(value = "/add",method = RequestMethod.POST)
+
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ApiOperation("新增下发任务")
-	public Object addSendTask(@RequestBody CollReceiveTask collReceiveTask){
-		String result=collSendTaskService.addSendTask(collReceiveTask);
-		return new RestRecord(200,"新增成功",result);
+	public Object addSendTask(@RequestBody CollReceiveTask collReceiveTask) {
+		String result = collSendTaskService.addSendTask(collReceiveTask);
+		return new RestRecord(200, "新增成功", result);
 	}
-	@RequestMapping(value = "/getVersion",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/getVersion", method = RequestMethod.GET)
 	@ApiOperation("获取下发任务版本号")
-	public Object getSendVersion(){
-		String version=TimeUtil.getVersion();
-		return  new RestRecord(200,"版本号",version);
+	public Object getSendVersion() {
+		String version = TimeUtil.getVersion();
+		return new RestRecord(200, "版本号", version);
 	}
-	@RequestMapping(value = "/scan",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/scan", method = RequestMethod.GET)
 	@ApiOperation("pdf预览")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "isOnline",value = "true为预览，false为下载",required = true),
-			@ApiImplicitParam(name = "sendTaskCode",value = "下发任务编号",required = true),
+			@ApiImplicitParam(name = "isOnline", value = "true为预览，false为下载", required = true),
+			@ApiImplicitParam(name = "sendTaskCode", value = "下发任务编号", required = true),
 	})
-	public void scanPdf( HttpServletResponse response, boolean isOnLine, String sendTaskCode) throws IOException{
-		collSendTaskService.scanPdf(response,isOnLine,sendTaskCode);
+	public void scanPdf(HttpServletResponse response, boolean isOnLine, String sendTaskCode) throws IOException {
+		collSendTaskService.scanPdf(response, isOnLine, sendTaskCode);
 	}
-	@RequestMapping(value = "/collType",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/collType", method = RequestMethod.GET)
 	@ApiOperation("查询采集类型")
-	public Object getCollType(){
-		List<CollDataDictValue> list=collSendTaskService.getCollType();
-		return new RestRecord(200,"查询成功",list);
+	public Object getCollType() {
+		List<CollDataDictValue> list = collSendTaskService.getCollType();
+		return new RestRecord(200, "查询成功", list);
 	}
 
-	@RequestMapping(value = "/getBeforeVersion",method = RequestMethod.GET)
+	@RequestMapping(value = "/getBeforeVersion", method = RequestMethod.GET)
 	@ApiOperation("参考数据")
-	public Object getVersion(String departmentCode){
-		List<Map<String,Object>> list=collSendTaskService.getBeforeVersion(departmentCode);
-		return new RestRecord(200,"查询成功",list);
+	public Object getVersion(String departmentCode) {
+		List<Map<String, Object>> list = collSendTaskService.getBeforeVersion(departmentCode);
+		return new RestRecord(200, "查询成功", list);
 	}
-	@RequestMapping(value = "/getExcelTemplate",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/getExcelTemplate", method = RequestMethod.GET)
 	@ApiOperation("生成excl")
-	public  void getExcelTemplate(HttpServletResponse response,String sendTaskCode){
-
-		collSendTaskService.getExcelTemplate(response,sendTaskCode,"send");
+	public void getExcelTemplate(HttpServletResponse response, String sendTaskCode) {
+		collSendTaskService.getExcelTemplate(response, sendTaskCode, "send");
 	}
-	@RequestMapping(value = "/getTaskZip",method = RequestMethod.GET)
+
+	@RequestMapping(value = "/getTaskZip", method = RequestMethod.GET)
 	@ApiOperation("生成压缩包")
-	public void getSendTaskZip(HttpServletResponse response,String sendTaskCode){
-		collSendTaskService.getZipTemplate(response,sendTaskCode,"send");
-	}
-	@RequestMapping(value = "/getExport",method = RequestMethod.GET)
-	@ApiOperation("导出")
-	public void exportZip(HttpServletResponse response,@RequestParam List<String> sendTaskCode){
-		collSendTaskService.getZipMore(response,sendTaskCode);
+	public void getSendTaskZip(HttpServletResponse response, String sendTaskCode) {
+		collSendTaskService.getZipTemplate(response, sendTaskCode, "send");
 	}
 
-	@RequestMapping(value = "/downloadTxt",method = RequestMethod.GET)
+	@RequestMapping(value = "/getExport", method = RequestMethod.GET)
+	@ApiOperation("导出")
+	public void exportZip(HttpServletResponse response, @RequestParam List<String> sendTaskCode) {
+		collSendTaskService.getZipMore(response, sendTaskCode);
+	}
+
+	@RequestMapping(value = "/downloadTxt", method = RequestMethod.GET)
 	@ApiOperation("下载txt")
-	public Object downloadZip(HttpServletResponse response,String ids){
+	public Object downloadZip(HttpServletResponse response, String ids) {
 		collSendTaskService.getText(null);
-		return new RestRecord(200,"成功","");
+		return new RestRecord(200, "成功", "");
 	}
 }

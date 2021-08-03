@@ -10,125 +10,124 @@ import java.util.List;
  * @since 2021-07-12 16:17:30
  */
 public class CollReceiveTask implements Serializable {
-    private static final long serialVersionUID = -16781547997230351L;
-    
-    private String sendTaskCode;
-    
-    private String sendTaskName;
-    
-    private String sendTaskVersion;
-    
-    private String sendTaskCollType;
-    
-    private String sendTaskDataAgo;
-    
-    private String sendTaskCollDepartment;
+	private static final long serialVersionUID = -16781547997230351L;
 
-    private String sendTaskCollDepartmentName;
+	private String sendTaskCode;
 
-    private String sendIfTemp;
+	private String sendTaskName;
 
-    private String createTime;
-    
-    private String state;
-    private String remarks;
+	private String sendTaskVersion;
 
-    public String getRemarks() {
-        return remarks;
-    }
+	private String sendTaskCollType;
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
+	private String sendTaskDataAgo;
 
-    public String getSendTaskCollDepartmentName() {
-        return sendTaskCollDepartmentName;
-    }
+	private String sendTaskCollDepartment;
 
-    public void setSendTaskCollDepartmentName(String sendTaskCollDepartmentName) {
-        this.sendTaskCollDepartmentName = sendTaskCollDepartmentName;
-    }
+	private String sendTaskCollDepartmentName;
 
-    public String getSendIfTemp() {
-        return sendIfTemp;
-    }
+	private String sendIfTemp;
 
-    public void setSendIfTemp(String sendIfTemp) {
-        this.sendIfTemp = sendIfTemp;
-    }
+	private String createTime;
 
-    private List<CollReceiveTaskTable> list;
+	private String state;
+	private String remarks;
 
-    public List<CollReceiveTaskTable> getList() {
-        return list;
-    }
+	public String getRemarks() {
+		return remarks;
+	}
 
-    public void setList(List<CollReceiveTaskTable> list) {
-        this.list = list;
-    }
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 
-    public String getSendTaskCode() {
-        return sendTaskCode;
-    }
+	public String getSendTaskCollDepartmentName() {
+		return sendTaskCollDepartmentName;
+	}
 
-    public void setSendTaskCode(String sendTaskCode) {
-        this.sendTaskCode = sendTaskCode;
-    }
+	public void setSendTaskCollDepartmentName(String sendTaskCollDepartmentName) {
+		this.sendTaskCollDepartmentName = sendTaskCollDepartmentName;
+	}
 
-    public String getSendTaskName() {
-        return sendTaskName;
-    }
+	public String getSendIfTemp() {
+		return sendIfTemp;
+	}
 
-    public void setSendTaskName(String sendTaskName) {
-        this.sendTaskName = sendTaskName;
-    }
+	public void setSendIfTemp(String sendIfTemp) {
+		this.sendIfTemp = sendIfTemp;
+	}
 
-    public String getSendTaskVersion() {
-        return sendTaskVersion;
-    }
+	private List<CollReceiveTaskTable> list;
 
-    public void setSendTaskVersion(String sendTaskVersion) {
-        this.sendTaskVersion = sendTaskVersion;
-    }
+	public List<CollReceiveTaskTable> getList() {
+		return list;
+	}
 
-    public String getSendTaskCollType() {
-        return sendTaskCollType;
-    }
+	public void setList(List<CollReceiveTaskTable> list) {
+		this.list = list;
+	}
 
-    public void setSendTaskCollType(String sendTaskCollType) {
-        this.sendTaskCollType = sendTaskCollType;
-    }
+	public String getSendTaskCode() {
+		return sendTaskCode;
+	}
 
-    public String getSendTaskDataAgo() {
-        return sendTaskDataAgo;
-    }
+	public void setSendTaskCode(String sendTaskCode) {
+		this.sendTaskCode = sendTaskCode;
+	}
 
-    public void setSendTaskDataAgo(String sendTaskDataAgo) {
-        this.sendTaskDataAgo = sendTaskDataAgo;
-    }
+	public String getSendTaskName() {
+		return sendTaskName;
+	}
 
-    public String getSendTaskCollDepartment() {
-        return sendTaskCollDepartment;
-    }
+	public void setSendTaskName(String sendTaskName) {
+		this.sendTaskName = sendTaskName;
+	}
 
-    public void setSendTaskCollDepartment(String sendTaskCollDepartment) {
-        this.sendTaskCollDepartment = sendTaskCollDepartment;
-    }
+	public String getSendTaskVersion() {
+		return sendTaskVersion;
+	}
 
-    public String getCreateTime() {
-        return createTime;
-    }
+	public void setSendTaskVersion(String sendTaskVersion) {
+		this.sendTaskVersion = sendTaskVersion;
+	}
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
+	public String getSendTaskCollType() {
+		return sendTaskCollType;
+	}
 
-    public String getState() {
-        return state;
-    }
+	public void setSendTaskCollType(String sendTaskCollType) {
+		this.sendTaskCollType = sendTaskCollType;
+	}
 
-    public void setState(String state) {
-        this.state = state;
-    }
+	public String getSendTaskDataAgo() {
+		return sendTaskDataAgo;
+	}
 
+	public void setSendTaskDataAgo(String sendTaskDataAgo) {
+		this.sendTaskDataAgo = sendTaskDataAgo;
+	}
+
+	public String getSendTaskCollDepartment() {
+		return sendTaskCollDepartment;
+	}
+
+	public void setSendTaskCollDepartment(String sendTaskCollDepartment) {
+		this.sendTaskCollDepartment = sendTaskCollDepartment;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 }

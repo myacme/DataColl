@@ -1,11 +1,9 @@
 package com.bonc.colldata.service;
 
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollTableConfigDataSource;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -81,7 +79,7 @@ public interface CollBusinessTableConfigService {
 	 *
 	 * @param tableName 表名称
 	 */
-	List<Map<String, Object>>  queryDataSourceField(String tableName);
+	List<Map<String, Object>> queryDataSourceField(String tableName);
 
 	/**
 	 * 数据绑定

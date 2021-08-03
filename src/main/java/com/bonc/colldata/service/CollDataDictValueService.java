@@ -77,7 +77,7 @@ public interface CollDataDictValueService {
 	 * 批量导入
 	 *
 	 * @param file excle
-	 * @param id 字典id
+	 * @param id   字典id
 	 */
 	int batchImport(MultipartFile file, String id);
 }

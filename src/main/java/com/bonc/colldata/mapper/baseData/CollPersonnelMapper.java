@@ -49,7 +49,7 @@ public interface CollPersonnelMapper {
 	 * @param map
 	 * @return
 	 */
-	List<CollPersonnelMaintain> getPersonnelByList(Map<String,Object> map);
+	List<CollPersonnelMaintain> getPersonnelByList(Map<String, Object> map);
 
 	/****
 	 * todo:查询人员列表
@@ -70,11 +70,11 @@ public interface CollPersonnelMapper {
 	 * @param id
 	 * @return
 	 */
-	int deletePersonnelById(Map<String,Object> map);
+	int deletePersonnelById(Map<String, Object> map);
 
 	/***
 	 * todo:获取表字段描述
 	 * @return
 	 */
-	List<Map<String,Object>> getTableDesc();
+	List<Map<String, Object>> getTableDesc();
 }

@@ -58,6 +58,7 @@ public class CommonUtil {
 
 	/**
 	 * 验证手机号
+	 *
 	 * @param value
 	 * @return
 	 */
@@ -71,6 +72,7 @@ public class CommonUtil {
 
 	/**
 	 * 验证身份证
+	 *
 	 * @param IDNumber
 	 * @return
 	 */

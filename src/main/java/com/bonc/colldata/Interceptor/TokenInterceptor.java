@@ -3,7 +3,6 @@ package com.bonc.colldata.Interceptor;
 import com.bonc.base.RestRecord;
 import com.bonc.base.Util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,17 +29,16 @@ public class TokenInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		if (token == null) {
-			RestRecord r2=new RestRecord(HttpServletResponse.SC_UNAUTHORIZED,"无token",new RuntimeException().getMessage());
+			RestRecord r2 = new RestRecord(HttpServletResponse.SC_UNAUTHORIZED, "无token", new RuntimeException().getMessage());
 			response.getWriter().append(r2.toString());
 			return false;
 		}
-		if (!JwtTokenUtil.verifyTokenExpireDate(token)){
-			RestRecord r2=new RestRecord(HttpServletResponse.SC_UNAUTHORIZED,"token过期",new RuntimeException("token过期！").getMessage());
+		if (!JwtTokenUtil.verifyTokenExpireDate(token)) {
+			RestRecord r2 = new RestRecord(HttpServletResponse.SC_UNAUTHORIZED, "token过期", new RuntimeException("token过期！").getMessage());
 			response.getWriter().append(r2.toString());
 			return false;
 		}
 		boolean flag = JwtTokenUtil.validateJWT(token);
 		return flag;
 	}
-
 }
