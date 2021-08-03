@@ -135,9 +135,9 @@ public class JwtTokenUtil {
 			e.printStackTrace();
 			return false;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println("token签发时间:" + sdf.format(claims.getIssuedAt()));
-		System.out.println("token过期时间:" + sdf.format(claims.getExpiration()));
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		System.out.println("token签发时间:" + sdf.format(claims.getIssuedAt()));
+//		System.out.println("token过期时间:" + sdf.format(claims.getExpiration()));
 		if (new Date().after(claims.getExpiration())) {
 			return false;
 		}

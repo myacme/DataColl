@@ -162,7 +162,7 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 		if ("coll_personnel_maintain".equals(tableName)) {
 			List<CollBasicPersonnelConfig> tableHead1 = collPersonnelMapper.getTableHead();
 			tableHead1.forEach(bean -> {
-				HashMap<String, Object> map = new HashMap<>();
+				HashMap<String, Object> map = new HashMap<>(4);
 				map.put("name", bean.getPersonnelConfigName());
 				map.put("code", bean.getPersonnelConfigValue());
 				tableHead.add(map);
@@ -177,19 +177,19 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 //				map.put("code", map1.get("name").toString());
 //				tableHead.add(map);
 //			});
-			HashMap<String, Object> map1 = new HashMap<>();
+			HashMap<String, Object> map1 = new HashMap<>(2);
 			map1.put("name", "部门编号");
 			map1.put("code", "instiutions_id");
 			tableHead.add(map1);
-			HashMap<String, Object> map2 = new HashMap<>();
+			HashMap<String, Object> map2 = new HashMap<>(2);
 			map2.put("name", "部门名称");
 			map2.put("code", "instiutions_name");
 			tableHead.add(map2);
-			HashMap<String, Object> map3 = new HashMap<>();
+			HashMap<String, Object> map3 = new HashMap<>(2);
 			map3.put("name", "联系人");
 			map3.put("code", "instiutions_contact");
 			tableHead.add(map3);
-			HashMap<String, Object> map4 = new HashMap<>();
+			HashMap<String, Object> map4 = new HashMap<>(2);
 			map4.put("name", "联系人电话");
 			map4.put("code", "instiutions_phone");
 			tableHead.add(map4);
