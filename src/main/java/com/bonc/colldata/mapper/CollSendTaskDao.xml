@@ -27,8 +27,8 @@
           a.create_time,
           a.state,
           a.remarks,
-          b.instiutions_name
-        from coll_send_task a left join  coll_instiutions b on b.instiutions_id=a.send_task_coll_department
+          b.jgmc instiutions_name
+        from coll_send_task a left join  t_zb_jgkb b on b.id=a.send_task_coll_department
         where a.state='1'
 	    order by create_time  desc
     </select>

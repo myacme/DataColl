@@ -68,6 +68,7 @@ public class BaseDataController {
 	@RequestMapping(value = "/depart/tree", method = RequestMethod.POST)
 	public Object departmentTree() {
 		Map<String, Object> map = new HashMap<>();
+		map.put("pid","0");
 		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
 		return new RestRecord(200, "查询成功", list);
 	}
@@ -99,37 +100,30 @@ public class BaseDataController {
 	 *                    维护                              *
 	 *                                                      *
 	 ********************************************************/
-	@ApiOperation("获取人员数据表头")
-	@RequestMapping(value = "/personnel/getHead", method = RequestMethod.GET)
-	public Object getTableHead() {
-		List<CollBasicPersonnelConfig> list = collPersonnelService.getTableHead();
-		return new RestRecord(200, "查询成功", list);
-	}
+
 
 	@ApiOperation("新增人员数据")
 	@RequestMapping(value = "/personnel/add", method = RequestMethod.POST)
-	public Object addPersonnel(@RequestBody CollPersonnelMaintain collPersonnelMaintain) {
+	public Object addPersonnel(@RequestBody RYKB rykb) {
 		//获取数据id
 		System.out.println();
 		String uuid = CommonUtil.getUUID20();
-		collPersonnelMaintain.setId(uuid);
-		collPersonnelMaintain.setState("1");
-		System.out.println(collPersonnelMaintain);
-		collPersonnelService.addPersonnelData(collPersonnelMaintain);
-		return new RestRecord(200, "查询成功", collPersonnelMaintain);
+		rykb.setId(uuid);
+		collPersonnelService.addPersonnelData(rykb);
+		return new RestRecord(200, "查询成功", rykb);
 	}
 
 	@ApiOperation("查询人员数据详情")
 	@RequestMapping(value = "/personnel/check", method = RequestMethod.GET)
 	public Object checkPersonnel(String id) {
 		//获取数据id
-		CollPersonnelMaintain collPersonnelMaintain = collPersonnelService.checkById(id);
+		RYKB collPersonnelMaintain = collPersonnelService.checkById(id);
 		return new RestRecord(200, "查询成功", collPersonnelMaintain);
 	}
 
 	@ApiOperation("修改人员数据详情")
 	@RequestMapping(value = "/personnel/update", method = RequestMethod.POST)
-	public Object updatePersonnel(@RequestBody CollPersonnelMaintain collPersonnelMaintain) {
+	public Object updatePersonnel(@RequestBody RYKB collPersonnelMaintain) {
 		//获取数据id
 		collPersonnelService.updatePersonnel(collPersonnelMaintain);
 		return new RestRecord(200, "查询成功", collPersonnelMaintain);
@@ -138,9 +132,7 @@ public class BaseDataController {
 	@ApiOperation("删除人员数据详情")
 	@RequestMapping(value = "/personnel/delete", method = RequestMethod.GET)
 	public Object deletePersonnel(@RequestParam(value = "id") List<String> id) {
-		for (String s : id) {
-			System.out.println(s);
-		}
+
 		//获取数据id
 		collPersonnelService.deletePersonnelById(id);
 		return new RestRecord(200, "查询成功", id);
@@ -151,7 +143,7 @@ public class BaseDataController {
 	public Object listPersonnel(@RequestBody QueryList queryList) {
 		PageHelper.startPage(queryList.getPageNum(), queryList.getPageSize());
 		//获取数据id
-		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByList(queryList.getList());
+		List<RYKB> list = collPersonnelService.getPersonnelByList(queryList.getXm(),queryList.getSzdwcjid());
 		PageInfo pageInfo = new PageInfo(list);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}

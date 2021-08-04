@@ -74,7 +74,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 					List<Map<String, String>> listMap = ExcelUtil.readExcleOfCommon(excle);
 					JSONArray jsonArray = new JSONArray();
 					jsonArray.addAll(listMap);
-					List<CollPersonnelMaintain> list = jsonArray.toJavaList(CollPersonnelMaintain.class);
+					List<RYKB> list = jsonArray.toJavaList(RYKB.class);
 					result = collPersonnelMapper.insertPersonnelData(list);
 					size += result;
 				} else {
@@ -479,7 +479,9 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		List<JGKB> list = new ArrayList<>();
 		list.add(dept);
 		Map<String, Object> map = new HashMap<>(2);
-		map.put("pid", dept.getFdwid());
+		if(dept.getFdwid()!=null&&dept.getFdwid()!=""){
+			map.put("pid", dept.getFdwid());
+		}
 		List<JGKB> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
 		if (list1 != null) {
 			list1.forEach(l -> {

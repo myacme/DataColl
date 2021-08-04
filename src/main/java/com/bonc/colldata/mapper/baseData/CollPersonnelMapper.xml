@@ -1,115 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bonc.colldata.mapper.baseData.CollPersonnelMapper">
-	<resultMap id="tableHead" type="com.bonc.colldata.entity.CollBasicPersonnelConfig">
-		<id column="basic_code" property="basicCode"/>
-	    <result column="personnel_config_name" property="personnelConfigName"/>
-		<result column="personnel_config_value" property="personnelConfigValue"/>
-		<result column="state" property="state"/>
-		<result column="if_check" property="ifCheck"/>
-		<result column="if_list" property="ifList"/>
-		<result column="is_required" property="isRequired"/>
-		<result column="is_type" property="isType"/>
-	</resultMap>
-	<!--获取人员配置表有用字段信息-->
-	<select id="getTableHead" resultMap="tableHead">
-        select * from
-        coll_basic_personnel_config where state='1'
-     </select>
+
+
 	<!--插入人员数据-->
-	<insert id="addPersonnelData" parameterType="com.bonc.colldata.entity.CollPersonnelMaintain">
-         INSERT  INTO coll_personnel_maintain
+	<insert id="addPersonnelData" parameterType="com.bonc.colldata.entity.RYKB">
+         INSERT  INTO t_zb_rykb
          VALUES
          (
          #{id},
-         #{dept_id},
-         #{name},
-         #{a},
-         #{b},
-         #{c},
-         #{d},
-         #{e},
-         #{f},
-         #{g},
-         #{h},
-         #{i},
-         #{j},
-         #{k},
-         #{l},
-         #{m},
-         #{n},
-         #{o},
-         #{p},
-         #{q},
-         #{r},
-         #{s},
-         #{t},
-         #{u},
-         #{v},
-         #{w},
-         #{x},
-         #{y},
-         #{z},
-         #{state}
+         #{sfh},
+         #{xm},
+         #{bb},
+         #{xb},
+         #{jg},
+         #{jgdm},
+         #{zzmm},
+         #{zzmmmc},
+         #{cssj},
+         #{rwsj},
+         #{zwmc},
+         #{xlmc},
+         #{xl},
+         #{byyx},
+         #{szdwcjid},
+         #{sflb},
+         #{sflbmc}
          )
      </insert>
 	<insert id="insertPersonnelData" >
-		replace  INTO coll_personnel_maintain
+		replace  INTO t_zb_rykb
          VALUES
 		<foreach collection="list" index="index" item="item" separator=",">
          (
-         #{item.id},
-         #{item.dept_id},
-         #{item.name},
-         #{item.a},
-         #{item.b},
-         #{item.c},
-         #{item.d},
-         #{item.e},
-         #{item.f},
-         #{item.g},
-         #{item.h},
-         #{item.i},
-         #{item.j},
-         #{item.k},
-         #{item.l},
-         #{item.m},
-         #{item.n},
-         #{item.o},
-         #{item.p},
-         #{item.q},
-         #{item.r},
-         #{item.s},
-         #{item.t},
-         #{item.u},
-         #{item.v},
-         #{item.w},
-         #{item.x},
-         #{item.y},
-         #{item.z},
-         #{item.state}
+			#{item.id},
+			#{item.sfh},
+			#{item.xm},
+			#{item.bb},
+			#{item.xb},
+			#{item.jg},
+			#{item.jgdm},
+			#{item.zzmm},
+			#{item.zzmmmc},
+			#{item.cssj},
+			#{item.rwsj},
+			#{item.zwmc},
+			#{item.xlmc},
+			#{item.xl},
+			#{item.byyx},
+			#{item.szdwcjid},
+			#{item.sflb},
+			#{item.sflbmc}
          )
 		</foreach>
      </insert>
 	<!--查询列表-->
-	<select id="getPersonnelByList" resultType="com.bonc.colldata.entity.CollPersonnelMaintain" parameterType="java.util.Map">
-		SELECT *  FROM coll_personnel_maintain WHERE STATE='1'
-		<if test="list!=null">
-			<foreach collection="list" index="index" item="item">
-				<if test="item.type==1">
-					AND ${item.code} like '%'||#{item.value}||'%'
-				</if>
-				<if test="item.type!=1">
-					AND ${item.code} =#{item.value}
-				</if>
-			</foreach>
+	<select id="getPersonnelByList" resultType="com.bonc.colldata.entity.RYKB" parameterType="java.util.Map">
+		SELECT *  FROM t_zb_rykb WHERE 1=1
+		<if test="xm!=null and xm!=''">
+			AND xm LIKE '%'||#{xm}||'%'
 		</if>
-   order by name
+		<if test="szdwcjid!=null and szdwcjid!=''">
+
+			AND szdwcjid =#{szdwcjid}
+		</if>
+   order by xm
 	</select>
 	<!--查询列表-->
 	<select id="getPersonnelByDept" resultType="com.bonc.colldata.entity.RYKB">
 		SELECT *  FROM t_zb_rykb
-		WHERE STATE='1'
+		WHERE  1=1
 		  <if test="name != null and name != ''">
               and xm like '%'||#{name}||'%'
           </if>
@@ -126,54 +86,41 @@
         order by id
 	</select>
 	<!--查询人员数据详情 byid-->
-	<select id="checkById" parameterType="String" resultType="com.bonc.colldata.entity.CollPersonnelMaintain">
-          SELECT *  FROM coll_personnel_maintain WHERE STATE='1' and id=#{id}
+	<select id="checkById" parameterType="String" resultType="com.bonc.colldata.entity.RYKB">
+          SELECT *  FROM t_zb_rykb WHERE 1=1 and id=#{id}
     </select>
 	<!--修改人员信息-->
 	<update id="updatePersonnel" parameterType="com.bonc.colldata.entity.CollPersonnelMaintain">
-		update coll_personnel_maintain
+		update t_zb_rykb
 		<set>
-			<if test="dept_id!=null and dept_id!=''">dept_id=#{dept_id},</if>
-			<if test="name!=null and name!=''">name=#{name},</if>
-			<if test="a!=null and a!=''">a=#{a},</if>
-			<if test="b!=null and b!=''">b=#{b},</if>
-			<if test="c!=null and c!=''">c=#{c},</if>
-			<if test="d!=null and d!=''">d=#{d},</if>
-			<if test="e!=null and e!=''">e=#{e},</if>
-			<if test="f!=null and f!=''">f=#{f},</if>
-			<if test="g!=null and g!=''">g=#{g},</if>
-			<if test="h!=null and h!=''">h=#{h},</if>
-			<if test="i!=null and i!=''">i=#{i},</if>
-			<if test="j!=null and j!=''">j=#{j},</if>
-			<if test="k!=null and k!=''">k=#{k},</if>
-			<if test="l!=null and l!=''">l=#{l},</if>
-			<if test="m!=null and m!=''">m=#{m},</if>
-			<if test="n!=null and n!=''">n=#{n},</if>
-			<if test="o!=null and o!=''">o=#{o},</if>
-			<if test="p!=null and p!=''">p=#{p},</if>
-			<if test="q!=null and q!=''">q=#{q},</if>
-			<if test="r!=null and r!=''">r=#{r},</if>
-			<if test="s!=null and s!=''">s=#{s},</if>
-			<if test="t!=null and t!=''">t=#{t},</if>
-			<if test="u!=null and u!=''">u=#{u},</if>
-			<if test="v!=null and v!=''">v=#{v},</if>
-			<if test="w!=null and w!=''">w=#{w},</if>
-			<if test="x!=null and x!=''">x=#{x},</if>
-			<if test="y!=null and y!=''">y=#{y},</if>
-			<if test="z!=null and z!=''">z=#{z},</if>
+			<if test="sfh!=null and sfh!=''">sfh=#{sfh},</if>
+			<if test="xm!=null and xm!=''">xm=#{xm},</if>
+			<if test="bb!=null and bb!=''">bb=#{bb},</if>
+			<if test="zwmc!=null and zwmc!=''">zwmc=#{zwmc},</if>
+			<if test="xb!=null and xb!=''">xb=#{xb},</if>
+			<if test="jg!=null and jg!=''">jg=#{jg},</if>
+			<if test="jgdm!=null and jgdm!=''">jgdm=#{jgdm},</if>
+			<if test="zzmm!=null and zzmm!=''">zzmm=#{zzmm},</if>
+			<if test="zzmmmc!=null and zzmmmc!=''">zzmmmc=#{zzmmmc},</if>
+			<if test="cssj!=null and cssj!=''">cssj=#{cssj},</if>
+			<if test="rwsj!=null and rwsj!=''">rwsj=#{rwsj},</if>
+			<if test="xlmc!=null and xlmc!=''">xlmc=#{xlmc},</if>
+			<if test="xl!=null and xl!=''">xl=#{xl},</if>
+			<if test="byyx!=null and byyx!=''">byyx=#{byyx},</if>
+			<if test="szdwcjid!=null and szdwcjid!=''">szdwcjid=#{szdwcjid},</if>
+			<if test="sflb!=null and sflb">sflb=#{sflb},</if>
+			<if test="sflbmc!=null and sflbmc!=''">sflbmc=#{sflbmc},</if>
 		</set>
 		where id=#{id}
 	</update>
-	<update id="deletePersonnelById" parameterType="java.util.Map">
-		update coll_personnel_maintain set state='0' where
+	<delete id="deletePersonnelById" parameterType="java.util.Map">
+		delete from t_zb_rykb  where
 		id IN
 		<foreach collection="list" open="(" close=")" item="i" separator="," index="index">
 			#{i}
 		</foreach>
 
-	</update>
+	</delete>
 
-	<select id="getTableDesc" resultType="java.util.Map">
-		pragma table_info ('coll_personnel_maintain')
-	</select>
+
 </mapper>

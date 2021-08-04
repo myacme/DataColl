@@ -18,39 +18,35 @@ import java.util.Map;
  */
 @Mapper
 public interface CollPersonnelMapper {
-	/***
-	 * todo:获取人员数据表配置项
-	 * @return
-	 */
-	List<CollBasicPersonnelConfig> getTableHead();
+
 
 	/***
 	 * todo:新增人员数据
-	 * @param collPersonnelMaintain
+	 * @param
 	 * @return
 	 */
-	int addPersonnelData(CollPersonnelMaintain collPersonnelMaintain);
+	int addPersonnelData(RYKB rykb);
 
 	/***
 	 * todo:批量新增人员数据
-	 * @param collPersonnelMaintain
+	 * @param list
 	 * @return
 	 */
-	int insertPersonnelData(@Param("list") List<CollPersonnelMaintain> collPersonnelMaintain);
+	int insertPersonnelData(@Param("list") List<RYKB> list);
 
 	/***
 	 * todo:查看某个人员详情
 	 * @param id
 	 * @return
 	 */
-	CollPersonnelMaintain checkById(@Param("id") String id);
+	RYKB checkById(@Param("id") String id);
 
 	/****
 	 * todo:查询人员列表
 	 * @param map
 	 * @return
 	 */
-	List<CollPersonnelMaintain> getPersonnelByList(Map<String, Object> map);
+	List<RYKB> getPersonnelByList(Map<String, Object> map);
 
 	/****
 	 * todo:查询人员列表
@@ -61,21 +57,16 @@ public interface CollPersonnelMapper {
 
 	/***
 	 * todo:修改人员信息
-	 * @param collPersonnelMaintain
+	 * @param rykb
 	 * @return
 	 */
-	int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain);
+	int updatePersonnel(RYKB rykb);
 
 	/****
 	 * todo:人员信息
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	int deletePersonnelById(Map<String, Object> map);
 
-	/***
-	 * todo:获取表字段描述
-	 * @return
-	 */
-	List<Map<String, Object>> getTableDesc();
 }

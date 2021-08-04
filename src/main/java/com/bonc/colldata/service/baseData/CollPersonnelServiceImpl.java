@@ -32,29 +32,28 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	@Autowired
 	private CollTableDataService collTableDataService;
 
+
+
 	@Override
-	public List<CollBasicPersonnelConfig> getTableHead() {
-		return collPersonnelMapper.getTableHead();
+	public int addPersonnelData(RYKB rykb) {
+		return collPersonnelMapper.addPersonnelData(rykb);
 	}
 
 	@Override
-	public int addPersonnelData(CollPersonnelMaintain collPersonnelMaintain) {
-		return collPersonnelMapper.addPersonnelData(collPersonnelMaintain);
-	}
-
-	@Override
-	public CollPersonnelMaintain checkById(String id) {
+	public RYKB checkById(String id) {
 		return collPersonnelMapper.checkById(id);
 	}
 
 	@Override
-	public List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list) {
+	public List<RYKB> getPersonnelByList(String xm,String szdwcjid) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
+		map.put("xm", xm);
+		map.put("szdwcjid",szdwcjid);
 		return collPersonnelMapper.getPersonnelByList(map);
 	}
 
 	@Override
+
 	public List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard) {
 		//获取本级及下级部门id
 		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
@@ -66,8 +65,8 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain) {
-		return collPersonnelMapper.updatePersonnel(collPersonnelMaintain);
+	public int updatePersonnel(RYKB rykb) {
+		return collPersonnelMapper.updatePersonnel(rykb);
 	}
 
 	@Override
@@ -76,12 +75,6 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 		map.put("list", id);
 		return collPersonnelMapper.deletePersonnelById(map);
 	}
-
-	@Override
-	public List<Map<String, Object>> getTableDesc() {
-		return collPersonnelMapper.getTableDesc();
-	}
-
 	@Override
 	public String getSystemName() {
 		return sysConfigDao.queryById("sys_name").getConfigValue();

@@ -19,25 +19,17 @@ import java.util.Map;
 
 public interface CollPersonnelService {
 
-	List<CollBasicPersonnelConfig> getTableHead();
+	int addPersonnelData(RYKB rykb);
 
+	RYKB checkById(String id);
 
-	int addPersonnelData(CollPersonnelMaintain collPersonnelMaintain);
+	List<RYKB> getPersonnelByList(String xm,String szdwcjid);
 
+	int updatePersonnel(RYKB rykb);
 
-	CollPersonnelMaintain checkById(@Param("id") String id);
-
-
-	List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list);
 	List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard);
 
-
-	int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain);
-
-
 	int deletePersonnelById(List<String> id);
-
-	List<Map<String,Object>> getTableDesc();
 
 	String getSystemName();
 }

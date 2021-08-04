@@ -26,10 +26,27 @@ public enum PersonEnum {
 	XL("学历", "xl"),
 	BYYX("毕业院校及专业", "byyx"),
 	SZDWCJID("所在单位ID", "szdwcjid"),
-	SFLB("身份类别", "sflb"),
-	SFLBMC("身份类别名称", "sflbmc");
+	SFLB("身份类别","sflb"),
+	SFLBMV("身份类别名称","sflbmc");
 	public String name;
 	public String code;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	PersonEnum(String name, String code) {
 		this.code = code;
 		this.name = name;

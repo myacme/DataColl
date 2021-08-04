@@ -11,7 +11,8 @@ import java.util.List;
 public class QueryList {
 	private int pageSize;
 	private int pageNum;
-	private List<QueryParam> list;
+	private String xm;
+    private String szdwcjid;
 
 	public int getPageSize() {
 		return pageSize;
@@ -29,11 +30,19 @@ public class QueryList {
 		this.pageNum = pageNum;
 	}
 
-	public List<QueryParam> getList() {
-		return list;
+	public String getXm() {
+		return xm;
 	}
 
-	public void setList(List<QueryParam> list) {
-		this.list = list;
+	public void setXm(String xm) {
+		this.xm = xm;
+	}
+
+	public String getSzdwcjid() {
+		return szdwcjid;
+	}
+
+	public void setSzdwcjid(String szdwcjid) {
+		this.szdwcjid = szdwcjid;
 	}
 }

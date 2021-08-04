@@ -265,39 +265,18 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		List<Map<String, Object>> list = new ArrayList<>();
 		param.put("dept_id", deptId);
 		//获取基础数据
-		List<CollBasicPersonnelConfig> listHead = collPersonnelService.getTableHead();
+
 		//获取表字段字段信息
-		List<Map<String, Object>> listDesc = collPersonnelService.getTableDesc();
-		//获取数据
-		List<QueryParam> listp = new ArrayList<>();
-		QueryParam queryParam = new QueryParam();
-		queryParam.setCode("dept_id");
-		queryParam.setType(1);
-		queryParam.setValue(deptId);
-		listp.add(queryParam);
-		List<CollPersonnelMaintain> listData = collPersonnelService.getPersonnelByList(listp);
-		for (Map<String, Object> m : listDesc) {
-			String key = String.valueOf(m.get("name"));
-			String value = key;
-			for (CollBasicPersonnelConfig collBasicPersonnelConfig : listHead) {
-				if (collBasicPersonnelConfig.getPersonnelConfigValue().toLowerCase().equals(key.toLowerCase())) {
-					value = collBasicPersonnelConfig.getPersonnelConfigName() + "(" + key + ")";
-					break;
-				} else {
-					value = key + "(" + key + ")";
-				}
-			}
-			nameMap.put(key, value);
-		}
-		System.out.println(nameMap);
+		List<RYKB> listData = collPersonnelService.getPersonnelByList(null,deptId);
+		nameMap = Enum2Map.EnumToMap(PersonEnum.class);
 		p.put("nameMap", nameMap);
-		p.put("name", "coll_personnel_maintain");
+		p.put("name", "t_zb_rykb");
 		p.put("tableName", "人员基本信息");
 		if ("1".equals(ifTemp)) {
 			p.put("data", null);
 		} else {
 			if (listData != null && listData.size() > 0) {
-				for (CollPersonnelMaintain collPersonnelMaintain : listData) {
+				for (RYKB collPersonnelMaintain : listData) {
 					list.add(JSON.parseObject(JSON.toJSONString(collPersonnelMaintain), Map.class));
 				}
 				p.put("data", list);
