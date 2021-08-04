@@ -190,7 +190,7 @@ public class CollDataReportController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "deptCode", value = "部门", required = true),
 	})
-	public Object dataSource(String deptCode) {
+	public Object dataSource(String deptCode,String name) {
 		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByDept(deptCode);
 		return new RestRecord(200, "成功", list);
 	}

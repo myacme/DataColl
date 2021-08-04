@@ -6,11 +6,13 @@ import com.bonc.colldata.entity.CollBusinessTableConfig;
 import com.bonc.colldata.entity.CollTableConfigDataSource;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollTableConfigDataSourceDao;
+import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.service.CollBusinessTableConfigService;
 import com.bonc.utils.CommonUtil;
 import com.bonc.utils.ExcelUtil;
 import com.bonc.utils.FileUtil;
+import com.fasterxml.jackson.core.sym.NameN;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -38,6 +40,8 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 	private CollTableConfigDataSourceDao collTableConfigDataSourceDao;
 	@Resource
 	private CollPersonnelMapper collPersonnelMapper;
+	@Resource
+	private CollDepartmentMapper collDepartmentMapper;
 
 	/**
 	 * 通过ID查询单条数据
@@ -158,39 +162,23 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 		List<Map<String, Object>> tableHead = new ArrayList<>();
 		//人员信息
 		if ("coll_personnel_maintain".equals(tableName)) {
-			List<CollBasicPersonnelConfig> tableHead1 = collPersonnelMapper.getTableHead();
-			tableHead1.forEach(bean -> {
+//			List<Map<String, Object>> tableHead1 = collPersonnelMapper.getTableDesc();
+			for (PersonEnum personEnum : PersonEnum.values()) {
 				HashMap<String, Object> map = new HashMap<>(4);
-				map.put("name", bean.getPersonnelConfigName());
-				map.put("code", bean.getPersonnelConfigValue());
+				map.put("name", personEnum.name);
+				map.put("code", personEnum.code);
 				tableHead.add(map);
-			});
+			}
 		}
 		//部门信息
 		if ("coll_instiutions".equals(tableName)) {
 //			List<Map<String, Object>> tableHead1 = collDepartmentMapper.getTableHead();
-//			tableHead1.forEach(map1 -> {
-//				HashMap<String, Object> map = new HashMap<>();
-//				map.put("name", map1.get("name").toString());
-//				map.put("code", map1.get("name").toString());
-//				tableHead.add(map);
-//			});
-			HashMap<String, Object> map1 = new HashMap<>(2);
-			map1.put("name", "部门编号");
-			map1.put("code", "instiutions_id");
-			tableHead.add(map1);
-			HashMap<String, Object> map2 = new HashMap<>(2);
-			map2.put("name", "部门名称");
-			map2.put("code", "instiutions_name");
-			tableHead.add(map2);
-			HashMap<String, Object> map3 = new HashMap<>(2);
-			map3.put("name", "联系人");
-			map3.put("code", "instiutions_contact");
-			tableHead.add(map3);
-			HashMap<String, Object> map4 = new HashMap<>(2);
-			map4.put("name", "联系人电话");
-			map4.put("code", "instiutions_phone");
-			tableHead.add(map4);
+			for (DepartEnum departEnum : DepartEnum.values()) {
+				HashMap<String, Object> map = new HashMap<>(4);
+				map.put("name", departEnum.name);
+				map.put("code", departEnum.code);
+				tableHead.add(map);
+			}
 		}
 		return tableHead;
 	}
@@ -208,5 +196,54 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 			}
 		});
 		return collTableConfigDataSourceDao.insertList(list);
+	}
+
+
+	public enum PersonEnum {
+		ID("人员ID", "id"),
+		SFH("身份号", "sfh"),
+		XM("姓名", "xm"),
+		BB("部别", "bb"),
+		ZWMC("职务名称", "zwmc"),
+		XB("性别", "xb"),
+		JG("籍贯", "jg"),
+		JGDM("籍贯代码", "jgdm"),
+		ZZMM("政治面貌", "zzmm"),
+		ZZMMMC("政治面貌名称", "zzmmmc"),
+		CSSJ("出生时间", "cssj"),
+		RWSJ("工作时间", "rwsj"),
+		XLMC("学历名称", "xlmc"),
+		XL("学历", "xl"),
+		BYYX("毕业院校及专业", "byyx"),
+		SZDWCJID("所在单位ID", "szdwcjid");
+		private String name;
+		private String code;
+		PersonEnum(String name, String code) {
+			this.code = code;
+			this.name = name;
+		}
+	}
+
+	public enum DepartEnum {
+		ID("机构ID", "id"),
+		JGMC("机构名称", "jgmc"),
+		LEVEL("机构等级", "level"),
+		JGDJMC("机构等级名称", "jgdjmc"),
+		ZZJGMCM("组织机构名称码", "zzjgmcm"),
+		DWFB("单位分布", "dwfb"),
+		JGXZ("机构性质", "jgxz"),
+		JGXZMC("机构性质名称", "jgxzmc"),
+		QZQF("强制区分", "qzqf"),
+		QZQFMC("强制区分名称", "qzqfmc"),
+		PXM("排序码", "pxm"),
+		FDWID("父单位ID", "fdwid"),
+		DWQLJ("单位全路径", "dwqlj"),
+		CCM("层次码", "ccm");
+		private String name;
+		private String code;
+		DepartEnum(String name, String code) {
+			this.code = code;
+			this.name = name;
+		}
 	}
 }
