@@ -1,9 +1,6 @@
 package com.bonc.colldata.service.baseData;
 
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollDepartment;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
-import com.bonc.colldata.entity.QueryParam;
+import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.mapper.baseData.SysConfigDao;
 import org.springframework.stereotype.Service;
@@ -55,7 +52,7 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 		//获取本级及下级部门id
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("pid", deptCode);
-		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
+		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
 		List<String> idList = collDepartmentService.getAllNode(list);
 		idList.add(deptCode);
 		String[] ids = idList.toArray(new String[idList.size()]);

@@ -209,7 +209,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		//下发部门
 		String deptId = collReceiveTask.getSendTaskCollDepartment();
 		//获取部门名称
-		String deptName = collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
+		String deptName = collDepartmentService.checkDepartmentById(deptId).getJgmc();
 		//任务名称
 		String taskName = collReceiveTask.getSendTaskName();
 		//是否仅模板
@@ -345,7 +345,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 			//下发部门
 			String deptId = collReceiveTask.getSendTaskCollDepartment();
 			//获取部门名称
-			String deptName = collDepartmentService.checkDepartmentById(deptId).getInstiutionsName();
+			String deptName = collDepartmentService.checkDepartmentById(deptId).getJgmc();
 			//任务名称
 			String taskName = collReceiveTask.getSendTaskName();
 			//是否仅模板

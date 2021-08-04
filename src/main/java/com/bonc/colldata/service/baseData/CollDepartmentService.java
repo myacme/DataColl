@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.baseData;
 
 import com.bonc.colldata.entity.CollDepartment;
+import com.bonc.colldata.entity.JGKB;
 
 import java.util.List;
 import java.util.Map;
@@ -13,14 +14,14 @@ import java.util.Map;
  */
 public interface CollDepartmentService {
 
-	int addDepartment(CollDepartment collDepartment);
+	int addDepartment(JGKB jgkb);
 
-	List<CollDepartment> checkCollDepartmentList(Map<String, Object> map);
+	List<JGKB> checkCollDepartmentList(Map<String, Object> map);
 
-	List<CollDepartment> checkCollDepartmentTree(Map<String, Object> map);
+	List<JGKB> checkCollDepartmentTree(Map<String, Object> map);
 
-	int updateDepartment(CollDepartment collDepartment);
+	int updateDepartment(JGKB jgkb);
 
 	int deleteDepartment(String instiutionsId);
-	CollDepartment checkDepartmentById(String id);
+	JGKB checkDepartmentById(String id);
 }

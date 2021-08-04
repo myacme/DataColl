@@ -1,10 +1,7 @@
 package com.bonc.colldata.controller.baseData;
 
 import com.bonc.base.RestRecord;
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollDepartment;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
-import com.bonc.colldata.entity.QueryList;
+import com.bonc.colldata.entity.*;
 import com.bonc.colldata.service.baseData.CollDepartmentServiceImpl;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
@@ -40,7 +37,7 @@ public class BaseDataController {
 
 	@ApiOperation("新增机构维护")
 	@RequestMapping(value = "/depart/add", method = RequestMethod.POST)
-	public Object addDepartment(@RequestBody CollDepartment collDepartment) {
+	public Object addDepartment(@RequestBody JGKB collDepartment) {
 		collDepartmentService.addDepartment(collDepartment);
 		return new RestRecord(200, "新增成功", 1);
 	}
@@ -48,26 +45,21 @@ public class BaseDataController {
 	@ApiOperation("查询机构列表")
 	@RequestMapping(value = "/depart/list", method = RequestMethod.GET)
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "instiutions_id", value = "机构ID", dataType = "String", paramType = "query"),
-			@ApiImplicitParam(name = "instiutions_name", value = "机构名称", dataType = "String", paramType = "query"),
-			@ApiImplicitParam(name = "instiutions_contact", value = "联系人", dataType = "String", paramType = "query"),
-			@ApiImplicitParam(name = "instiutions_phone", value = "联系电话", dataType = "String", paramType = "query"),
+			@ApiImplicitParam(name = "id", value = "机构ID", dataType = "String", paramType = "query"),
+			@ApiImplicitParam(name = "jgmc", value = "机构名称", dataType = "String", paramType = "query"),
 			@ApiImplicitParam(name = "pid", value = "节点编号", dataType = "String", paramType = "query")
 	})
-	public Object departmentList(String instiutions_id, String instiutions_name, String instiutions_contact, String instiutions_phone, String pid, int pageSize, int pageNum) {
+	public Object departmentList(String id, String jgmc,  String pid, int pageSize, int pageNum) {
 		Map<String, Object> map = new HashMap<>();
-		String pCode = StringUtils.isBlank(pid) == true ? "0" : pid;
-		map.put("pid", pCode);
-		map.put("instiutions_id", instiutions_id);
-		map.put("instiutions_name", instiutions_name);
-		map.put("instiutions_contact", instiutions_contact);
-		map.put("instiutions_phone", instiutions_phone);
-		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
+		map.put("pid", pid);
+		map.put("id", id);
+		map.put("jgmc", jgmc);
+		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
 		List<String> idList = collDepartmentService.getAllNode(list);
 		PageHelper.startPage(pageNum, pageSize);
-		idList.add(pCode);
+		idList.add(pid);
 		map.put("list", idList);
-		List<CollDepartment> result = collDepartmentService.checkCollDepartmentList(map);
+		List<JGKB> result = collDepartmentService.checkCollDepartmentList(map);
 		PageInfo pageInfo = new PageInfo(result);
 		return new RestRecord(200, "查询成功", pageInfo);
 	}
@@ -76,21 +68,20 @@ public class BaseDataController {
 	@RequestMapping(value = "/depart/tree", method = RequestMethod.POST)
 	public Object departmentTree() {
 		Map<String, Object> map = new HashMap<>();
-		map.put("pid", "0");
-		List<CollDepartment> list = collDepartmentService.checkCollDepartmentTree(map);
+		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
 		return new RestRecord(200, "查询成功", list);
 	}
 
 	@ApiOperation("查询机构详情")
 	@RequestMapping(value = "/depart/detail", method = RequestMethod.GET)
 	public Object departmentDetail(String id) {
-		CollDepartment collDepartment = collDepartmentService.checkDepartmentById(id);
+		JGKB collDepartment = collDepartmentService.checkDepartmentById(id);
 		return new RestRecord(200, "查询成功", collDepartment);
 	}
 
 	@ApiOperation("修改机构")
 	@RequestMapping(value = "/depart/update", method = RequestMethod.POST)
-	public Object updateDepartment(@RequestBody CollDepartment collDepartment) {
+	public Object updateDepartment(@RequestBody JGKB collDepartment) {
 		int result = collDepartmentService.updateDepartment(collDepartment);
 		return new RestRecord(200, "修改成功", result);
 	}

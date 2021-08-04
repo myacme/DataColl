@@ -1,93 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bonc.colldata.mapper.baseData.CollDepartmentMapper">
-	<insert id="addDepartment" parameterType="com.bonc.colldata.entity.CollDepartment">
-        INSERT INTO coll_instiutions
+	<insert id="addDepartment" parameterType="com.bonc.colldata.entity.JGKB">
+        INSERT INTO t_zb_jgkb
         values (
-        #{instiutionsId},
-        #{instiutionsName},
-        #{instiutionsContact},
-        #{instiutionsPhone},
-        #{isLeaf},
-        #{parentCode},
-        #{businessType},
-        #{state}
+        #{id},
+        #{jgmc},
+        #{level},
+        #{jgdjmc},
+        #{zzjgmcm},
+        #{dwfb},
+        #{jgxz},
+        #{jgxzmc},
+        #{qzqf},
+        #{qzqfmc},
+        #{pxm},
+        #{fdwid},
+        #{dwqlj},
+        #{ccm}
         )
 
     </insert>
-    <resultMap id="baseList" type="com.bonc.colldata.entity.CollDepartment">
-        <id property="instiutionsId"  column="instiutions_id"/>
-        <result property="instiutionsName" column="instiutions_name"/>
-        <result property="instiutionsContact" column="instiutions_contact"/>
-        <result property="instiutionsPhone" column="instiutions_phone"/>
-        <result property="isLeaf" column="is_leaf"/>
-        <result property="parentCode" column="parent_code"/>
-        <result property="businessType" column="business_type"/>
-        <result property="state" column="state"/>
-
-    </resultMap>
+	<resultMap id="baseList" type="com.bonc.colldata.entity.JGKB">
+		<id property="id" column="id"/>
+		<result property="jgmc" column="jgmc"/>
+		<result property="level" column="level"/>
+		<result property="jgdjmc" column="jgdjmc"/>
+		<result property="zzjgmcm" column="zzjgmcm"/>
+		<result property="dwfb" column="dwfb"/>
+		<result property="jgxz" column="jgxz"/>
+		<result property="jgxzmc" column="jgxzmc"/>
+		<result property="qzqf" column="qzqf"/>
+		<result property="qzqfmc" column="qzqfmc"/>
+		<result property="dwqlj" column="dwqlj"/>
+		<result property="pxm" column="pxm"/>
+		<result property="fdwid" column="fdwid"/>
+		<result property="ccm" column="ccm"/>
+	</resultMap>
 	<select id="checkCollDepartmentList" resultMap="baseList">
-        select * from  coll_instiutions where state='1'
-        <if test="instiutions_id!=null and instiutions_id!=''">
-            AND  instiutions_id like '%'||#{instiutions_id}||'%'
-        </if>
-        <if test="instiutions_contact!=null and instiutions_contact!=''">
-            AND  instiutions_contact like '%'||#{instiutions_contact}||'%'
-        </if>
-        <if test="instiutions_phone!=null and instiutions_phone!=''">
-            AND  instiutions_phone like '%'||#{instiutions_phone}||'%'
-        </if>
-        <if test="instiutions_name!=null and instiutions_name!=''">
-            AND  instiutions_name like '%'||#{instiutions_name}||'%'
-        </if>
-        <if test="list!=null">
-           AND  instiutions_id IN
-            <foreach collection="list" index="index" separator="," item="i" open="(" close=")">
-                #{i}
-            </foreach>
-        </if>
-     </select>
-    <select id="checkDepartmentById" resultMap="baseList" parameterType="String">
-        select * from coll_instiutions where state='1'
-       AND  instiutions_id=#{id}
+		select * from t_zb_jgkb where 1=1
+		<if test="id!=null and id!=''">
+			AND id like '%'||#{id}||'%'
+		</if>
+		<if test="jgmc!=null and jgmc!=''">
+			AND jgmc like '%'||#{jgmc}||'%'
+		</if>
+		<if test="list!=null">
+			AND id IN
+			<foreach collection="list" index="index" separator="," item="i" open="(" close=")">
+				#{i}
+			</foreach>
+		</if>
+	</select>
+	<select id="checkDepartmentById" resultMap="baseList" parameterType="String">
+        select * from t_zb_jgkb where 1=1
+       AND  id=#{id}
     </select>
-    <resultMap id="baseTree" type="com.bonc.colldata.entity.CollDepartment">
-        <id property="instiutionsId"  column="instiutions_id"/>
-        <result property="instiutionsName" column="instiutions_name"/>
-        <result property="instiutionsContact" column="instiutions_contact"/>
-        <result property="instiutionsPhone" column="instiutions_phone"/>
-        <result property="isLeaf" column="is_leaf"/>
-        <result property="parentCode" column="parent_code"/>
-        <result property="businessType" column="business_type"/>
-        <result property="state" column="state"/>
-        <collection property="list" select="com.bonc.colldata.mapper.baseData.CollDepartmentMapper.checkCollDepartmentTree" ofType="com.bonc.colldata.entity.CollDepartment" column="instiutions_id">
-        </collection>
-    </resultMap>
-    <!--递归查询机构树-->
-    <select id="checkCollDepartmentTree" resultMap="baseTree" parameterType="java.util.Map">
-     select * from  coll_instiutions where state='1' and parent_code=#{pid}
+	<resultMap id="baseTree" type="com.bonc.colldata.entity.JGKB">
+		<id property="id" column="id"/>
+		<result property="jgmc" column="jgmc"/>
+		<result property="level" column="level"/>
+		<result property="jgdjmc" column="jgdjmc"/>
+		<result property="zzjgmcm" column="zzjgmcm"/>
+		<result property="dwfb" column="dwfb"/>
+		<result property="jgxz" column="jgxz"/>
+		<result property="jgxzmc" column="jgxzmc"/>
+		<result property="qzqf" column="qzqf"/>
+		<result property="qzqfmc" column="qzqfmc"/>
+		<result property="dwqlj" column="dwqlj"/>
+		<result property="pxm" column="pxm"/>
+		<result property="fdwid" column="fdwid"/>
+		<result property="ccm" column="ccm"/>
+		<collection property="list"
+		            select="com.bonc.colldata.mapper.baseData.CollDepartmentMapper.checkCollDepartmentTree"
+		            ofType="com.bonc.colldata.entity.JGKB" column="id">
+		</collection>
+	</resultMap>
+	<!--递归查询机构树-->
+	<select id="checkCollDepartmentTree" resultMap="baseTree" parameterType="java.util.Map">
+     select * from  t_zb_jgkb where 1=1
+     <if test="pid!=null and pid!=''">
+	     and fdwid=#{pid}
+     </if>
+
     </select>
 
-    <update id="updateDepartment" parameterType="com.bonc.colldata.entity.CollDepartment">
-        update  coll_instiutions set
-        instiutions_name=#{instiutionsName},
-        instiutions_contact=#{instiutionsContact},
-        instiutions_phone=#{instiutionsPhone},
-        is_leaf=#{isLeaf},
-        parent_code=#{parentCode},
-        business_type=#{businessType}
-        where  instiutions_id=#{instiutionsId}
+	<update id="updateDepartment" parameterType="com.bonc.colldata.entity.JGKB">
+        update  t_zb_jgkb set
+        jgmc=#{jgmc},
+        level=#{level},
+        jgdjmc=#{jgdjmc},
+        zzjgmcm=#{zzjgmcm},
+        dwfb=#{dwfb},
+        jgxz=#{jgxz},
+        jgxzmc=#{jgxzmc},
+        qzqf=#{qzqf},
+        qzqfmc=#{qzqfmc},
+        dwqlj=#{dwqlj},
+        pxm=#{pxm},
+        fdwid=#{fdwid},
+        ccm=#{ccm}
+        where  id=#{id}
     </update>
 
-    <update id="deleteDepartment" parameterType="java.util.Map">
-        update coll_instiutions set state='0' where instiutions_id IN
-        <foreach collection="list" index="index" separator="," item="i" open="(" close=")">
-            #{i}
-        </foreach>
-    </update>
+	<delete id="deleteDepartment" parameterType="java.util.Map">
+		delete from  t_zb_jgkb where id IN
+		<foreach collection="list" index="index" separator="," item="i" open="(" close=")">
+			#{i}
+		</foreach>
+	</delete>
 
-
-    <select id="getTableHead" resultType="java.util.Map">
-        pragma table_info ('coll_instiutions')
-    </select>
 </mapper>
