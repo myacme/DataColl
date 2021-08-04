@@ -2,6 +2,7 @@ package com.bonc.colldata.mapper.baseData;
 
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.RYKB;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -56,7 +57,7 @@ public interface CollPersonnelMapper {
 	 * @param array
 	 * @return
 	 */
-	List<CollPersonnelMaintain> getPersonnelByDept(@Param("array") String[] array, @Param("name") String name, @Param("IDcard") String IDcard);
+	List<RYKB> getPersonnelByDept(@Param("array") String[] array, @Param("name") String name, @Param("IDcard") String IDcard);
 
 	/***
 	 * todo:修改人员信息

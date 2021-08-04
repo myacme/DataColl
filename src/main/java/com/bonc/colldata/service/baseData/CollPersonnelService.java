@@ -3,6 +3,7 @@ package com.bonc.colldata.service.baseData;
 import com.bonc.colldata.entity.CollBasicPersonnelConfig;
 import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.QueryParam;
+import com.bonc.colldata.entity.RYKB;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public interface CollPersonnelService {
 
 
 	List<CollPersonnelMaintain> getPersonnelByList(List<QueryParam> list);
-	List<CollPersonnelMaintain> getPersonnelByDept(String deptCode, String name, String IDcard);
+	List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard);
 
 
 	int updatePersonnel(CollPersonnelMaintain collPersonnelMaintain);

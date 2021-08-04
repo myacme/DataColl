@@ -3,12 +3,11 @@ package com.bonc.colldata.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollBusinessTableType;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.CollTableData;
+import com.bonc.colldata.entity.RYKB;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
-import com.sun.xml.bind.v2.model.core.ID;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -194,7 +193,7 @@ public class CollDataReportController {
 			@ApiImplicitParam(name = "IDcard", value = "身份证（搜索条件）", required = true),
 	})
 	public Object dataSource(String deptCode, String name, String IDcard) {
-		List<CollPersonnelMaintain> list = collPersonnelService.getPersonnelByDept(deptCode, name, IDcard);
+		List<RYKB> list = collPersonnelService.getPersonnelByDept(deptCode, name, IDcard);
 		return new RestRecord(200, "成功", list);
 	}
 }

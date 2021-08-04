@@ -1,9 +1,6 @@
 package com.bonc.colldata.service.baseData;
 
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
-import com.bonc.colldata.entity.JGKB;
-import com.bonc.colldata.entity.QueryParam;
+import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.mapper.baseData.SysConfigDao;
@@ -58,7 +55,7 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public List<CollPersonnelMaintain> getPersonnelByDept(String deptCode, String name, String IDcard) {
+	public List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard) {
 		//获取本级及下级部门id
 		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
 		List<JGKB> list = collTableDataService.checkCollDepartmentTree(collDepartment);
