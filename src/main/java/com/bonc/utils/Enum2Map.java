@@ -97,7 +97,7 @@ public class Enum2Map {
 	}
 
 	public static void main(String[] args) {
-		Map<String,Object> map=Enum2Map.EnumToMap(PersonEnum.class);
-		System.out.println(map);
+
+
 	}
 }

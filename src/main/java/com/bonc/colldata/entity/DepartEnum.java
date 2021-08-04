@@ -1,6 +1,9 @@
 package com.bonc.colldata.entity;
 
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * 〈机构表字段配置〉
  *
@@ -26,8 +29,36 @@ public enum DepartEnum {
 	CCM("层次码", "ccm");
 	public String name;
 	public String code;
+
 	DepartEnum(String name, String code) {
 		this.code = code;
 		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	/**
+	 * 将枚举类转成map
+	 */
+	public static Map<String, Object> payTypeMap = new LinkedHashMap<>();
+	static {
+		DepartEnum[] types = DepartEnum.values();
+		for (DepartEnum type : types) {
+			payTypeMap.put(String.valueOf(type.getCode()), type.getName());
+		}
 	}
 }

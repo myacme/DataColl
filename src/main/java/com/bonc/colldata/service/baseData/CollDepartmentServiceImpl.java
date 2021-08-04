@@ -6,6 +6,7 @@ import com.bonc.colldata.entity.UserManager;
 import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.utils.SessionUtiil;
 import com.bonc.utils.StringUtils;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,10 @@ public class CollDepartmentServiceImpl implements CollDepartmentService {
 
 	@Override
 	public List<JGKB> checkCollDepartmentList(Map<String, Object> map) {
+		List<JGKB> list = this.checkCollDepartmentTree(map);
+		List<String> idList = this.getAllNode(list);
+		idList.add(map.get("pid").toString());
+		map.put("list", idList);
 		return collDepartmentMapper.checkCollDepartmentList(map);
 	}
 

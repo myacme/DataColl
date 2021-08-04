@@ -1,6 +1,10 @@
 package com.bonc.colldata.entity;
 
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * 〈人员表字段配置〉
  *
@@ -50,5 +54,19 @@ public enum PersonEnum {
 	PersonEnum(String name, String code) {
 		this.code = code;
 		this.name = name;
+	}
+	/**
+	 * 将枚举类转成map
+	 */
+	public static Map<String,Object> payTypeMap = new LinkedHashMap<>();
+	static {
+		PersonEnum[] types = PersonEnum.values();
+		for (PersonEnum type : types) {
+			payTypeMap.put(String.valueOf(type.getCode()), type.getName());
+		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println(PersonEnum.payTypeMap);
 	}
 }

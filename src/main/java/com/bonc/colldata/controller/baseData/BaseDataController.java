@@ -54,11 +54,7 @@ public class BaseDataController {
 		map.put("pid", pid);
 		map.put("id", id);
 		map.put("jgmc", jgmc);
-		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
-		List<String> idList = collDepartmentService.getAllNode(list);
 		PageHelper.startPage(pageNum, pageSize);
-		idList.add(pid);
-		map.put("list", idList);
 		List<JGKB> result = collDepartmentService.checkCollDepartmentList(map);
 		PageInfo pageInfo = new PageInfo(result);
 		return new RestRecord(200, "查询成功", pageInfo);

@@ -181,6 +181,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		list = this.getTaskTemplate(listTable, befVsersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
+			list.add(this.getBaseDeptTemplate(deptId,ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
 		try {
@@ -223,6 +224,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		list = this.getTaskTemplate(listTable, befVersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
+			list.add(this.getBaseDeptTemplate(deptId,ifTemp));
 		}
 		String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		ArrayList<File> fileList = new ArrayList<File>();
@@ -259,16 +261,14 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * @param deptId
 	 */
 	public Map<String, Object> getBaseTemplate(String deptId, String ifTemp) {
-		Map<String, Object> param = new HashMap<>();
-		Map<String, Object> nameMap = new HashMap<>();
+		Map<String, Object> nameMap =null;
 		Map<String, Object> p = new HashMap<>();
 		List<Map<String, Object>> list = new ArrayList<>();
-		param.put("dept_id", deptId);
 		//获取基础数据
-
 		//获取表字段字段信息
 		List<RYKB> listData = collPersonnelService.getPersonnelByList(null,deptId);
-		nameMap = Enum2Map.EnumToMap(PersonEnum.class);
+		nameMap = PersonEnum.payTypeMap;
+		System.out.println(nameMap);
 		p.put("nameMap", nameMap);
 		p.put("name", "t_zb_rykb");
 		p.put("tableName", "人员基本信息");
@@ -287,6 +287,40 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		return p;
 	}
 
+	/***
+	 *
+	 * @param deptId
+	 * @param ifTemp
+	 * @return
+	 */
+	public Map<String, Object> getBaseDeptTemplate(String deptId, String ifTemp) {
+		Map<String,Object> param=new HashMap<>();
+		Map<String, Object> nameMap =null;
+		Map<String, Object> p = new HashMap<>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		param.put("pid",deptId);
+		//获取基础数据
+		//获取表字段字段信息
+		List<JGKB> listData = collDepartmentService.checkCollDepartmentList(param);
+		nameMap = DepartEnum.payTypeMap;
+		System.out.println(nameMap);
+		p.put("nameMap", nameMap);
+		p.put("name", "t_zb_jgkb");
+		p.put("tableName", "机构信息表");
+		if ("1".equals(ifTemp)) {
+			p.put("data", null);
+		} else {
+			if (listData != null && listData.size() > 0) {
+				for (JGKB jgkb : listData) {
+					list.add(JSON.parseObject(JSON.toJSONString(jgkb), Map.class));
+				}
+				p.put("data", list);
+			} else {
+				p.put("data", null);
+			}
+		}
+		return p;
+	}
 	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version, String deptId) {
 		List<Map<String, Object>> list = new ArrayList<>();
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
