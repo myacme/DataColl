@@ -341,8 +341,8 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		if (deptCode == null || "".equals(deptCode)) {
 			deptCode = user.getDeptId();
 		}
-		CollDepartment collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
-		List<CollDepartment> list = checkCollDepartmentTree(collDepartment);
+		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
+		List<JGKB> list = checkCollDepartmentTree(collDepartment);
 		List<String> idList = collDepartmentService.getAllNode(list);
 		idList.add(deptCode);
 		String[] ids = idList.toArray(new String[idList.size()]);
@@ -474,15 +474,15 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	 * @param dept
 	 * @return
 	 */
-	public List<CollDepartment> checkCollDepartmentTree(CollDepartment dept) {
-		List<CollDepartment> list = new ArrayList<>();
+	public List<JGKB> checkCollDepartmentTree(JGKB dept) {
+		List<JGKB> list = new ArrayList<>();
 		list.add(dept);
 		Map<String, Object> map = new HashMap<>(2);
-		map.put("pid", dept.getInstiutionsId());
-		List<CollDepartment> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
+		map.put("pid", dept.getFdwid());
+		List<JGKB> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
 		if (list1 != null) {
 			list1.forEach(l -> {
-				List<CollDepartment> list2 = checkCollDepartmentTree(l);
+				List<JGKB> list2 = checkCollDepartmentTree(l);
 				list.addAll(list2);
 			});
 		}

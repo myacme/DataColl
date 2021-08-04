@@ -1,6 +1,6 @@
 package com.bonc.colldata.mapper.baseData;
 
-import com.bonc.colldata.entity.CollDepartment;
+import com.bonc.colldata.entity.JGKB;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,38 +18,38 @@ import java.util.Map;
 public interface CollDepartmentMapper {
 	/***
 	 * todo:新增部门
-	 * @param collDepartment
+	 * @param jgkb
 	 * @return
 	 */
-	int addDepartment(CollDepartment collDepartment);
+	int addDepartment(JGKB jgkb);
 
 	/****
 	 * todo:查询机构列表
 	 * @param map
 	 * @return
 	 */
-	List<CollDepartment> checkCollDepartmentList(Map<String, Object> map);
+	List<JGKB> checkCollDepartmentList(Map<String, Object> map);
 
 	/****
 	 * todo:查询机构列表树
 	 * @param map
 	 * @return
 	 */
-	List<CollDepartment> checkCollDepartmentTree(Map<String, Object> map);
+	List<JGKB> checkCollDepartmentTree(Map<String, Object> map);
 
 	/***
 	 * todo:查看部门详情
 	 * @param id
 	 * @return
 	 */
-	CollDepartment checkDepartmentById(@Param("id") String id);
+	JGKB checkDepartmentById(@Param("id") String id);
 
 	/****
 	 * todo:修改机构数据
-	 * @param collDepartment
+	 * @param jgkb
 	 * @return
 	 */
-	int updateDepartment(CollDepartment collDepartment);
+	int updateDepartment(JGKB jgkb);
 
 	/***
 	 * todo:删除机构
@@ -58,9 +58,5 @@ public interface CollDepartmentMapper {
 	 */
 	int deleteDepartment(Map<String, Object> map);
 
-	/***
-	 * todo:获取表字段描述
-	 * @return
-	 */
-	List<Map<String, Object>> getTableHead();
+
 }
