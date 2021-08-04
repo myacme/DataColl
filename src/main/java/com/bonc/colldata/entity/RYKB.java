@@ -24,6 +24,8 @@ public class RYKB {
 	private String xl;
 	private String byyx;
 	private String szdwcjid;
+	private String sflb;
+	private String sflbmc;
 
 	public String getId() {
 		return id;
@@ -151,5 +153,21 @@ public class RYKB {
 
 	public void setSzdwcjid(String szdwcjid) {
 		this.szdwcjid = szdwcjid;
+	}
+
+	public String getSflb() {
+		return sflb;
+	}
+
+	public void setSflb(String sflb) {
+		this.sflb = sflb;
+	}
+
+	public String getSflbmc() {
+		return sflbmc;
+	}
+
+	public void setSflbmc(String sflbmc) {
+		this.sflbmc = sflbmc;
 	}
 }

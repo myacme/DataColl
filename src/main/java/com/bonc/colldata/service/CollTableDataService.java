@@ -2,6 +2,7 @@ package com.bonc.colldata.service;
 
 import com.bonc.colldata.entity.CollBusinessTableType;
 import com.bonc.colldata.entity.CollTableData;
+import com.bonc.colldata.entity.JGKB;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -177,4 +178,12 @@ public interface CollTableDataService {
 	 * @return 实例对象
 	 */
 	int delete(List<Map<String, Object>> list);
+
+	/**
+	 * 获取本级及下级部门
+	 *
+	 * @param dept
+	 * @return
+	 */
+	List<JGKB> checkCollDepartmentTree(JGKB dept);
 }

@@ -474,6 +474,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 	 * @param dept
 	 * @return
 	 */
+	@Override
 	public List<JGKB> checkCollDepartmentTree(JGKB dept) {
 		List<JGKB> list = new ArrayList<>();
 		list.add(dept);

@@ -1,8 +1,14 @@
 package com.bonc.colldata.service.baseData;
 
-import com.bonc.colldata.entity.*;
+import com.bonc.colldata.entity.CollBasicPersonnelConfig;
+import com.bonc.colldata.entity.CollPersonnelMaintain;
+import com.bonc.colldata.entity.JGKB;
+import com.bonc.colldata.entity.QueryParam;
+import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.mapper.baseData.SysConfigDao;
+import com.bonc.colldata.service.CollTableDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +30,10 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	private SysConfigDao sysConfigDao;
 	@Resource
 	private CollDepartmentServiceImpl collDepartmentService;
+	@Autowired
+	private CollDepartmentMapper collDepartmentMapper;
+	@Autowired
+	private CollTableDataService collTableDataService;
 
 	@Override
 	public List<CollBasicPersonnelConfig> getTableHead() {
@@ -50,9 +60,8 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	@Override
 	public List<CollPersonnelMaintain> getPersonnelByDept(String deptCode, String name, String IDcard) {
 		//获取本级及下级部门id
-		Map<String, Object> map = new HashMap<>(2);
-		map.put("pid", deptCode);
-		List<JGKB> list = collDepartmentService.checkCollDepartmentTree(map);
+		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
+		List<JGKB> list = collTableDataService.checkCollDepartmentTree(collDepartment);
 		List<String> idList = collDepartmentService.getAllNode(list);
 		idList.add(deptCode);
 		String[] ids = idList.toArray(new String[idList.size()]);

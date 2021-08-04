@@ -107,8 +107,8 @@
    order by name
 	</select>
 	<!--查询列表-->
-	<select id="getPersonnelByDept" resultType="com.bonc.colldata.entity.CollPersonnelMaintain" parameterType="java.util.Map">
-		SELECT *  FROM coll_personnel_maintain
+	<select id="getPersonnelByDept" resultType="com.bonc.colldata.entity.RYKB">
+		SELECT *  FROM t_zb_rykb
 		WHERE STATE='1'
 		  <if test="name != null and name != ''">
               and xm like '%'||#{name}||'%'
@@ -117,7 +117,7 @@
               and sfh like '%'||#{IDcard}||'%'
           </if>
             <if test="array != null">
-                and dept_id in
+                and szdwcjid in
                 <foreach collection="array" index="index" item="item" open="(" close=")"
                          separator=",">
                     #{item}
