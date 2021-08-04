@@ -1,9 +1,7 @@
 package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollBusinessTableConfig;
-import com.bonc.colldata.entity.CollTableConfigDataSource;
+import com.bonc.colldata.entity.*;
 import com.bonc.colldata.mapper.CollBusinessTableConfigDao;
 import com.bonc.colldata.mapper.CollTableConfigDataSourceDao;
 import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
@@ -196,54 +194,5 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 			}
 		});
 		return collTableConfigDataSourceDao.insertList(list);
-	}
-
-
-	public enum PersonEnum {
-		ID("人员ID", "id"),
-		SFH("身份号", "sfh"),
-		XM("姓名", "xm"),
-		BB("部别", "bb"),
-		ZWMC("职务名称", "zwmc"),
-		XB("性别", "xb"),
-		JG("籍贯", "jg"),
-		JGDM("籍贯代码", "jgdm"),
-		ZZMM("政治面貌", "zzmm"),
-		ZZMMMC("政治面貌名称", "zzmmmc"),
-		CSSJ("出生时间", "cssj"),
-		RWSJ("工作时间", "rwsj"),
-		XLMC("学历名称", "xlmc"),
-		XL("学历", "xl"),
-		BYYX("毕业院校及专业", "byyx"),
-		SZDWCJID("所在单位ID", "szdwcjid");
-		private String name;
-		private String code;
-		PersonEnum(String name, String code) {
-			this.code = code;
-			this.name = name;
-		}
-	}
-
-	public enum DepartEnum {
-		ID("机构ID", "id"),
-		JGMC("机构名称", "jgmc"),
-		LEVEL("机构等级", "level"),
-		JGDJMC("机构等级名称", "jgdjmc"),
-		ZZJGMCM("组织机构名称码", "zzjgmcm"),
-		DWFB("单位分布", "dwfb"),
-		JGXZ("机构性质", "jgxz"),
-		JGXZMC("机构性质名称", "jgxzmc"),
-		QZQF("强制区分", "qzqf"),
-		QZQFMC("强制区分名称", "qzqfmc"),
-		PXM("排序码", "pxm"),
-		FDWID("父单位ID", "fdwid"),
-		DWQLJ("单位全路径", "dwqlj"),
-		CCM("层次码", "ccm");
-		private String name;
-		private String code;
-		DepartEnum(String name, String code) {
-			this.code = code;
-			this.name = name;
-		}
 	}
 }
