@@ -159,7 +159,7 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 	public List<Map<String, Object>> queryDataSourceField(String tableName) {
 		List<Map<String, Object>> tableHead = new ArrayList<>();
 		//人员信息
-		if ("coll_personnel_maintain".equals(tableName)) {
+		if ("t_zb_rykb".equals(tableName)) {
 //			List<Map<String, Object>> tableHead1 = collPersonnelMapper.getTableDesc();
 			for (PersonEnum personEnum : PersonEnum.values()) {
 				HashMap<String, Object> map = new HashMap<>(4);
@@ -169,7 +169,7 @@ public class CollBusinessTableConfigServiceImpl implements CollBusinessTableConf
 			}
 		}
 		//部门信息
-		if ("coll_instiutions".equals(tableName)) {
+		if ("t_zb_jgkb".equals(tableName)) {
 //			List<Map<String, Object>> tableHead1 = collDepartmentMapper.getTableHead();
 			for (DepartEnum departEnum : DepartEnum.values()) {
 				HashMap<String, Object> map = new HashMap<>(4);

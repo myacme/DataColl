@@ -25,7 +25,9 @@ public enum PersonEnum {
 	XLMC("学历名称", "xlmc"),
 	XL("学历", "xl"),
 	BYYX("毕业院校及专业", "byyx"),
-	SZDWCJID("所在单位ID", "szdwcjid");
+	SZDWCJID("所在单位ID", "szdwcjid"),
+	SFLB("身份类别", "sflb"),
+	SFLBMC("身份类别名称", "sflbmc");
 	public String name;
 	public String code;
 	PersonEnum(String name, String code) {

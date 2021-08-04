@@ -4,6 +4,7 @@ package com.bonc.utils;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,12 +114,5 @@ public class CommonUtil {
 			}
 		}
 		return matches;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(getVersionCode());
-		for (int i = 0; i < 10; i++) {
-			System.out.println(getUUID20());
-		}
 	}
 }
