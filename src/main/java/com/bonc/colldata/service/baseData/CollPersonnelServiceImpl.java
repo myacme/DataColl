@@ -48,7 +48,7 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public List<CollPersonnelMaintain> getPersonnelByDept(String deptCode) {
+	public List<CollPersonnelMaintain> getPersonnelByDept(String deptCode, String name, String IDcard) {
 		//获取本级及下级部门id
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("pid", deptCode);
@@ -56,7 +56,7 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 		List<String> idList = collDepartmentService.getAllNode(list);
 		idList.add(deptCode);
 		String[] ids = idList.toArray(new String[idList.size()]);
-		return collPersonnelMapper.getPersonnelByDept(ids);
+		return collPersonnelMapper.getPersonnelByDept(ids,name,IDcard);
 	}
 
 	@Override

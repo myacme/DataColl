@@ -56,7 +56,7 @@ public interface CollPersonnelMapper {
 	 * @param array
 	 * @return
 	 */
-	List<CollPersonnelMaintain> getPersonnelByDept(@Param("array") String[] array);
+	List<CollPersonnelMaintain> getPersonnelByDept(@Param("array") String[] array, @Param("name") String name, @Param("IDcard") String IDcard);
 
 	/***
 	 * todo:修改人员信息
