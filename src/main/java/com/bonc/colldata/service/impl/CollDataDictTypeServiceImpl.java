@@ -1,6 +1,7 @@
 package com.bonc.colldata.service.impl;
 
 import com.bonc.colldata.entity.CollDataDictType;
+import com.bonc.colldata.entity.ZgGn;
 import com.bonc.colldata.mapper.CollDataDictTypeDao;
 import com.bonc.colldata.service.CollDataDictTypeService;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class CollDataDictTypeServiceImpl implements CollDataDictTypeService {
 	 * @return 对象列表
 	 */
 	@Override
-	public List<CollDataDictType> queryAllByLimit(String name, String state) {
+	public List<ZgGn> queryAllByLimit(String name, String state) {
 //		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
 		return collDataDictTypeDao.queryAllByLimit(name, state);
 	}

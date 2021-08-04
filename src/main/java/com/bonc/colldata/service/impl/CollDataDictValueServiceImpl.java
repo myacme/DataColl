@@ -2,6 +2,7 @@ package com.bonc.colldata.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.bonc.colldata.entity.CollDataDictValue;
+import com.bonc.colldata.entity.ZgGn;
 import com.bonc.colldata.mapper.CollDataDictValueDao;
 import com.bonc.colldata.service.CollDataDictValueService;
 import com.bonc.utils.CommonUtil;
@@ -34,6 +35,16 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 	@Resource
 	private CollDataDictValueDao collDataDictValueDao;
 
+//	/**
+//	 * 通过ID查询单条数据
+//	 *
+//	 * @param codeId 主键
+//	 * @return 实例对象
+//	 */
+//	@Override
+//	public CollDataDictValue queryById(String codeId) {
+//		return this.collDataDictValueDao.queryById(codeId);
+//	}
 	/**
 	 * 通过ID查询单条数据
 	 *
@@ -41,9 +52,20 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 	 * @return 实例对象
 	 */
 	@Override
-	public CollDataDictValue queryById(String codeId) {
+	public ZgGn queryById(String codeId) {
 		return this.collDataDictValueDao.queryById(codeId);
 	}
+//	/**
+//	 * 查询多条数据
+//	 *
+//	 * @param id id
+//	 * @return 对象列表
+//	 */
+//	@Override
+//	public PageInfo<CollDataDictValue> queryAllByLimit(String id, Pageable pageable) {
+//		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+//		return new PageInfo<>(collDataDictValueDao.queryAllByLimit(id));
+//	}
 
 	/**
 	 * 查询多条数据
@@ -52,9 +74,10 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 	 * @return 对象列表
 	 */
 	@Override
-	public PageInfo<CollDataDictValue> queryAllByLimit(String id, Pageable pageable) {
-		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
-		return new PageInfo<>(collDataDictValueDao.queryAllByLimit(id));
+	public List<ZgGn> queryAllByLimit(String id) {
+		List<ZgGn> zgGns = collDataDictValueDao.queryAllByLimit(id);
+		List<ZgGn> tree = createTree(zgGns);
+		return tree;
 	}
 
 	/**
@@ -144,5 +167,34 @@ public class CollDataDictValueServiceImpl implements CollDataDictValueService {
 		} else {
 			return 0;
 		}
+	}
+
+	public List<ZgGn> createTree(List<ZgGn> list) {
+		List<ZgGn> father = new ArrayList<>();
+		for (ZgGn zgGn : list) {
+			if (zgGn.getFbm() == null || "".equals(zgGn.getFbm())) {
+				father.add(zgGn);
+			}
+		}
+		for (ZgGn zgGn : father) {
+			List<ZgGn> chrld = getChrld(zgGn, list);
+			zgGn.setChild(chrld);
+		}
+		return father;
+	}
+
+	public List<ZgGn> getChrld(ZgGn zgGn, List<ZgGn> list) {
+		List<ZgGn> chrld = new ArrayList<>();
+		for (ZgGn gn : list) {
+			if (gn.getFbm() == zgGn.getBm()) {
+				chrld.add(gn);
+			}
+		}
+		if (chrld != null && chrld.size() > 0) {
+			for (ZgGn gn : chrld) {
+				getChrld(gn, list);
+			}
+		}
+		return chrld;
 	}
 }

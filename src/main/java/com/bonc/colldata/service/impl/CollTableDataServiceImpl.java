@@ -70,12 +70,12 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		if (files != null && files.length != 0) {
 			for (File excle : files) {
 				String sheetName = ExcelUtil.getSheetName(excle);
-				if ("coll_personnel_maintain".equals(sheetName)) {
+				if ("t_zb_rykb".equals(sheetName)) {
 					List<Map<String, String>> listMap = ExcelUtil.readExcleOfCommon(excle);
 					JSONArray jsonArray = new JSONArray();
 					jsonArray.addAll(listMap);
 					List<RYKB> list = jsonArray.toJavaList(RYKB.class);
-					result = collPersonnelMapper.insertPersonnelData(list);
+					result = collPersonnelMapper.insertPersonnelData(null);
 					size += result;
 				} else {
 					//下级数据

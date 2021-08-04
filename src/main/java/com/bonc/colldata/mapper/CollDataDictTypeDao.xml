@@ -21,20 +21,24 @@
     </select>
 
 
+<!--    &lt;!&ndash;通过实体作为筛选条件查询&ndash;&gt;-->
+<!--    <select id="queryAllByLimit" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--            dict_code,data_dict_type_code, data_dict_type_name, remark, state-->
+<!--        from main.coll_data_dict_type-->
+<!--        <where>-->
+<!--            <if test="name != null and name != ''">-->
+<!--                and data_dict_type_name like '%'||#{name}||'%'-->
+<!--            </if>-->
+<!--            <if test="state != null and state != ''">-->
+<!--                and state = #{state}-->
+<!--            </if>-->
+<!--            and is_valid = '1'-->
+<!--        </where>-->
+<!--    </select>-->
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAllByLimit" resultMap="BaseResultMap">
-        select
-            dict_code,data_dict_type_code, data_dict_type_name, remark, state
-        from main.coll_data_dict_type
-        <where>
-            <if test="name != null and name != ''">
-                and data_dict_type_name like '%'||#{name}||'%'
-            </if>
-            <if test="state != null and state != ''">
-                and state = #{state}
-            </if>
-            and is_valid = '1'
-        </where>
+    <select id="queryAllByLimit" resultType="com.bonc.colldata.entity.ZgGn">
+        SELECT * FROM zg_gn GROUP BY zdlx
     </select>
 
     <!--新增所有列-->

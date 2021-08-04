@@ -11,20 +11,28 @@
         <result property="state" column="state" jdbcType="VARCHAR"/>
     </resultMap>
 
+<!--    &lt;!&ndash;查询单个&ndash;&gt;-->
+<!--    <select id="queryById" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          code_id, code_type, code_name, code_value, state-->
+<!--        from main.coll_data_dict_value-->
+<!--        where code_id = #{codeId} and is_valid = '1'-->
+<!--    </select>-->
     <!--查询单个-->
-    <select id="queryById" resultMap="BaseResultMap">
-        select
-          code_id, code_type, code_name, code_value, state
-        from main.coll_data_dict_value
-        where code_id = #{codeId} and is_valid = '1'
+    <select id="queryById" resultType="com.bonc.colldata.entity.ZgGn">
+        SELECT * FROM zg_gn WHERE bm = #{id}
     </select>
 
+<!--    &lt;!&ndash;查询指定行数据&ndash;&gt;-->
+<!--    <select id="queryAllByLimit" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          code_id, code_type, code_name, code_value, state-->
+<!--        from main.coll_data_dict_value-->
+<!--        where code_type = #{id} and is_valid = '1'-->
+<!--    </select>-->
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="BaseResultMap">
-        select
-          code_id, code_type, code_name, code_value, state
-        from main.coll_data_dict_value
-        where code_type = #{id} and is_valid = '1'
+    <select id="queryAllByLimit" resultType="com.bonc.colldata.entity.ZgGn">
+        SELECT * FROM zg_gn WHERE zdlx = #{id}
     </select>
 
     <!--通过实体作为筛选条件查询-->

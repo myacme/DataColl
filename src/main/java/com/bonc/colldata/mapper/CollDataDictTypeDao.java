@@ -1,6 +1,7 @@
 package com.bonc.colldata.mapper;
 
 import com.bonc.colldata.entity.CollDataDictType;
+import com.bonc.colldata.entity.ZgGn;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +31,7 @@ public interface CollDataDictTypeDao {
 	 * @param state 状态
 	 * @return 对象列表
 	 */
-	List<CollDataDictType> queryAllByLimit(@Param("name") String name, @Param("state") String state);
+	List<ZgGn> queryAllByLimit(@Param("name") String name, @Param("state") String state);
 
 	/**
 	 * 新增数据

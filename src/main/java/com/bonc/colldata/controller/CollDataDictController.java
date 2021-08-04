@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollDataDictType;
 import com.bonc.colldata.entity.CollDataDictValue;
+import com.bonc.colldata.entity.ZgGn;
 import com.bonc.colldata.service.CollDataDictTypeService;
 import com.bonc.colldata.service.CollDataDictValueService;
 import com.bonc.utils.CommonUtil;
@@ -69,7 +70,7 @@ public class CollDataDictController {
 			@ApiImplicitParam(name = "state", value = "状态，搜索参数"),
 	})
 	public Object query(String name, String state) {
-		List<CollDataDictType> result = collDataDictTypeService.queryAllByLimit(name, state);
+		List<ZgGn> result = collDataDictTypeService.queryAllByLimit(name, state);
 		return new RestRecord(200, "查询成功", result);
 	}
 
@@ -122,7 +123,6 @@ public class CollDataDictController {
 	 * 查询字典配置项
 	 *
 	 * @param id       字典id
-	 * @param pageable 分页参数
 	 * @return 列表
 	 */
 	@ApiOperation("字典配置项列表")
@@ -130,8 +130,8 @@ public class CollDataDictController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "字典id", required = true),
 	})
-	public Object queryDictData(String id, Pageable pageable) {
-		PageInfo<CollDataDictValue> pageInfo = collDataDictValueService.queryAllByLimit(id, pageable);
+	public Object queryDictData(String id) {
+		List<ZgGn> pageInfo = collDataDictValueService.queryAllByLimit(id);
 		return new RestRecord(200, "成功", pageInfo);
 	}
 
@@ -147,7 +147,7 @@ public class CollDataDictController {
 			@ApiImplicitParam(name = "id", value = "字典配置项id", required = true),
 	})
 	public Object selectOneDictData(String id) {
-		CollDataDictValue collDataDictValue = collDataDictValueService.queryById(id);
+		ZgGn collDataDictValue = collDataDictValueService.queryById(id);
 		return new RestRecord(200, "成功", collDataDictValue);
 	}
 

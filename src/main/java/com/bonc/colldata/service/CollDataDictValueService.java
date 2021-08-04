@@ -1,6 +1,7 @@
 package com.bonc.colldata.service;
 
 import com.bonc.colldata.entity.CollDataDictValue;
+import com.bonc.colldata.entity.ZgGn;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,21 +18,35 @@ import java.util.Map;
  */
 public interface CollDataDictValueService {
 
+//	/**
+//	 * 通过ID查询单条数据
+//	 *
+//	 * @param codeId 主键
+//	 * @return 实例对象
+//	 */
+//	CollDataDictValue queryById(String codeId);
 	/**
 	 * 通过ID查询单条数据
 	 *
 	 * @param codeId 主键
 	 * @return 实例对象
 	 */
-	CollDataDictValue queryById(String codeId);
+	ZgGn queryById(String codeId);
 
+//	/**
+//	 * 查询多条数据
+//	 *
+//	 * @param id 字典id
+//	 * @return 对象列表
+//	 */
+//	PageInfo<CollDataDictValue> queryAllByLimit(String id, Pageable pageable);
 	/**
 	 * 查询多条数据
 	 *
 	 * @param id 字典id
 	 * @return 对象列表
 	 */
-	PageInfo<CollDataDictValue> queryAllByLimit(String id, Pageable pageable);
+	List<ZgGn> queryAllByLimit(String id);
 
 	/**
 	 * 新增数据

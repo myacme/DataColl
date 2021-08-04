@@ -1,6 +1,7 @@
 package com.bonc.colldata.mapper;
 
 import com.bonc.colldata.entity.CollDataDictValue;
+import com.bonc.colldata.entity.ZgGn;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,13 +17,20 @@ import java.util.Map;
 @Mapper
 public interface CollDataDictValueDao {
 
+//	/**
+//	 * 通过ID查询单条数据
+//	 *
+//	 * @param codeId 主键
+//	 * @return 实例对象
+//	 */
+//	CollDataDictValue queryById(String codeId);
 	/**
 	 * 通过ID查询单条数据
 	 *
 	 * @param codeId 主键
 	 * @return 实例对象
 	 */
-	CollDataDictValue queryById(String codeId);
+	ZgGn queryById(String codeId);
 
 	/**
 	 * 查询指定行数据
@@ -30,7 +38,7 @@ public interface CollDataDictValueDao {
 	 * @param id 字典id
 	 * @return 对象列表
 	 */
-	List<CollDataDictValue> queryAllByLimit(@Param("id") String id);
+	List<ZgGn> queryAllByLimit(@Param("id") String id);
 
 
 	/**

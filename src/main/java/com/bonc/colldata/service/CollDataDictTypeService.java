@@ -1,6 +1,7 @@
 package com.bonc.colldata.service;
 
 import com.bonc.colldata.entity.CollDataDictType;
+import com.bonc.colldata.entity.ZgGn;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface CollDataDictTypeService {
 	 * @param state 状态
 	 * @return 对象列表
 	 */
-	List<CollDataDictType> queryAllByLimit(String name, String state);
+	List<ZgGn> queryAllByLimit(String name, String state);
 
 	/**
 	 * 新增数据
