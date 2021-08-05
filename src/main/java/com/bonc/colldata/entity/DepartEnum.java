@@ -19,6 +19,7 @@ public enum DepartEnum {
 	JGDJMC("机构等级名称", "jgdjmc"),
 	ZZJGMCM("组织机构名称码", "zzjgmcm"),
 	DWFB("单位分布", "dwfb"),
+	DWFBMC("单位分布名称", "dwfbmc"),
 	JGXZ("机构性质", "jgxz"),
 	JGXZMC("机构性质名称", "jgxzmc"),
 	QZQF("强制区分", "qzqf"),
