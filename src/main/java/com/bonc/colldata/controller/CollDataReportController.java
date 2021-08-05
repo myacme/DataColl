@@ -135,6 +135,7 @@ public class CollDataReportController {
 		String id = CommonUtil.getUUID20();
 		for (Map.Entry<String, Object> entry : data.entrySet()) {
 			CollTableData bean = new CollTableData();
+			bean.setId(CommonUtil.getUUID20());
 			bean.setBusinessTypeCode("");
 			bean.setCreateTime(CommonUtil.getNowTime());
 			bean.setDataCode(id);

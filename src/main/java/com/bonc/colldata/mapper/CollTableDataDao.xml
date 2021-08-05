@@ -69,7 +69,7 @@
 
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
+          id,data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
         from main.coll_table_data
         <where>
             <if test="version != null and version != ''">
@@ -81,7 +81,7 @@
 
     <select id="queryAllOfTowVersion" resultMap="BaseResultMap">
         select
-          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version
+          id,data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version
         from main.coll_table_data
         where
             table_business_code in(
@@ -111,7 +111,7 @@
 
     <select id="queryMap" resultType="map">
         select
-          data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
+          id,data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,this_update,lower_update
         from main.coll_table_data
         <where>
             <if test="version != null and version != ''">
@@ -130,10 +130,10 @@
     <!--批量新增所有列-->
     <insert id="insertList" >
         <if test="list != null">
-            insert into main.coll_table_data(data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
+            replace into main.coll_table_data(id,data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
             values
             <foreach collection="list" index="index" item="item" separator=",">
-                (#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
+                (#{item.id},#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
             </foreach>
         </if>
     </insert>

@@ -83,15 +83,18 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 						List<Map<String, String>> maps = ExcelUtil.parseExcel(excle);
 						JSONArray jsonArray = new JSONArray();
 						jsonArray.addAll(maps);
-						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
-						size += collect.size();
-						collect.forEach((k, list) -> {
-							String id = CommonUtil.getUUID20();
-							list.forEach(bean -> {
-								bean.setDataCode(id);
-							});
-							tableDataList.addAll(list);
-						});
+						List<CollTableData> tableList = jsonArray.toJavaList(CollTableData.class);
+						size += tableList.size();
+						tableDataList.addAll(tableList);
+//						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
+//						size += collect.size();
+//						collect.forEach((k, list) -> {
+//							String id = CommonUtil.getUUID20();
+//							list.forEach(bean -> {
+//								bean.setDataCode(id);
+//							});
+//							tableDataList.addAll(list);
+//						});
 					} else { //本级数据
 						Map<String, Object> temp = new HashMap<>(4);
 						List<List<CollTableData>> lists = ExcelUtil.readExcle(excle, temp);
@@ -99,6 +102,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 							for (List<CollTableData> list : lists) {
 								String id = CommonUtil.getUUID20();
 								list.forEach(bean -> {
+									bean.setId(CommonUtil.getUUID20());
 									bean.setDataCode(id);
 									bean.setDepartmentCode(user.getDeptId());
 									bean.setVersion(version);
@@ -416,6 +420,7 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		collect.forEach((k, list) -> {
 			String id = CommonUtil.getUUID20();
 			list.forEach(collTableData -> {
+				collTableData.setId(CommonUtil.getUUID20());
 				collTableData.setVersion(rportVersion);
 				collTableData.setCreateTime(CommonUtil.getNowTime());
 				collTableData.setDataCode(id);
