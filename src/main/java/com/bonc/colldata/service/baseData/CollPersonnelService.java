@@ -1,10 +1,7 @@
 package com.bonc.colldata.service.baseData;
 
-import com.bonc.colldata.entity.CollBasicPersonnelConfig;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
-import com.bonc.colldata.entity.QueryParam;
 import com.bonc.colldata.entity.RYKB;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -23,11 +20,13 @@ public interface CollPersonnelService {
 
 	RYKB checkById(String id);
 
-	List<RYKB> getPersonnelByList(String xm,String szdwcjid);
+	List<RYKB> getPersonnelByList(String xm, String szdwcjid);
 
 	int updatePersonnel(RYKB rykb);
 
-	List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard);
+	Map<String, Object> getPersonnelByDept(String deptCode, String name, String IDcard, Pageable pageable);
+
+	Map<String, Object> getJgByDept(String deptCode, String name, String IDcard, Pageable pageable);
 
 	int deletePersonnelById(List<String> id);
 

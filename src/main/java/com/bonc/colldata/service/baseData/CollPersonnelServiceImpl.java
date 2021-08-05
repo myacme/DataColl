@@ -5,10 +5,14 @@ import com.bonc.colldata.mapper.baseData.CollDepartmentMapper;
 import com.bonc.colldata.mapper.baseData.CollPersonnelMapper;
 import com.bonc.colldata.mapper.baseData.SysConfigDao;
 import com.bonc.colldata.service.CollTableDataService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +37,6 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	private CollTableDataService collTableDataService;
 
 
-
 	@Override
 	public int addPersonnelData(RYKB rykb) {
 		return collPersonnelMapper.addPersonnelData(rykb);
@@ -45,23 +48,60 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 	}
 
 	@Override
-	public List<RYKB> getPersonnelByList(String xm,String szdwcjid) {
+	public List<RYKB> getPersonnelByList(String xm, String szdwcjid) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("xm", xm);
-		map.put("szdwcjid",szdwcjid);
+		map.put("szdwcjid", szdwcjid);
 		return collPersonnelMapper.getPersonnelByList(map);
 	}
 
 	@Override
-
-	public List<RYKB> getPersonnelByDept(String deptCode, String name, String IDcard) {
+	public Map<String, Object> getPersonnelByDept(String deptCode, String name, String IDcard, Pageable pageable) {
+		Map<String, Object> result = new HashMap<>();
 		//获取本级及下级部门id
 		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
 		List<JGKB> list = collTableDataService.checkCollDepartmentTree(collDepartment);
-		List<String> idList = collDepartmentService.getAllNode(list);
-		idList.add(deptCode);
+		List<String> idList = new ArrayList<>();
+		list.forEach(l->{
+			idList.add(l.getId());
+		});
 		String[] ids = idList.toArray(new String[idList.size()]);
-		return collPersonnelMapper.getPersonnelByDept(ids,name,IDcard);
+		List<RYKB> personnelByDept = collPersonnelMapper.getPersonnelByDept(ids, name, IDcard);
+		//分页
+		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+		PageInfo<RYKB> pageInfo = new PageInfo<>(personnelByDept);
+		result.put("data", pageInfo);
+		//表头
+		List<Map<String, Object>> tableHead = new ArrayList<>();
+		for (PersonEnum personEnum : PersonEnum.values()) {
+			HashMap<String, Object> map = new HashMap<>(4);
+			map.put("name", personEnum.name);
+			map.put("code", personEnum.code);
+			tableHead.add(map);
+		}
+		result.put("name", tableHead);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getJgByDept(String deptCode, String name, String IDcard, Pageable pageable) {
+		//获取本级及下级部门id
+		Map<String, Object> result = new HashMap<>();
+		List<JGKB> jgkbs = collDepartmentMapper.checkCollDepartmentList(null);
+		//分页
+		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+		PageInfo<JGKB> pageInfo = new PageInfo<>(jgkbs);
+		result.put("data", pageInfo);
+		//表头
+		List<Map<String, Object>> tableHead = new ArrayList<>();
+		for (DepartEnum departEnum : DepartEnum.values()) {
+			HashMap<String, Object> map = new HashMap<>(4);
+			map.put("name", departEnum.name);
+			map.put("code", departEnum.code);
+			tableHead.add(map);
+		}
+		result.put("name", tableHead);
+		return result;
 	}
 
 	@Override
@@ -75,6 +115,7 @@ public class CollPersonnelServiceImpl implements CollPersonnelService {
 		map.put("list", id);
 		return collPersonnelMapper.deletePersonnelById(map);
 	}
+
 	@Override
 	public String getSystemName() {
 		return sysConfigDao.queryById("sys_name").getConfigValue();

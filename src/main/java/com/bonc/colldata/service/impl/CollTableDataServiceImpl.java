@@ -343,8 +343,10 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		}
 		JGKB collDepartment = collDepartmentMapper.checkDepartmentById(deptCode);
 		List<JGKB> list = checkCollDepartmentTree(collDepartment);
-		List<String> idList = collDepartmentService.getAllNode(list);
-		idList.add(deptCode);
+		List<String> idList = new ArrayList<>();
+		list.forEach(l->{
+			idList.add(l.getId());
+		});
 		String[] ids = idList.toArray(new String[idList.size()]);
 		//分页
 		PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
@@ -479,11 +481,12 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		List<JGKB> list = new ArrayList<>();
 		list.add(dept);
 		Map<String, Object> map = new HashMap<>(2);
-		if(dept.getFdwid()!=null&&dept.getFdwid()!=""){
-			map.put("pid", dept.getFdwid());
+		List<JGKB> list1 = null;
+		if (dept.getId() != null && dept.getId() != "") {
+			map.put("pid", dept.getId());
+			list1 = collDepartmentMapper.checkCollDepartmentTree(map);
 		}
-		List<JGKB> list1 = collDepartmentMapper.checkCollDepartmentTree(map);
-		if (list1 != null) {
+		if (list1 != null && list1.size() > 0) {
 			list1.forEach(l -> {
 				List<JGKB> list2 = checkCollDepartmentTree(l);
 				list.addAll(list2);

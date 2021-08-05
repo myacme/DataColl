@@ -78,8 +78,7 @@
 	</resultMap>
 	<!--递归查询机构树-->
 	<select id="checkCollDepartmentTree" resultMap="baseTree" parameterType="java.util.Map">
-     select * from  t_zb_jgkb where 1=1
-    and fdwid=#{pid}
+     select * from  t_zb_jgkb where fdwid=#{pid}
     </select>
 
 	<update id="updateDepartment" parameterType="com.bonc.colldata.entity.JGKB">

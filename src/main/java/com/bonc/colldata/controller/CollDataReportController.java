@@ -3,9 +3,7 @@ package com.bonc.colldata.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.bonc.base.RestRecord;
 import com.bonc.colldata.entity.CollBusinessTableType;
-import com.bonc.colldata.entity.CollPersonnelMaintain;
 import com.bonc.colldata.entity.CollTableData;
-import com.bonc.colldata.entity.RYKB;
 import com.bonc.colldata.service.CollTableDataService;
 import com.bonc.colldata.service.baseData.CollPersonnelService;
 import com.bonc.utils.CommonUtil;
@@ -185,16 +183,28 @@ public class CollDataReportController {
 		return new RestRecord(result > 0 ? 200 : 400, result > 0 ? "成功" : "失败", result);
 	}
 
-	@ApiOperation("查询关联表数据")
-	@RequestMapping(value = "dataSource/list", method = RequestMethod.GET)
+	@ApiOperation("查询人员表数据")
+	@RequestMapping(value = "ry/list", method = RequestMethod.GET)
 	@ResponseBody
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "deptCode", value = "部门", required = true),
-			@ApiImplicitParam(name = "name", value = "姓名（搜索条件）", required = true),
-			@ApiImplicitParam(name = "IDcard", value = "身份证（搜索条件）", required = true),
+			@ApiImplicitParam(name = "name", value = "姓名（搜索条件）"),
+			@ApiImplicitParam(name = "IDcard", value = "身份证（搜索条件）"),
 	})
-	public Object dataSource(String deptCode, String name, String IDcard) {
-		List<RYKB> list = collPersonnelService.getPersonnelByDept(deptCode, name, IDcard);
+	public Object dataSource(String deptCode, String name, String IDcard, Pageable pageable) {
+		Map<String, Object> list = collPersonnelService.getPersonnelByDept(deptCode, name, IDcard,pageable);
+		return new RestRecord(200, "成功", list);
+	}
+	@ApiOperation("查询机构表数据")
+	@RequestMapping(value = "jg/list", method = RequestMethod.GET)
+	@ResponseBody
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "deptCode", value = "部门"),
+			@ApiImplicitParam(name = "name", value = "姓名（搜索条件）"),
+			@ApiImplicitParam(name = "IDcard", value = "身份证（搜索条件）"),
+	})
+	public Object dataSourceOfJg(String deptCode, String name, String IDcard, Pageable pageable) {
+		Map<String, Object> list = collPersonnelService.getJgByDept(deptCode, name, IDcard,pageable);
 		return new RestRecord(200, "成功", list);
 	}
 }
