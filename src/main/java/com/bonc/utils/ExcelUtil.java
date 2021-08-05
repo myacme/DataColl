@@ -556,7 +556,42 @@ public class ExcelUtil {
 		}
 		return list;
 	}
-
+	public static List<Map<String, String>> parseExcelNew(File excle) {
+		List<Map<String, String>> list = new ArrayList<>();
+		try {
+			//.是特殊字符，需要转义！！！！！
+			String[] split = excle.getName().split("\\.");
+			XSSFWorkbook wb;
+			InputStream inputStream = new FileInputStream(excle);
+			//根据文件后缀（xls/xlsx）进行判断
+			if ("xlsx".equals(split[1])) {
+				wb = new XSSFWorkbook(inputStream);
+			} else {
+				System.out.println("文件类型错误!");
+				return null;
+			}
+			XSSFSheet xssfSheet = wb.getSheetAt(0);
+			XSSFRow titleRow = xssfSheet.getRow(0);
+			//循环取每行的数据
+			for (int rowIndex = 1; rowIndex < xssfSheet.getPhysicalNumberOfRows(); rowIndex++) {
+				XSSFRow xssfRow = xssfSheet.getRow(rowIndex);
+				if (xssfRow == null) {
+					continue;
+				}
+				Map<String, String> map = new LinkedHashMap<>();
+				//循环取每个单元格(cell)的数据
+				for (int cellIndex = 0; cellIndex < titleRow.getPhysicalNumberOfCells(); cellIndex++) {
+					XSSFCell titleCell = titleRow.getCell(cellIndex);
+					XSSFCell xssfCell = xssfRow.getCell(cellIndex);
+					map.put(getName(titleCell.getStringCellValue()), getValue(xssfCell));
+				}
+				list.add(map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	private static String getValue(XSSFCell cell) {
 		if (cell == null) {

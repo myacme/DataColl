@@ -188,5 +188,26 @@
     <select id="queryVersionOfA" resultType="java.util.Map">
         SELECT version from coll_table_data GROUP BY version HAVING version like 'a%'
     </select>
+  <select id="getTableDataList" resultType="java.util.Map" parameterType="java.util.Map">
+        select * from coll_table_data
+        where
+        version=#{version}
+        AND table_business_code=#{tableCode}
+        <if test="list!=null">
+            AND  department_code IN
+            <foreach collection="list" item="item" index="index" separator="," close=")" open="(">
+                #{item}
+            </foreach>
+        </if>
+  </select>
 
+    <insert id="insertReplacetList" >
+        <if test="list != null">
+            replace into main.coll_table_data(data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
+            values
+            <foreach collection="list" index="index" item="item" separator=",">
+                (#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
+            </foreach>
+        </if>
+    </insert>
 </mapper>

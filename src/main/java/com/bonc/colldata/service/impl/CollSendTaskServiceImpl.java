@@ -41,8 +41,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	private CollReceiveTaskService collReceiveTaskService;
 	@Resource
 	private CollDepartmentServiceImpl collDepartmentService;
-	@Resource
-	private CollTableDataDao collTableDataDao;
+
 	@Resource
 	private CollBusinessTableConfigDao collBusinessTableConfigDao;
 
@@ -181,7 +180,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		list = this.getTaskTemplate(listTable, befVsersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
-			list.add(this.getBaseDeptTemplate(deptId,ifTemp));
+			list.add(this.getBaseDeptTemplate(deptId, ifTemp));
 		}
 		Workbook wb = ExcelUtil.createXSLXTemplateList(list);
 		try {
@@ -224,7 +223,7 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		list = this.getTaskTemplate(listTable, befVersion, deptId);
 		if ("cjlx002".equals(taskCollType)) {
 			list.add(this.getBaseTemplate(deptId, ifTemp));
-			list.add(this.getBaseDeptTemplate(deptId,ifTemp));
+			list.add(this.getBaseDeptTemplate(deptId, ifTemp));
 		}
 		String fileName = deptName + "_" + taskName + "_" + taskCollType + "_" + vsersion;
 		ArrayList<File> fileList = new ArrayList<File>();
@@ -261,12 +260,12 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * @param deptId
 	 */
 	public Map<String, Object> getBaseTemplate(String deptId, String ifTemp) {
-		Map<String, Object> nameMap =null;
+		Map<String, Object> nameMap = null;
 		Map<String, Object> p = new HashMap<>();
 		List<Map<String, Object>> list = new ArrayList<>();
 		//获取基础数据
 		//获取表字段字段信息
-		List<RYKB> listData = collPersonnelService.getPersonnelByList(null,deptId);
+		List<RYKB> listData = collPersonnelService.getPersonnelByList(null, deptId);
 		nameMap = PersonEnum.payTypeMap;
 		System.out.println(nameMap);
 		p.put("nameMap", nameMap);
@@ -294,11 +293,11 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 	 * @return
 	 */
 	public Map<String, Object> getBaseDeptTemplate(String deptId, String ifTemp) {
-		Map<String,Object> param=new HashMap<>();
-		Map<String, Object> nameMap =null;
+		Map<String, Object> param = new HashMap<>();
+		Map<String, Object> nameMap = null;
 		Map<String, Object> p = new HashMap<>();
 		List<Map<String, Object>> list = new ArrayList<>();
-		param.put("pid",deptId);
+		param.put("pid", deptId);
 		//获取基础数据
 		//获取表字段字段信息
 		List<JGKB> listData = collDepartmentService.checkCollDepartmentList(param);
@@ -321,22 +320,30 @@ public class CollSendTaskServiceImpl implements CollSendTaskService {
 		}
 		return p;
 	}
+
 	public List<Map<String, Object>> getTaskTemplate(List<CollReceiveTaskTable> listTable, String version, String deptId) {
 		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> param = new HashMap<>();
+		param.put("pid", deptId);
+		List<String> deptList = collDepartmentService.getAllNode(collDepartmentService.checkCollDepartmentTree(param));
+         deptList.add(deptId);
 		for (CollReceiveTaskTable collReceiveTaskTable : listTable) {
 			String tableCode = collReceiveTaskTable.getSendTaskTableCode();
-			String[] array = new String[]{deptId};
 			String tableName = collReceiveTaskTable.getSendTaskTableName();
-			List<CollBusinessTableConfig> fieldList = this.getTableFieldConfig(tableCode);
-			List<Map<String, Object>> tableDataList = collTableDataDao.getDataList(fieldList, tableCode, version, null, "this_update", array);
+			//List<CollBusinessTableConfig> fieldList = this.getTableFieldConfig(tableCode);
+			List<Map<String, Object>> tableDataList = collTableDataService.getTableDataList(deptList, version, tableCode);
 			//封装数据标题数据
-			Map<String, String> map = new LinkedHashMap<>();
-			for (CollBusinessTableConfig collBusinessTableConfig : fieldList) {
+			Map<String, String> map = TableFieldEnum.payTypeMap;
+			/*for (CollBusinessTableConfig collBusinessTableConfig : fieldList) {
 				map.put(collBusinessTableConfig.getTableConfigCode(), collBusinessTableConfig.getTableConfigName() + "(" + collBusinessTableConfig.getTableConfigCode() + ")");
-			}
+			}*/
 			Map<String, Object> p = new HashMap<>();
 			p.put("nameMap", map);
-			p.put("data", tableDataList);
+			if (tableDataList != null && tableDataList.size() > 0) {
+				p.put("data", tableDataList);
+			} else {
+				p.put("data", null);
+			}
 			p.put("name", tableCode);
 			p.put("tableName", tableName);
 			list.add(p);

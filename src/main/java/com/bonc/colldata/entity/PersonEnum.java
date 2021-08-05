@@ -62,7 +62,7 @@ public enum PersonEnum {
 	static {
 		PersonEnum[] types = PersonEnum.values();
 		for (PersonEnum type : types) {
-			payTypeMap.put(String.valueOf(type.getCode()), type.getName());
+			payTypeMap.put(String.valueOf(type.getCode()), type.getName()+"("+String.valueOf(type.getCode())+")");
 		}
 	}
 

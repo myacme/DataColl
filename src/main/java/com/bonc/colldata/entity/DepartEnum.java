@@ -59,7 +59,7 @@ public enum DepartEnum {
 	static {
 		DepartEnum[] types = DepartEnum.values();
 		for (DepartEnum type : types) {
-			payTypeMap.put(String.valueOf(type.getCode()), type.getName());
+			payTypeMap.put(String.valueOf(type.getCode()), type.getName()+"("+String.valueOf(type.getCode())+")");
 		}
 	}
 }

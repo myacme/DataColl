@@ -100,10 +100,32 @@
     </update>
 
 	<delete id="deleteDepartment" parameterType="java.util.Map">
-		delete from  t_zb_jgkb where id IN
+		delete from t_zb_jgkb where id IN
 		<foreach collection="list" index="index" separator="," item="i" open="(" close=")">
 			#{i}
 		</foreach>
 	</delete>
+	<insert id="insertDepartmentData">
+		replace  INTO t_zb_jgkb(id,jgmc,level,jgdjmc,zzjgmcm,dwfb,jgxz,jgxzmc,qzqf,qzqfmc,pxm,fdwid,dwqlj,ccm)
+		values
+		<foreach collection="list" separator="," index="index" item="item">
+			(
+			#{item.id},
+			#{item.jgmc},
+			#{item.level},
+			#{item.jgdjmc},
+			#{item.zzjgmcm},
+			#{item.dwfb},
+			#{item.jgxz},
+			#{item.jgxzmc},
+			#{item.qzqf},
+			#{item.qzqfmc},
+			#{item.pxm},
+			#{item.fdwid},
+			#{item.dwqlj},
+			#{item.ccm}
+			)
+		</foreach>
 
+	</insert>
 </mapper>

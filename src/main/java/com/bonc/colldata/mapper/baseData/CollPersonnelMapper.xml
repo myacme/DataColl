@@ -29,7 +29,7 @@
          )
      </insert>
 	<insert id="insertPersonnelData" >
-		replace  INTO t_zb_rykb
+		replace  INTO t_zb_rykb(id,sfh,xm,bb,xb,jg,jgdm,zzmm,zzmmmc,cssj,rwsj,zwmc,xlmc,xl,byyx,szdwcjid,sflb,sflbmc)
          VALUES
 		<foreach collection="list" index="index" item="item" separator=",">
          (

@@ -186,4 +186,6 @@ public interface CollTableDataService {
 	 * @return
 	 */
 	List<JGKB> checkCollDepartmentTree(JGKB dept);
+
+	List<Map<String,Object>> getTableDataList(List<String> list,String version,String tableCode);
 }

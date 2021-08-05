@@ -1,6 +1,7 @@
 package com.bonc.colldata.mapper.baseData;
 
 import com.bonc.colldata.entity.JGKB;
+import com.bonc.colldata.entity.RYKB;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,6 +23,8 @@ public interface CollDepartmentMapper {
 	 * @return
 	 */
 	int addDepartment(JGKB jgkb);
+
+	int insertDepartmentData(@Param("list") List<JGKB> list);
 
 	/****
 	 * todo:查询机构列表

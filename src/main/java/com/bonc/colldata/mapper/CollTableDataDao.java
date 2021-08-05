@@ -130,4 +130,6 @@ public interface CollTableDataDao {
 	 * @return 实例对象
 	 */
 	List<Map<String, String>> queryVersionOfA();
+	int insertReplacetList(@Param("list") List<CollTableData> list);
+	List<Map<String,Object>> getTableDataList(Map<String,Object> map);
 }

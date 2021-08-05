@@ -494,4 +494,13 @@ public class CollTableDataServiceImpl implements CollTableDataService {
 		}
 		return list;
 	}
+
+	@Override
+	public List<Map<String, Object>> getTableDataList(List<String> list, String version, String tableCode) {
+		Map<String,Object> map=new HashMap<>();
+		map.put("list",list);
+		map.put("version",version);
+		map.put("tableCode",tableCode);
+		return collTableDataDao.getTableDataList(map);
+	}
 }
