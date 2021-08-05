@@ -109,15 +109,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 	}
 
 	public CollReceiveTask readZipAndExcel(MultipartFile multipartFile) {
-		//获取当前登录用户信息
-		UserManager userManager = SessionUtiil.getUserInfo();
 		//文件名称 zip规则 部门_任务名称_采集类型_版本号
-		String fileName = null;
-		try {
-			fileName = URLDecoder.decode(multipartFile.getOriginalFilename(), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		CollReceiveTask task = new CollReceiveTask();
 		List<CollReceiveTaskTable> result = new ArrayList<>();
 		File[] unzip = ZipUtil.unzip(FileUtil.toFile(multipartFile), SystemConfig.getZipPassWord());
@@ -133,8 +125,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 					CollReceiveTaskTable collReceiveTaskTable=new CollReceiveTaskTable();
 					List<CollTableData> tableDataList = new ArrayList<>();
 					String sheetName = ExcelUtil.getSheetName(file);
-					collReceiveTaskTable.setSendTaskTableCode(sheetName);
-					result.add(collReceiveTaskTable);
+
 					if ("t_zb_rykb".equals(sheetName)) {
 						//人员基础表
 						List<Map<String, String>> listMap = ExcelUtil.readExcleOfCommon(file);
@@ -147,25 +138,18 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 						List<Map<String, String>> listMap = ExcelUtil.readExcleOfCommon(file);
 						JSONArray jsonArray = new JSONArray();
 						jsonArray.addAll(listMap);
-						System.out.println(jsonArray);
+
 						List<JGKB> list = jsonArray.toJavaList(JGKB.class);
 						collDepartmentMapper.insertDepartmentData(list);
 					} else {
 						//下级数据
-
-						System.out.println(sheetName);
+						collReceiveTaskTable.setSendTaskTableCode(sheetName);
+						result.add(collReceiveTaskTable);
 						List<Map<String, String>> maps = ExcelUtil.parseExcelNew(file);
 						JSONArray jsonArray = new JSONArray();
 						jsonArray.addAll(maps);
-						System.out.println(jsonArray);
-						Map<String, List<CollTableData>> collect = jsonArray.toJavaList(CollTableData.class).stream().collect(Collectors.groupingBy(CollTableData::getDataCode));
-						collect.forEach((k, list) -> {
-							String id = CommonUtil.getUUID20();
-							list.forEach(bean -> {
-								bean.setDataCode(id);
-							});
-							tableDataList.addAll(list);
-						});
+						List<CollTableData> list = jsonArray.toJavaList(CollTableData.class);
+						tableDataList.addAll(list);
 					}
 					file.delete();
 
@@ -177,12 +161,7 @@ public class CollReceiveTaskServiceImpl implements CollReceiveTaskService {
 			}
 		}
 		task.setList(result);
-
 		return task;
 	}
 
-
-	public void insertReportData(File file) {
-
-	}
 }

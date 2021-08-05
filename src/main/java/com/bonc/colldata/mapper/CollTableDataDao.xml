@@ -203,10 +203,10 @@
 
     <insert id="insertReplacetList" >
         <if test="list != null">
-            replace into main.coll_table_data(data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
+            replace into main.coll_table_data(id,data_code, business_type_code, table_business_code, table_config_code, department_code, data_value, create_time, version,lower_update)
             values
             <foreach collection="list" index="index" item="item" separator=",">
-                (#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
+                (#{item.id},#{item.dataCode}, #{item.businessTypeCode}, #{item.tableBusinessCode}, #{item.tableConfigCode}, #{item.departmentCode}, #{item.dataValue}, #{item.createTime}, #{item.version},#{item.thisUpdate})
             </foreach>
         </if>
     </insert>
